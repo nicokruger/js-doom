@@ -8,10 +8,17 @@ var run = function() {};
 run.prototype.run = function() {
 
 	this.testFunctionalTools();
-	testSimulator();
+	this.testSimulator();
 }
 
-testSimulator = function() {
+run.prototype.testSimulator = function() {
+
+	this.calls = simulator.generateCalls([{
+		label: "A", callFactor: 1.0
+	}], {})
+	this.test('1.0 == this.calls["A"]')
+
+	return
 	// We have two zones
 	// Blocks Like this:
 	// |-------|
@@ -64,6 +71,14 @@ run.prototype.testFunctionalTools = function() {
 	this.test("6 == this.z[1]")
 	this.test("8 == this.z[2]")
 	this.test("10 == this.z[3]")
+
+	d1 = { a: { attr1: "value1" } }
+	d2 = { a: { attr2: "value2" } }
+	this.d = f.combine(d1,d2)
+
+	this.test("\"value1\" == this.d[\"a\"][\"attr1\"]")
+	this.test("\"value2\" == this.d[\"a\"][\"attr2\"]")
+
 }
 
 run.prototype.test = function(code){

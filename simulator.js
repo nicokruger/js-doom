@@ -1,5 +1,27 @@
 var f = require("./f.js")
 
+function generateCalls(zones, populations) {
+
+	calls = f.reduce(zones, function(a,b) {
+		a[b["label"]] = b["callFactor"]
+		return a
+	}, {})
+
+	
+	return calls
+
+	//calls = f.map(zones, function(x) { return { calx[callFactor] } )
+	//calls = {}
+	//f.each(zones, function(x) {
+	//	calls[calls.length] = {
+	//		label: x[label],
+	//		population: x[]
+	//	})
+	
+	//f.each(populations,
+}
+
+
 function Simulator(zones, timeline) {
 	this.zones = zones
 	this.timeline = timeline
@@ -9,7 +31,7 @@ function Simulator(zones, timeline) {
 // at time t, and return a normalised
 // list of number of calls per block
 Simulator.prototype.normalize = function(zones, populations) {
-	//calls = f.map(zones, function(x) { return x[callFactor; })
+	calls = f.map(zones, function(x) { return x[callFactor]; })
 	//return f.reduce(
 }
 
@@ -32,3 +54,4 @@ Simulator.prototype.calculate = function(pop) {
 
 
 exports.Simulator = Simulator
+exports.generateCalls = generateCalls
