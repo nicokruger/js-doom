@@ -1,54 +1,42 @@
-//var f = require("./f.js")
+var Simulator = function() { }
 
-function generateCalls(zones, populations) {
+// Return the number of calls per zone, given a population snapshot
+Simulator.prototype.generateCalls = function (zones, populations) {
 
-	calls = f.reduce(zones, function(a,b) {
+	sorted = [];
+	population = [];
+	populations.eachSorted( function (key, value) { sorted.push(key); population.push(value); } );
+
+	calls = []
+	reduce(zones, function(a,b) {
 		a[b["label"]] = b["callFactor"]
 		return a
-	}, {})
+	}, {}).eachSorted(function (key, value) { calls.push(value); });
 
-	
-	return calls
 
-	//calls = f.map(zones, function(x) { return { calx[callFactor] } )
-	//calls = {}
-	//f.each(zones, function(x) {
-	//	calls[calls.length] = {
-	//		label: x[label],
-	//		population: x[]
-	//	})
-	
-	//f.each(populations,
+	total_calls = zip(calls, population, function(x,y) { return x*y });
+
+	calls = {}
+	zip(sorted, total_calls, function(x,y) { return [x,y] }).each(function(key, x) { calls[x[0]] = x[1]; } );
+	return calls;	
 }
 
-
-var Simulator = function(zones, timeline) {
-	this.zones = zones
-	this.timeline = timeline
+// Return the zones that are services by a tower.
+Simulator.prototype.zonesServiced = function(zones, towers) {
+		
 }
+
+Simulator.prototype.generateCapacity = function(towers) {
+	return reduce(towers, function(a,b) { a += b["capacity"]; return a}, 0);
+}
+
+//Simulator.prototype.generateLoad = function(zones, populations, 
+
 // Convert the zones callFactor,
 // together with the zones puplation
 // at time t, and return a normalised
 // list of number of calls per block
 Simulator.prototype.normalize = function(zones, populations) {
-	calls = f.map(zones, function(x) { return x[callFactor]; })
-	//return f.reduce(
-}
-
-Simulator.prototype.start = function() {
-
-	calls = this.normalize(this.zones, this.timeline[0])
-
-	this.hour = 0
-}
-
-Simulator.prototype.step = function() {
-	this.hour += 1
-	this.calculate(this.timeline[this.hour])	
-}
-
-Simulator.prototype.calculate = function(pop) {
-		
 }
 
 

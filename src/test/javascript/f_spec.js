@@ -11,5 +11,19 @@ describe("Functional Tools", function() {
 	it("should be able to combine two objects",function() {
 		expect(combine({a:{attr1:"value1"}},{a:{attr2:"value2"}})).toEqual({a: { attr1: "value1", attr2: "value2"}});
 	});
-});
+	describe("Additinoal functional-like object and list tools", function() {
+		it("should be possible iterate over an object in a functional way",function() {
+			var total = 0;
+			var f = { a:1,b:2,c:3 };
+			f.each(function(key,val) { total += val });
+			expect(total).toBe(6);
+		});
+		it("should be possible to iterate over the keys of an object in a sorted manner",function() {
+			var f = {z:10,y:9,x:8};
+			var l = [];
+			f.eachSorted(function(key,val) { l.push(key) });
+			expect(l).toEqual(["x","y","z"]);
+		});
+	});
 
+});
