@@ -3,7 +3,7 @@
  * intersect. Based on "The Method of Seperating Axes", described 
  * in Geometric Tools for Computer Graphics, pg 271
  */
-
+/*
 function get_middle_index(i0, i1, N) {
 	if (i0 < i1)
 		return (i0 + i1)/2;
@@ -30,4 +30,4 @@ function get_extreme_index(C, D) {
 function poly_intersect(c0, c1) {
 	// First, test C)
 	//for (var i0 = 1, i1 = c0.length -1; 
-}
+}*/
