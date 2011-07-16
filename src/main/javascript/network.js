@@ -21,10 +21,24 @@ Network.prototype.generateCalls = function (zones, populations) {
 	return calls;	
 }
 
-// Return the zones that are services by a tower.
-Network.prototype.zonesServiced = function(zones, towers) {
-		
+// Return the zones that are serviced by a tower.
+Network.prototype.zonesServiced = function(zones, tower) {
+	
+	tesselated_tower = tesselate_circle(tower["point"], tower["radius"], 16);
+
+	serviced_zones = []
+	zones.forEach(function (zone) {
+		for (var i =0; i < tesselated_tower.length; i++) {
+			triangle = tesselated_tower[i];
+			if (poly_intersect_simple(zone["points"], triangle)) {
+				serviced_zones.push(zone);
+				break;
+			}
+		}
+	});
+	return serviced_zones;
 }
+
 
 Network.prototype.generateCapacity = function(towers) {
 	return reduce(towers, function(a,b) { a += b["capacity"]; return a}, 0);
