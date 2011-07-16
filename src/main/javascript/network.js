@@ -1,7 +1,7 @@
-var Simulator = function() { }
+var Network = function() { }
 
 // Return the number of calls per zone, given a population snapshot
-Simulator.prototype.generateCalls = function (zones, populations) {
+Network.prototype.generateCalls = function (zones, populations) {
 
 	sorted = [];
 	population = [];
@@ -22,11 +22,11 @@ Simulator.prototype.generateCalls = function (zones, populations) {
 }
 
 // Return the zones that are services by a tower.
-Simulator.prototype.zonesServiced = function(zones, towers) {
+Network.prototype.zonesServiced = function(zones, towers) {
 		
 }
 
-Simulator.prototype.generateCapacity = function(towers) {
+Network.prototype.generateCapacity = function(towers) {
 	return reduce(towers, function(a,b) { a += b["capacity"]; return a}, 0);
 }
 
@@ -36,7 +36,7 @@ Simulator.prototype.generateCapacity = function(towers) {
 // together with the zones puplation
 // at time t, and return a normalised
 // list of number of calls per block
-Simulator.prototype.normalize = function(zones, populations) {
+Network.prototype.normalize = function(zones, populations) {
 }
 
 
