@@ -1,4 +1,4 @@
-var f = require("./f.js")
+//var f = require("./f.js")
 
 function generateCalls(zones, populations) {
 
@@ -22,7 +22,7 @@ function generateCalls(zones, populations) {
 }
 
 
-function Simulator(zones, timeline) {
+var Simulator = function(zones, timeline) {
 	this.zones = zones
 	this.timeline = timeline
 }
@@ -53,5 +53,5 @@ Simulator.prototype.calculate = function(pop) {
 
 
 
-exports.Simulator = Simulator
-exports.generateCalls = generateCalls
+//exports.Simulator = Simulator
+//exports.generateCalls = generateCalls

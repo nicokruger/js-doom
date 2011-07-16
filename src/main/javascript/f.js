@@ -83,8 +83,8 @@ Object.prototype.eachSorted = function(f) {
 }
 
 
-exports.map = map
-exports.reduce = reduce
-exports.sum = sum
-exports.zip = zip
-exports.combine = combine
+//exports.map = map
+//exports.reduce = reduce
+//exports.sum = sum
+//exports.zip = zip
+//exports.combine = combine
