@@ -7,6 +7,7 @@ function Zone(point, label, callFactor, population) {
   this.population = population;
   this.currentHour = 0;
 
+  this.calls = -1
   this.width = 100;
   this.height = 100;
   this.strokeStyle = "#dedede";
@@ -23,6 +24,6 @@ function Zone(point, label, callFactor, population) {
 
     ctx.fillStyle = "rgba(220, 220, 220, 1)";
     ctx.font = "bold 12px sans-serif";
-    ctx.fillText(this.label + " - " + this.population[this.currentHour], this.point.x, this.point.y);
+    ctx.fillText("[" + this.calls +"] " + this.label + " - " + this.population[this.currentHour], this.point.x, this.point.y);
   }
 }

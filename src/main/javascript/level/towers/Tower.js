@@ -1,6 +1,7 @@
 function Tower(point, capacity) {
   this.point = point;
   this.capacity = capacity;
+  this.utilisation = -1
 
   this.strokeStyle = "#56ff56";
 
@@ -16,6 +17,6 @@ function Tower(point, capacity) {
 
     ctx.fillStyle = "rgba(0, 255, 0, 1)";
     ctx.font = "bold 12px sans-serif";
-    ctx.fillText(this.capacity, this.point.x, this.point.y);
+    ctx.fillText("[" + this.utilisation + "] " + this.capacity, this.point.x, this.point.y);
   }
 }
