@@ -1,24 +1,13 @@
 var Network = function() { }
 
 // Return the number of calls per zone, given a population snapshot
-Network.prototype.generateCalls = function (zones, populations) {
+Network.prototype.generateCalls = function (zones) {
 
-	sorted = [];
-	population = [];
-	populations.eachSorted( function (key, value) { sorted.push(key); population.push(value); } );
+	zones.forEach(function (zone) {
+		zone["calls"] = zone["population"] * zone["callFactor"];
+	});
 
-	calls = []
-	reduce(zones, function(a,b) {
-		a[b["label"]] = b["callFactor"]
-		return a
-	}, {}).eachSorted(function (key, value) { calls.push(value); });
-
-
-	total_calls = zip(calls, population, function(x,y) { return x*y });
-
-	calls = {}
-	zip(sorted, total_calls, function(x,y) { return [x,y] }).each(function(key, x) { calls[x[0]] = x[1]; } );
-	return calls;	
+	return zones;	
 }
 
 // Return the zones that are serviced by a tower.

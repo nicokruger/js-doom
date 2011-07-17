@@ -4,12 +4,13 @@ describe('1. Very basic GSM network',function(){
 		it("must be a product of the population of each zone, and the willingness of the customer to place a call", function() {
 			var n = new Network();
 			calls = n.generateCalls(
-				[{label: "A", callFactor: 1.0}, {label: "B", callFactor:0.5}, {label:"C", callFactor:1.0}], {
-					A: 10,
-					B: 10,
-					C: 100
-				})
-			expect(calls).toEqual({A: 10, B: 5, C: 100})
+				[{label: "A", callFactor: 1.0, population: 10}, {label: "B", callFactor:0.5, population:10}, {label:"C", callFactor:1.0,population:100}])
+
+			expect(calls[0]["calls"]).toBe(10);
+			expect(calls[1]["calls"]).toBe(5);
+			expect(calls[2]["calls"]).toBe(100);
+			//({A: 10, B: 5, C: 100})
+
 		});
 	});
 	describe("The total capacity of the network", function() {
