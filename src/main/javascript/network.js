@@ -50,6 +50,13 @@ Network.prototype.towersServicing = function(zone, towers) {
 	return serviced;
 }
 
+// Calculate the distribution of calls from a zone towards towers
+Network.prototype.callDistribution = function(zone, towers) {
+	connected_towers = this.towersServicing(zone, towers);
+	distribution = towers.map(function(tower) { return connected_towers.indexOf(tower) != -1 ? 1 : 0 });
+	return distribution.map(function (d) { return d * (zone["calls"]/connected_towers.length )});
+}
+
 Network.prototype.generateCapacity = function(towers) {
 	return reduce(towers, function(a,b) { a += b["capacity"]; return a}, 0);
 }
