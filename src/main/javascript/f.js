@@ -1,5 +1,5 @@
 map = function (l, f) {
-	var ret = new Array(l.length)
+	ret = new Array(l.length)
 	for (i = 0; i < l.length; i++) {
 		ret[i] = f(l[i])
 	}

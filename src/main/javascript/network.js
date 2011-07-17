@@ -39,6 +39,16 @@ Network.prototype.zonesServiced = function(zones, tower) {
 	return serviced_zones;
 }
 
+// Return the towers that are servicing a node.
+Network.prototype.towersServicing = function(zone, towers) {
+	var that = this; // unfortunate - must be a better way
+	//serviced = towers.map(function(tower) { 
+	serviced = towers.map(function(tower) {
+		return that.zonesServiced([zone], tower).length > 0 ? tower : null; 
+	})
+	serviced = serviced.filter(function(x) { return x != null });
+	return serviced;
+}
 
 Network.prototype.generateCapacity = function(towers) {
 	return reduce(towers, function(a,b) { a += b["capacity"]; return a}, 0);

@@ -19,7 +19,7 @@ describe('1. Very basic GSM network',function(){
 		});
 	});
 
-	describe("The servicing of zones by the network", function () {
+	describe("Zones should be serviced by the towers that intersect with them", function () {
 		it("should be possible to retrieve the list of nodes serviced by a tower", function() {
 			var n = new Network();
 
@@ -27,10 +27,25 @@ describe('1. Very basic GSM network',function(){
 			zone2 = { points: [[1,0],[2,0],[2,1],[1,1]] };
 
 			zones = n.zonesServiced([zone1, zone2], {point: [1,0.5], radius: 1})
-			expect(zones.length).toBe(2);
+			expect(zones).toEqual([zone1, zone2]);
 
 			zones = n.zonesServiced([zone1, zone2], {point: [10,10], radius: 1})
-			expect(zones.length).toBe(0);
+			expect(zones).toEqual([]);
+		});
+		it("should be possible to retrieve a list of zones being serviced by a tower", function() {
+			var n = new Network();
+
+			zone1 = { points: [[0,0],[1,0],[1,1],[0,1]] };
+			zone2 = { points: [[1,0],[2,0],[2,1],[1,1]] };
+
+			var tower1 = { point: [1,0.5], radius: 1};
+			var tower2 = { point: [2.0,0.5], radius: 0.5};
+
+			zones = n.towersServicing(zone1, [tower1, tower2])
+			expect(zones).toEqual([tower1]);
+
+			expect(n.towersServicing(zone2, [tower1, tower2])).toEqual([tower1, tower2]);
+
 		});
 	});
 	
