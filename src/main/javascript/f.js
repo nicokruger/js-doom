@@ -1,10 +1,3 @@
-map = function (l, f) {
-	ret = new Array(l.length)
-	for (i = 0; i < l.length; i++) {
-		ret[i] = f(l[i])
-	}
-	return ret
-}
 
 reduce = function(l, f, i) {
 	var initial = i

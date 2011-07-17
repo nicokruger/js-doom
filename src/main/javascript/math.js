@@ -3,7 +3,7 @@ function v2_add(v1,v2) {
 }
 
 function v2_neg(v1) {
-	return map(v1, function (x) { return -x; } );
+	return v1.map(function (x) { return -x; } );
 }
 
 function v2_dot(v1,v2) {
@@ -11,13 +11,13 @@ function v2_dot(v1,v2) {
 }
 
 function v2_normalise(v) {
-	the_length = Math.sqrt(sum(map(v, function(x) { return x*x })));	
-	return map(v, function(x) { return x/the_length; });
+	the_length = Math.sqrt(sum(v.map(function(x) { return x*x })));	
+	return v.map(function(x) { return x/the_length; });
 }
 
 function v2_length(p1,p2) {
 	normed = zip(p1,p2,function(x,y) { return y-x; });
-	return Math.sqrt(sum(map(normed, function(x) { return x*x } )));
+	return Math.sqrt(sum(normed.map(function(x) { return x*x } )));
 
 }
 
