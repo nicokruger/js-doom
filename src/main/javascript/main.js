@@ -4,7 +4,7 @@ var previousTime, currentTime, deltaTime;
 
 function init() {
     canvas = document.getElementById("canvas");
-    if (canvas.getContext) {
+    if (canvas && canvas.getContext) {
         ctx = canvas.getContext("2d");
 
         document.addEventListener('mousemove', documentMouseMoveHandler, false);

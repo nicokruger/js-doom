@@ -5,6 +5,7 @@ function Zone(point, label, callFactor, population) {
   this.callFactor = callFactor;
 
   this.population = population;
+  this.currentPopulation = population[0]
   this.currentHour = 0;
 
   this.calls = -1
@@ -14,6 +15,7 @@ function Zone(point, label, callFactor, population) {
 
   this.updateComponent = function (hour) {
     this.currentHour = hour;
+    this.currentPopulation = this.population[hour]
   }
 
   this.draw = function (ctx) {

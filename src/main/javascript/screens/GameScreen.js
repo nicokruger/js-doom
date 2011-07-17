@@ -3,12 +3,12 @@ function ConvertGameTowers(towerObjects) {
 	towers = []
 	towerObjects.forEach(function(towerObject) {
 		tower = {}
-		x = towerObject.point[0]
-		y = towerObject.point[1]
+		x = towerObject.point.x
+		y = towerObject.point.y
 
 		tower["point"] = [x,y]
 		tower["radius"] = 50
-		tower["capacity"] = tower.capacity
+		tower["capacity"] = towerObject.capacity
 
 		towers.push(tower);
 	});
@@ -23,16 +23,16 @@ function ConvertGameZones(zoneObjects) {
 	zoneObjects.forEach(function(zoneObject) {
 		zone = {}
 
-		x = zoneObject.point[0]
-		y = zoneObject.point[1]
+		x = zoneObject.point.x
+		y = zoneObject.point.y
 		w = zoneObject.width
 		h = zoneObject.height
 
-		zone["points"] = [ [x - w/2, y - h/2], [x + w/2, y - h/2],
-			[x + w/2, y + h/2], [x - w/2, y-h/2]]
-		zone["population"] = zoneObject.population
+		zone["points"] = [ [x - w/2.0, y - h/2.0], [x + w/2, y - h/2],
+			[x + w/2, y + h/2], [x - w/2, y+h/2]]
+		zone["population"] = zoneObject.currentPopulation
 		zone["callFactor"] = zoneObject.callFactor
-
+		zone["label"] = zoneObject.label
 		zones.push(zone)
 	});
 
@@ -58,10 +58,10 @@ function GameScreen(src) {
 
   // Create zones
   this.zoneObjects = [
-    new Zone(new Point(55, 70), "z1", 0.5, [0, 0, 5, 5, 5, 0, 0]),
-    new Zone(new Point(60, 200), "z2", 0.5, [0, 0, 5, 5, 5, 0, 0]),
-    new Zone(new Point(370, 60), "z3", 0.35, [5, 5, 0, 0, 0, 5, 5]),
-    new Zone(new Point(340, 290), "z4", 0.8, [5, 5, 0, 0, 0, 5, 5])
+    new Zone(new Point(55, 70), "z1", 0.5, [1, 2, 5, 5, 5, 9, 1]),
+    new Zone(new Point(60, 200), "z2", 0.5, [1, 6, 5, 100, 5, 0, 9]),
+    new Zone(new Point(370, 60), "z3", 0.35, [5, 5, 9, 2, 5, 6, 5]),
+    new Zone(new Point(340, 290), "z4", 0.8, [5, 5, 3, 8, 5, 5, 5])
   ]
   this.zoneObjects.forEach(function (zone) { that.gameComponents.push(zone) } );
 
