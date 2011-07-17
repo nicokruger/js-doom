@@ -26,52 +26,25 @@ sum = function(l) {
 		0)
 }
 
-combine = function(x,y) {
-	n = []
-	x.each(function(key,value) {
-		n[key] = []
-		value.each(function(key2,value2) {
-			n[key][key2] = value2
-		})
-	})
-	y.each(function(key,value) {
-		value.each(function(key2,value2) {
-			n[key][key2] = value2
-		})
-	})
-
-	return n
-}
-
-Object.prototype.keys = function(f) {
-	keys = []
-	for (var key in this) {
-		if (this.hasOwnProperty(key)) {
-			keys.push(key)
-		}
-	}
-	return keys
-}
-
-Object.prototype.each = function(f) {
-	for (var key in this) {
-		if (this.hasOwnProperty(key)) {
-			f(key, this[key])
+each = function(o, f) {
+	for (var key in o) {
+		if (o.hasOwnProperty(key)) {
+			f(key, o[key])
 		}
 	}
 }
 
-Object.prototype.eachSorted = function(f) {
+eachSorted = function(o, f) {
 	var keys = []
-	for (var key in this) {
-		if (this.hasOwnProperty(key)) {
+	for (var key in o) {
+		if (o.hasOwnProperty(key)) {
 			keys.push(key)
 		}
 	}
 	keys.sort()
 
 	for (var i = 0; i < keys.length; i++) {
-		f(keys[i], this[keys[i]])
+		f(keys[i], o[keys[i]])
 	}
 }
 
