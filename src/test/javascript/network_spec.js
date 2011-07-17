@@ -63,5 +63,20 @@ describe('1. Very basic GSM network',function(){
 			expect(n.callDistribution(zone2, [tower1, tower2])).toEqual([25, 25])
 		});
 	})
-	
+
+	describe("The spare capacity of the towers in the network", function() {
+		it("is the total number of calls being routed to a tower from each of the zones in the network, minus the capacity of the tower", function() {
+			var n = new Network();
+
+			zone1 = { points: [[0,0],[1,0],[1,1],[0,1]], calls: 50 };
+			zone2 = { points: [[1,0],[2,0],[2,1],[1,1]], calls: 50 };
+
+			var tower1 = { point: [1,0.5], radius: 1, capacity: 50};
+			var tower2 = { point: [2.0,0.5], radius: 0.5, capacity: 50};
+
+			var capacities = n.towerCapacities([zone1,zone2], [tower1,tower2]);
+			expect(capacities).toEqual([-25, 25])
+
+		});
+	})
 });

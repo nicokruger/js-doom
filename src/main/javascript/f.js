@@ -75,7 +75,13 @@ Object.prototype.eachSorted = function(f) {
 	}
 }
 
-
+empty_array = function(size) {
+	a = new Array(size);
+	for (var i = 0; i < a.length; i++) {
+		a[i] = 0;
+	}
+	return a;
+}
 //exports.map = map
 //exports.reduce = reduce
 //exports.sum = sum

@@ -8,6 +8,9 @@ describe("Functional Tools", function() {
 	it("should be able to combine two objects",function() {
 		expect(combine({a:{attr1:"value1"}},{a:{attr2:"value2"}})).toEqual({a: { attr1: "value1", attr2: "value2"}});
 	});
+	it("should be possible to create an empty (intiailised) array of arb size",function() {
+		expect(empty_array(5)).toEqual([0,0,0,0,0]);
+	});
 	describe("Additinoal functional-like object and list tools", function() {
 		it("should be possible iterate over an object in a functional way",function() {
 			var total = 0;

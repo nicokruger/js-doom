@@ -57,6 +57,14 @@ Network.prototype.callDistribution = function(zone, towers) {
 	return distribution.map(function (d) { return d * (zone["calls"]/connected_towers.length )});
 }
 
+// Calculate the spare capacity of all the towers in the network
+Network.prototype.towerCapacities = function(zones, towers) {
+	var that = this; // eish	
+	network_calls = zones.map(function (zone) { return that.callDistribution(zone, towers);} )
+	tower_load = reduce(network_calls, function (a,b) { return zip(a,b,function (x,y) { return x+y; }) }, empty_array(towers.length));
+	return zip(towers, tower_load, function (a,b) { return a["capacity"] - b } )
+}
+
 Network.prototype.generateCapacity = function(towers) {
 	return reduce(towers, function(a,b) { a += b["capacity"]; return a}, 0);
 }
