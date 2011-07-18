@@ -58,10 +58,37 @@ function GameScreen(src) {
 
   // Create zones
   this.zoneObjects = [
-    new Zone(new Point(55, 70), "z1", 0.5, [1, 2, 5, 5, 5, 9, 1]),
+    /*new Zone(new Point(55, 70), "z1", 0.5, [1, 2, 5, 5, 5, 9, 1]),
     new Zone(new Point(60, 200), "z2", 0.5, [1, 6, 5, 100, 5, 0, 9]),
     new Zone(new Point(370, 60), "z3", 0.35, [5, 5, 9, 2, 5, 6, 5]),
-    new Zone(new Point(340, 290), "z4", 0.8, [5, 5, 3, 8, 5, 5, 5])
+    new Zone(new Point(340, 290), "z4", 0.8, [5, 5, 3, 8, 5, 5, 5])*/
+
+new Zone(new Point(50,50), "a00", 1.0, [30,80,60,80,20,90,40]),
+new Zone(new Point(51,151), "a01", 1.0, [40,40,20,70,60,30,50]),
+new Zone(new Point(51,252), "a02", 1.0, [20,90,80,70,90,20,40]),
+new Zone(new Point(50,350), "a03", 1.0, [40,60,70,90,40,20,10]),
+new Zone(new Point(50,450), "a04", 1.0, [90,30,50,50,50,50,90]),
+new Zone(new Point(150,50), "a10", 1.0, [60,80,60,70,100,90,100]),
+new Zone(new Point(150,150), "a11", 1.0, [70,80,40,50,20,60,90]),
+new Zone(new Point(150,250), "a12", 1.0, [30,50,80,30,80,20,30]),
+new Zone(new Point(150,350), "a13", 1.0, [10,10,20,70,20,90,70]),
+new Zone(new Point(150,450), "a14", 1.0, [60,10,90,40,10,20,100]),
+new Zone(new Point(250,50), "a20", 1.0, [70,100,50,70,80,80,10]),
+new Zone(new Point(250,150), "a21", 1.0, [60,40,30,10,30,70,30]),
+new Zone(new Point(250,250), "a22", 1.0, [30,40,40,30,30,10,90]),
+new Zone(new Point(250,350), "a23", 1.0, [80,30,90,30,50,10,80]),
+new Zone(new Point(250,450), "a24", 1.0, [70,100,90,60,10,100,40]),
+new Zone(new Point(350,50), "a30", 1.0, [60,60,80,80,80,20,70]),
+new Zone(new Point(350,150), "a31", 1.0, [30,30,90,20,100,40,10]),
+new Zone(new Point(350,250), "a32", 1.0, [10,30,60,70,40,80,60]),
+new Zone(new Point(350,350), "a33", 1.0, [40,20,40,20,60,60,90]),
+new Zone(new Point(350,450), "a34", 1.0, [10,100,80,100,60,100,40]),
+new Zone(new Point(450,50), "a40", 1.0, [80,20,90,70,30,10,50]),
+new Zone(new Point(450,150), "a41", 1.0, [40,20,80,100,30,30,50]),
+new Zone(new Point(450,250), "a42", 1.0, [30,50,10,70,90,70,20]),
+new Zone(new Point(450,350), "a43", 1.0, [50,100,100,40,20,80,50]),
+new Zone(new Point(450,450), "a44", 1.0, [10,30,10,30,70,10,50])
+
   ]
   this.zoneObjects.forEach(function (zone) { that.gameComponents.push(zone) } );
 

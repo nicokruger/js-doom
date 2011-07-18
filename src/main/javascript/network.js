@@ -42,8 +42,9 @@ Network.prototype.towersServicing = function(zone, towers) {
 // Calculate the distribution of calls from a zone towards towers
 Network.prototype.callDistribution = function(zone, towers) {
 	connected_towers = this.towersServicing(zone, towers);
+	if (connected_towers.length > 0) c = connected_towers.length; else c = 1;
 	distribution = towers.map(function(tower) { return connected_towers.indexOf(tower) != -1 ? 1 : 0 });
-	return distribution.map(function (d) { return d * (zone["calls"]/connected_towers.length )});
+	return distribution.map(function (d) { return d * (zone["calls"]/c )});
 }
 
 // Calculate the spare capacity of all the towers in the network

@@ -59,9 +59,11 @@ describe('1. Very basic GSM network',function(){
 
 			var tower1 = { point: [1,0.5], radius: 1, capacity: 50};
 			var tower2 = { point: [2.0,0.5], radius: 0.5, capacity: 50};
-	
+			var tower3 = { point: [1000,1000], radius: 1, capacity: 100};
+
 			expect(n.callDistribution(zone1, [tower1, tower2])).toEqual([50, 0])
 			expect(n.callDistribution(zone2, [tower1, tower2])).toEqual([25, 25])
+			expect(n.callDistribution(zone1, [tower3])).toEqual([0])
 		});
 	})
 
