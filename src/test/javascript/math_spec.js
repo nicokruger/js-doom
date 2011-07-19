@@ -14,34 +14,42 @@ describe('Using our simplistic 2D vector math',function(){
 	});
 
 	it("should be possible to determine the length of a vector, consisting of two points", function() {
-		expect(v2_length([1,1],[2,1])).toBeInDeltaRange(1.0, 0.1);
+	    expect($V(12,0).length()).toBeInDeltaRange(12.0, 0.1)
 	});
 
 	it("must be possible to add 2 vectors", function() {
-		expect(v2_add([10,10],[0.5,0.5])).toEqual([10.5,10.5]);
+		expect($V.add($V(10,10), $V(0.5,0.5))).toEqual($V(10.5,10.5));
 	});
 
 	it("should be possible to subtract 2 vectors (even thought its clumsy :) )", function() {
-		expect(v2_add([10,10], v2_neg([0.5,0.5]))).toEqual([9.5,9.5]);
+		expect($V.sub($V(10,10), $V(0.5,0.5))).toEqual($V(9.5,9.5));
 	});
 	
 	it("shuld be possible to perform the dot product of 2 vectors", function() {
-		expect(v2_dot([1,2],[3,-4])).toBe(-5);
+		expect($V.dot($V(1,2),$V(3,-4))).toBe(-5);
 	});
 
-	it("should be possible to normalise a vector", function() {
-		expect(v2_length([0,0],v2_normalise([4,4],[10,10]))).toBeInDeltaRange(1.0, 0.1)
+	it("should be possible to convert from a vector to a line", function() {
+        expect($V(6,6).offset($V(4,4))).toEqual($L($V(4,4), $V(10,10)))
+        expect($V(6,6).offset($V(4,4)).canonical(), $V(6,6))
 	});
+
+	it("should be possible to convert from a line to a vector", function() {
+        expect($L($V(4,4), $V(6,6)).canonical()).toEqual($V(2,2))
+
+        expect($L($V(4,4), $V(6,6)).canonical().offset($V(4,4))).toEqual($L($V(4,4), $V(6,6)))
+
+	})
 
 	it("should be possible to get the right-hand normal", function() {
-		expect(v2_rh_normal([1,1])).toEqual([-1,1]);
-		expect(v2_rh_normal([10,8])).toEqual([-8,10]);
-		expect(v2_rh_normal([1,0])).toEqual([0,1]);
+		expect($V(1,1).rightNormal()).toEqual($V(-1,1));
+		expect($V(10,8).rightNormal()).toEqual($V(-8,10));
+		expect($V(1,0).rightNormal()).toEqual($V(0,1));
 	})
 	it("should be possible to get the left-hand normal", function() {
-		expect(v2_lh_normal([1,1])).toEqual([1,-1]);
-		expect(v2_lh_normal([10,8])).toEqual([8,-10]);
-		expect(v2_lh_normal([1,0])).toEqual([0,-1]);
+		expect($V(1,1).leftNormal()).toEqual($V(1,-1));
+		expect($V(10,8).leftNormal()).toEqual($V(8,-10));
+		expect($V(1,0).leftNormal()).toEqual($V(0,-1));
 	})
 
 });
