@@ -36,10 +36,12 @@ describe('Using our simplistic 2D vector math',function(){
 	it("should be possible to get the right-hand normal", function() {
 		expect(v2_rh_normal([1,1])).toEqual([-1,1]);
 		expect(v2_rh_normal([10,8])).toEqual([-8,10]);
+		expect(v2_rh_normal([1,0])).toEqual([0,1]);
 	})
 	it("should be possible to get the left-hand normal", function() {
 		expect(v2_lh_normal([1,1])).toEqual([1,-1]);
 		expect(v2_lh_normal([10,8])).toEqual([8,-10]);
+		expect(v2_lh_normal([1,0])).toEqual([0,-1]);
 	})
 
 });
