@@ -1,3 +1,20 @@
+Polygon = function(vertices) {
+    // for easy drawing
+    this.vertices = vertices
+
+    // get the edges
+    this.edges = reduce(this.vertices, function(e, b) {
+        e[0].push($L(e[1], b));
+        return [e[0], b];
+    }, [[], this.vertices[this.vertices.length-1]])[0]
+
+}
+
+$P = function(/* ...... */) {
+    var p = new Polygon(arguments);
+    return p;
+}
+
 function bsp(edges) {
     var line = edges[0]
 

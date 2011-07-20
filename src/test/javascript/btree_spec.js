@@ -1,3 +1,16 @@
+describe("Basic polygon library", function() {
+    it("should be possible to construct a poly using varargs constructor", function () {
+        expect($P($V(0,0), $V(1,0), $V(2,2)).vertices.length).toBe(3);
+
+        edges = $P($V(0,0), $V(1,0), $V(2,2)).edges
+
+        expect($P($V(0,0), $V(1,0), $V(2,2)).edges).toEqual([
+            $L($V(2,2), $V(0,0)),
+            $L($V(0,0), $V(1,0)),
+            $L($V(1,0), $V(2,2)),
+        ])
+    })
+})
 describe("Our binary space partitioning (BSP) library", function() {
 	it("should be able to partition a simple square", function() {
         bsptree = bsp(get_edges([[0,0],[1,0],[1,1],[0,1]]))

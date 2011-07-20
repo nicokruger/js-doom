@@ -19,6 +19,10 @@ Vector.prototype.clone = function() {
     return new Vector(this.x, this.y);
 }
 
+Vector.prototype.mul = function(t) {
+    return new Vector(t * this.x, t * this.y);
+}
+
 Vector.prototype.dot = function(other) {
     return (this.x * other.x) + (this.y * other.y)
 }
@@ -60,6 +64,10 @@ Line.prototype.canonical = function() {
     return v;
 }
 
+Line.prototype.move = function(v) {
+    var v = new Line(this.origin.add(v), this.end.add(v));
+    return v;
+}
 Line.prototype.length = function() {
     return this.canonical().length();
 }
@@ -67,6 +75,64 @@ Line.prototype.length = function() {
 Line.prototype.equals = function(o) {
     return this.origin.equals(o.origin) && this.end.equals(o.end)
 }
+
+/**
+ * Splits the line on a point on the line
+ */
+Line.prototype.split = function(v) {
+    var l1 = new Line(this.origin, v)
+    var l2 = new Line(v, this.end);
+
+    return {before: l1, after: l2}
+}
+
+Line.prototype.intersection = function(l) {
+    var normal_l = l.canonical().leftNormal();
+
+    var d0 = normal_l.dot(this.origin.sub(l.origin))
+    var d1 = normal_l.dot(this.end.sub(l.origin))
+
+    var t = d0 / (d0 - d1);
+    if (Math.abs(t) < 0.01) t = 0;
+    if (Math.abs(t - 1) < 0.01) t = 1;
+
+    if ((t!= 0 && t!=1) && d0 * d1 < 0) {
+        var from_origin = this.canonical();
+
+        return from_origin.mul(t).add(this.origin);
+    }
+
+    return null;
+}
+
+Line.LEFT = -1
+Line.INTERSECTS = 0
+Line.RIGHT = 2
+Line.COINCIDENT = 3
+
+Line.prototype.intersects = function(l) {
+    var normal_l = l.canonical().leftNormal();
+
+    var d0 = normal_l.dot(this.origin.sub(l.origin))
+    var d1 = normal_l.dot(this.end.sub(l.origin))
+
+    var t = d0 / (d0 - d1);
+    if (Math.abs(t) < 0.01) t = 0;
+    if (Math.abs(t - 1) < 0.01) t = 1;
+
+    if ((t!= 0 && t!=1) && d0 * d1 < 0) {
+        return Line.INTERSECTS;
+    } else if (d0 > 0 || d1 > 0) {
+        return Line.RIGHT;
+    } else if (d0 < 0 || d1 < 0) {
+        return Line.LEFT;
+    } else {
+        return Line.COINCIDENT;
+    }
+
+}
+
+
 function v2_add(v1,v2) {
 	return zip(v1,v2, function(x,y) { return x+y; });
 }
@@ -118,7 +184,27 @@ $V.dot = function (v1, v2) {
     return v1.dot(v2);
 }
 
+$V.mul = function(t, v1) {
+    return v1.mul(t);
+}
+
 $L = function(v1,v2) {
     var l = new Line(v1,v2);
     return l;
+}
+
+$L.split = function(l, v) {
+    return l.split(v);
+}
+
+$L.intersection = function(l1, l2) {
+    return l1.intersection(l2);
+}
+
+$L.move = function(l, v) {
+    return l.move(v);
+}
+
+$L.intersects = function(l1,l2) {
+    return l1.intersects(l2);
 }
