@@ -4,7 +4,8 @@ Polygon = function(vertices) {
 
     // get the edges
     this.edges = reduce(this.vertices, function(e, b) {
-        e[0].push($L(e[1], b));
+        if (!e[1].equals(b))
+            e[0].push($L(e[1], b));
         return [e[0], b];
     }, [[], this.vertices[this.vertices.length-1]])[0]
 
@@ -14,6 +15,49 @@ Polygon = function(vertices) {
 Polygon.prototype.partition = function(edge) {
     return partition(this, edge);
 }
+
+Polygon.prototype.intersection = function(that) {
+    var vertices = []
+
+    var me = this;
+    that.edges.forEach(function(edge) {
+        var partition_node = me.partition(edge);
+
+        partition_node.neg.forEach(function(seg) {
+            vertices.push(seg.origin);
+            vertices.push(seg.end);
+        })
+
+        partition_node.cosame.forEach(function(seg) {
+            vertices.push(seg.origin);
+            vertices.push(seg.end);
+        })
+    });
+
+    that.edges.forEach(function (edge) {
+        var partition_node = this.partition(edge);
+
+        partition_node.neg.forEach(function(seg) {
+            vertices.push(seg.origin);
+            vertices.push(seg.end);
+        })
+
+        partition_node.cosame.forEach(function(seg) {
+            vertices.push(seg.origin);
+            vertices.push(seg.end);
+        })
+
+    })
+
+    // Drop same vertices
+    cleaned = reduce(vertices.slice(1,vertices.length), function (a,b) {
+        if (!a[a.length-1].equals(b)) {  a.push(b); };
+        return a;
+    }, [vertices[0]]);
+
+    return new Polygon(cleaned);
+}
+
 
 $P = function(/* ...... */) {
     var p = new Polygon(arguments);
@@ -74,13 +118,13 @@ function classify(line, edge, bsp_node) {
 
 function partition(poly, edge) {
 
-    partition_node = {
+    var partition_node = {
         pos: [],
         neg: [],
         cosame: [],
         codiff : []
     }
-    T = poly.bsp;
+    var T = poly.bsp;
 
     get_partition(T, edge, partition_node);
 

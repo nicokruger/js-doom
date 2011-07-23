@@ -27,9 +27,12 @@ describe("Basic polygon/BSP library", function() {
 
     it("should be able to partition a line into segments according to a BSP tree of a simple square", function() {
         var square = $P($V(0,0), $V(10,0), $V(10,10), $V(0,10));
-        var partitioned_line = square.partition($L($V(-55,5), $V(15,5)));
+        var partitioned_line = square.partition($L($V(-55,5), $V(5,5)));
 
-        expect(partitioned_line.pos).toEqual([$L($V(-55,5), $V(0,5)), $L($V(10,5), $V(15,5))]);
+        expect(partitioned_line.neg).toEqual([$L($V(0,5), $V(5,5))]);
+
+        partitioned_line = square.partition($L($V(-2,-2), $V(2,2)))
+        expect(partitioned_line.neg).toEqual([$L($V(0,0), $V(2,2))])
 
     })
 
@@ -97,6 +100,42 @@ describe("Basic polygon/BSP library", function() {
         expect(partition.codiff).toEqual([])
         expect(partition.cosame).toEqual([])
 
+    })
+
+    it("should be possible to determine the intersection between two polygons", function() {
+        var poly1 = $P($V(0,0), $V(10,0), $V(10,10), $V(0,10));
+        var poly2 = $P($V(2,2), $V(5,2), $V(5,5), $V(2,5));
+
+        var I = poly1.intersection(poly2);
+
+        expect(I.edges).toEqual([$L($V(2,5), $V(2,2)),
+            $L($V(2,2), $V(5,2)),
+            $L($V(5,2), $V(5,5)),
+            $L($V(5,5), $V(2,5))]);
+
+
+        poly2 = $P($V(5,5), $V(15,5), $V(15,15), $V(5,15))
+        I = poly1.intersection(poly2);
+        expect(I.edges).toEqual([]);
+
+
+        var partition_node = poly1.partition($L($V(2,5), $V(2,2)));
+        expect(partition_node.neg).toEqual([$L($V(2,5), $V(2,2))]);
+        partition_node = poly1.partition($L($V(2,2), $V(5,2)));
+        expect(partition_node.neg).toEqual([$L($V(2,2), $V(5,2))]);
+        partition_node = poly1.partition($L($V(5,2), $V(5,5)));
+        expect(partition_node.neg).toEqual([$L($V(5,2), $V(5,5))]);
+        partition_node = poly1.partition($L($V(5,5), $V(2,5)));
+        expect(partition_node.neg).toEqual([$L($V(5,5), $V(2,5))]);
+
+        //partition_node = poly2.partition($L($V(0,10), $V(0,0)));
+        //expect(partition_node.neg).toEqual([]);
+        //partition_node = poly2.partition($L($V(0,0), $V(10,0)));
+        //expect(partition_node.neg).toEqual([]);
+        //partition_node = poly2.partition($L($V(10,0), $V(10,10)));
+        //expect(partition_node.neg).toEqual([]);
+        //partition_node = poly2.partition($L($V(10,10), $V(0,10)));
+        //expect(partition_node.neg).toEqual([]);
     })
     beforeEach(function() {
       /**************************************************************************************************************
