@@ -30,8 +30,21 @@ describe("Basic polygon/BSP library", function() {
         var partitioned_line = square.partition($L($V(-55,5), $V(15,5)));
 
         expect(partitioned_line.pos).toEqual([$L($V(-55,5), $V(0,5)), $L($V(10,5), $V(15,5))]);
-        expect(partitioned_line.neg).toEqual([$L($V(0,5), $V(10,5))]);
 
+    })
+
+    it("should correctly partition a line that is co-incident to edges on the polygon (cosame)", function() {
+        var square = $P($V(0,0), $V(10,0), $V(10,10), $V(0,10));
+        var partitioned_line = square.partition($L($V(0,55), $V(0,-15)));
+
+        expect(partitioned_line.cosame).toEqual([$L($V(0,10), $V(0,0))]);
+    })
+
+    it("should correctly partition a line that is co-incident to edges on the polygon (codiff)", function() {
+        var square = $P($V(0,0), $V(10,0), $V(10,10), $V(0,10));
+        var partitioned_line = square.partition($L($V(0,-15), $V(0,55)));
+
+        expect(partitioned_line.codiff).toEqual([$L($V(0,10), $V(0,0))]);
     })
 
 	it("should be able to create a BSP from a more complex (non-convex) polygon", function() {

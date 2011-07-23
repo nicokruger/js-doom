@@ -115,11 +115,21 @@ function get_partition(T, edge, partition_node) {
     } else if (classification == Line.LEFT) {
         neg_partition(T.negative, edge, partition_node);
     } else if (classification == Line.COINCIDENT) {
-        /*A = []
         T.coincident.forEach(function (EE) {
-            var I = edge.intersection(EE)
+            var I = EE.coincident_segment(edge)
 
-        })*/
+            // Check the direction of the line
+            var coinc = $L(I[0], I[1])
+
+            if  (coinc.canonical().dot(edge.canonical()) > 0) {
+                partition_node.cosame.push($L(I[0], I[1]))
+            } else {
+                partition_node.codiff.push($L(I[0], I[1]))
+            }
+
+
+
+        })
 
         // Iterate through the rest of the edges
 
