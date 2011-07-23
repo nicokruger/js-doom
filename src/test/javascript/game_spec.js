@@ -5,7 +5,7 @@ describe('3. The actual game',function(){
 			var z = new Zone(new Point(55, 70), "z1", 0.5, [1, 1, 5, 5, 5, 1, 1]);
 
 			z = ConvertGameZones([z])[0];
-			expect(z["points"]).toEqual([ [5,20], [105, 20], [105,120], [5,120] ])
+			expect(z["poly"]).toEqual($P(  $V(5,20), $V(105, 20),  $V(105,120), $V(5,120)))
 			expect(z["callFactor"]).toBe(0.5);
 			expect(z["label"]).toEqual("z1");
 			//expect(5).toBe(5);
@@ -39,10 +39,10 @@ describe('3. The actual game',function(){
 
 		var zones = ConvertGameZones(zoneObjects);
 
-		expect(zones[0]["points"]).toEqual([ [5,20], [105, 20], [105,120], [5,120] ])
-		expect(zones[1]["points"]).toEqual([ [10,150], [110, 150], [110,250], [10,250] ])
-		expect(zones[2]["points"]).toEqual([ [320,10], [420, 10], [420,110], [320,110] ])
-		expect(zones[3]["points"]).toEqual([ [290,240], [390, 240], [390,340], [290,340] ])
+		expect(zones[0]["poly"]).toEqual($P($V(5,20), $V(105, 20), $V(105,120), $V(5,120)))
+		expect(zones[1]["poly"]).toEqual($P($V(10,150), $V(110, 150), $V(110,250), $V(10,250)))
+		expect(zones[2]["poly"]).toEqual($P($V(320,10), $V(420, 10), $V(420,110), $V(320,110)))
+		expect(zones[3]["poly"]).toEqual($P($V(290,240), $V(390, 240), $V(390,340), $V(290,340)))
 
 		var towers = ConvertGameTowers(towerObjects);
 
@@ -57,4 +57,5 @@ describe('3. The actual game',function(){
 		expect(state["zones"][0]["calls"]).toBe(0.5);
 		expect(state["towers"][0]["utilisation"]).toBe(9);
 	});
+
 });

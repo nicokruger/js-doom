@@ -15,14 +15,14 @@ $P = function(/* ...... */) {
     return p;
 }
 
-function bsp(edges) {
-    var line = edges[0]
+function bsp(lines) {
+    var line = lines[0]
 
-    return bsp_gather_node(line, edges);
+    return bsp_gather_node(line, lines);
 
 }
 
-function bsp_gather_node(line, edges) {
+function bsp_gather_node(line, lines) {
 
     var bsp_node = {}
     bsp_node.line = line
@@ -32,7 +32,7 @@ function bsp_gather_node(line, edges) {
     bsp_node.pos = []
     bsp_node.neg = []
 
-    edges.forEach(function (edge) {
+    lines.forEach(function (edge) {
         classify(line, edge, bsp_node)
     })
 
@@ -49,48 +49,21 @@ function bsp_gather_node(line, edges) {
 
 function classify(line, edge, bsp_node) {
 
-    var l = v2_add(line[1], v2_neg(line[0]))
-    l = v2_lh_normal(l)
+    classification = line.intersects(edge);
 
-    var e0 = v2_add(edge[0], v2_neg(line[0]))
-    var e1 = v2_add(edge[1], v2_neg(line[0]))
-
-    var d0 = v2_dot(l, e0)
-    var d1 = v2_dot(l, e1)
-
-    var t = d0 / (d0 - d1);
-    if (Math.abs(t) < 0.01) t = 0;
-    if (Math.abs(t - 1) < 0.01) t = 1;
-
-    var pos = []
-    var neg = []
-
-    if ((t!= 0 && t!=1) && d0 * d1 < 0) {
-        // edge crosses the line
-
-        // get the intersection point
-        var from_origin = v2_add(edge[1], v2_neg(edge[0]))
-        from_origin[0] *= t
-        from_origin[1] *= t
-
-        var I = v2_add(edge[0], from_origin)
-
-        if (d1 > 0) {
-            var subedge_neg = [edge[0], I];
-            var subedge_pos = [I, edge[1]];
-        } else {
-            var subedge_pos = [edge[0], I];
-            var subedge_neg = [I, edge[1]];
-        }
-
-        bsp_node.pos.push(subedge_pos);
-        bsp_node.neg.push(subedge_neg);
-
-    } else if (d0 > 0 || d1 > 0) {
+    if (classification == Line.INTERSECTS_BACKWARD) {
+        var I = line.intersection(edge);
+        bsp_node.neg.push($L(edge.origin, I))
+        bsp_node.pos.push($L(I, edge.end));
+    } else if (classification == Line.INTERSECTS_FORWARD) {
+        var I = line.intersection(edge);
+        bsp_node.pos.push($L(edge.origin, I))
+        bsp_node.neg.push($L(I, edge.end));
+    } else if (classification == Line.RIGHT) {
         bsp_node.pos.push(edge);
-    } else if (d0 < 0 || d1 < 0) {
+    } else if (classification == Line.LEFT) {
         bsp_node.neg.push(edge);
-    } else {
+    } else if (classification == Line.COINCIDENT) {
         bsp_node.coincident.push(edge);
     }
 

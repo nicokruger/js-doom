@@ -19,7 +19,7 @@ Network.prototype.zonesServiced = function(zones, tower) {
 	zones.forEach(function (zone) {
 		for (var i =0; i < tesselated_tower.length; i++) {
 			triangle = tesselated_tower[i];
-			if (poly_intersect_simple(zone["points"], triangle)) {
+			if (poly_intersect_simple(zone["poly"], triangle)) {
 				serviced_zones.push(zone);
 				break;
 			}

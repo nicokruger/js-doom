@@ -55,22 +55,32 @@ describe('Using our simplistic 2D vector math',function(){
         })
     })
 
-    it("should be possible to get the intersection point of two lines", function() {
+    it("should be possible to get the intersection point of a line (which is an infinite ray), and an edge (which may be bounded)", function() {
 
         expect($L.intersection($L($V(0,0), $V(10,10)), $L($V(0,10), $V(10,0)))).toEqual($V(5,5));
         expect($L.intersection($L($V(0,10), $V(10,0)), $L($V(0,0), $V(10,10)))).toEqual($V(5,5));
 
+        // this is an intersection, because when the first Line is treated, like an infinite line
+        // they DO actually intersect at (5,5)
+        expect($L.intersection($L($V(9,9), $V(10,10)), $L($V(0,10), $V(10,0)))).toEqual($V(5,5));
+
         // test two lines that do NOT intersect
-        expect($L.intersection($L($V(9,9), $V(10,10)), $L($V(0,10), $V(10,0)))).toBe(null);
+        expect($L.intersection($L($V(0,10), $V(10,0)), $L($V(9,9), $V(10,10)))).toEqual(null);
+
     })
 
-    it("should be possible to determine whether a line is to the left, intersecting, or to the right of another line", function() {
-        expect($L.intersects($L($V(0,0), $V(10,10)), $L($V(0,10), $V(10,0)))).toBe(Line.INTERSECTS);
-        expect($L.intersects($L($V(0,10), $V(10,0)), $L($V(0,0), $V(10,10)))).toBe(Line.INTERSECTS);
+    it("should be possible to determine whether an edge (bounded line) is to the left, intersecting, or to the right of another (unbounced, infinite) line", function() {
+
+        expect($L.intersects($L($V(0,0), $V(0,2)), $L($V(-1,1), $V(1,1)))).toBe(Line.INTERSECTS_FORWARD);
+        expect($L.intersects($L($V(0,2), $V(0,0)), $L($V(-1,1), $V(1,1)))).toBe(Line.INTERSECTS_BACKWARD)
+
+        expect($L.intersects($L($V(0,0), $V(10,10)), $L($V(0,10), $V(10,0)))).toBe(Line.INTERSECTS_FORWARD);
+        expect($L.intersects($L($V(0,10), $V(10,0)), $L($V(0,0), $V(10,10)))).toBe(Line.INTERSECTS_BACKWARD);
 
         // test two lines that do NOT intersect
-        expect($L.intersects($L($V(9,9), $V(10,10)), $L($V(0,10), $V(10,0)))).toBe(Line.LEFT);
-        expect($L.intersects($L($V(-9,-9), $V(-10,-10)), $L($V(0,10), $V(10,0)))).toBe(Line.RIGHT);
+        expect($L.intersects($L($V(0,0), $V(0,2)), $L($V(-3,1), $V(-2,1)))).toBe(Line.LEFT)
+        expect($L.intersects($L($V(5,5), $V(10,10)), $L($V(0,10), $V(10,0)))).toBe(Line.INTERSECTS_FORWARD);
+        expect($L.intersects($L($V(-9,-9), $V(-10,-10)), $L($V(0,10), $V(10,0)))).toBe(Line.INTERSECTS_BACKWARD);
 
         // test coincident lines
         expect($L.intersects($L($V(0,0), $V(1,1)), $L($V(0.5,0.5), $V(3,3)))).toBe(Line.COINCIDENT);

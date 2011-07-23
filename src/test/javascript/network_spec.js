@@ -24,8 +24,8 @@ describe('1. Very basic GSM network',function(){
 		it("should be possible to retrieve the list of nodes serviced by a tower", function() {
 			var n = new Network();
 
-			zone1 = { points: [[0,0],[1,0],[1,1],[0,1]] };
-			zone2 = { points: [[1,0],[2,0],[2,1],[1,1]] };
+			zone1 = { poly: $P($V(0,0), $V(1,0), $V(1,1), $V(0,1)) };
+			zone2 = { poly: $P($V(1,0), $V(2,0), $V(2,1), $V(1,1)) };
 
 			zones = n.zonesServiced([zone1, zone2], {point: [1,0.5], radius: 1})
 			expect(zones).toEqual([zone1, zone2]);
@@ -36,8 +36,8 @@ describe('1. Very basic GSM network',function(){
 		it("should be possible to retrieve a list of zones being serviced by a tower", function() {
 			var n = new Network();
 
-			zone1 = { points: [[0,0],[1,0],[1,1],[0,1]] };
-			zone2 = { points: [[1,0],[2,0],[2,1],[1,1]] };
+			zone1 = { poly: $P($V(0,0), $V(1,0), $V(1,1), $V(0,1)) };
+			zone2 = { poly: $P($V(1,0), $V(2,0), $V(2,1), $V(1,1)) };
 
 			var tower1 = { point: [1,0.5], radius: 1};
 			var tower2 = { point: [2.0,0.5], radius: 0.5};
@@ -54,8 +54,8 @@ describe('1. Very basic GSM network',function(){
 		it("is simply the total number of calls in the zone divided equally amongst all towers connected to it", function() {
 			var n = new Network();
 
-			zone1 = { points: [[0,0],[1,0],[1,1],[0,1]], calls: 50 };
-			zone2 = { points: [[1,0],[2,0],[2,1],[1,1]], calls: 50 };
+			zone1 = { poly: $P($V(0,0), $V(1,0), $V(1,1), $V(0,1)), calls: 50 };
+			zone2 = { poly: $P($V(1,0), $V(2,0), $V(2,1), $V(1,1)), calls: 50 };
 
 			var tower1 = { point: [1,0.5], radius: 1, capacity: 50};
 			var tower2 = { point: [2.0,0.5], radius: 0.5, capacity: 50};
@@ -71,8 +71,8 @@ describe('1. Very basic GSM network',function(){
 		it("is the total number of calls being routed to a tower from each of the zones in the network, minus the capacity of the tower", function() {
 			var n = new Network();
 
-			zone1 = { points: [[0,0],[1,0],[1,1],[0,1]], calls: 50 };
-			zone2 = { points: [[1,0],[2,0],[2,1],[1,1]], calls: 50 };
+			zone1 = { poly: $P($V(0,0), $V(1,0), $V(1,1), $V(0,1)), calls: 50 };
+			zone2 = { poly: $P($V(1,0), $V(2,0), $V(2,1), $V(1,1)), calls: 50 };
 
 			var tower1 = { point: [1,0.5], radius: 1, capacity: 50};
 			var tower2 = { point: [2.0,0.5], radius: 0.5, capacity: 50};

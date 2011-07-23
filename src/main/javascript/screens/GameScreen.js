@@ -1,10 +1,10 @@
 function ConvertGameTowers(towerObjects) {
 	var that = this;
-	towers = []
+	var towers = []
 	towerObjects.forEach(function(towerObject) {
-		tower = {}
-		x = towerObject.point.x
-		y = towerObject.point.y
+		var tower = {}
+		var x = towerObject.point.x
+		var y = towerObject.point.y
 
 		tower["point"] = [x,y]
 		tower["radius"] = 50
@@ -19,17 +19,18 @@ function ConvertGameTowers(towerObjects) {
 function ConvertGameZones(zoneObjects) {
 	var that = this;
 
-	zones = []
+	var zones = []
 	zoneObjects.forEach(function(zoneObject) {
-		zone = {}
+		var zone = {}
 
-		x = zoneObject.point.x
-		y = zoneObject.point.y
-		w = zoneObject.width
-		h = zoneObject.height
+		var x = zoneObject.point.x
+		var y = zoneObject.point.y
+		var w = zoneObject.width
+		var h = zoneObject.height
 
-		zone["points"] = [ [x - w/2.0, y - h/2.0], [x + w/2, y - h/2],
-			[x + w/2, y + h/2], [x - w/2, y+h/2]]
+		zone["poly"] = $P($V(x - w/2.0, y - h/2.0), $V(x + w/2, y - h/2),
+			$V(x + w/2, y + h/2), $V(x - w/2, y+h/2))
+
 		zone["population"] = zoneObject.currentPopulation
 		zone["callFactor"] = zoneObject.callFactor
 		zone["label"] = zoneObject.label

@@ -5,13 +5,13 @@ describe("2. The simulation layer", function() {
 			{ 
 				label: "A",
 				callFactor: 0.7,
-				points: [[0,0],[0,1],[1,1],[1,0]],
+				poly: $P($V(0,0), $V(0,1), $V(1,1), $V(1,0)),
 				population: 100
 			},
 			{
 				label: "B",
 				callFactor: 0.2,
-				points: [[1,0],[2,0],[2,1],[1,1]],
+				poly: $P($V(1,0),$V(2,0), $V(2,1), $V(1,1)),
 				population: 100
 			}
 		]
