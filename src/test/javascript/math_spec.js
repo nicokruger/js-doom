@@ -44,6 +44,10 @@ describe('Using our simplistic 2D vector math',function(){
 
 	})
 
+    it("should be possible to get the overlapping segment formed by two co-incident lines' intersection", function() {
+        expect($L.coincident_segment($L($V(0,0), $V(10,10)), $L($V(5,5), $V(15,15)))).toEqual([$V(5,5), $V(10,10)]);
+        expect($L.coincident_segment($L($V(5,5), $V(15,15)), $L($V(0,0), $V(10,10)))).toEqual([$V(5,5), $V(10,10)]);
+    })
     it("should be possible to move a line around 2d-space", function() {
         expect($L.move($L($V(5,5), $V(10,10)), $V(-5, -5))).toEqual($L($V(0,0), $V(5,5)));
     })

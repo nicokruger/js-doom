@@ -155,8 +155,63 @@ Line.prototype.intersects = function(l) {
 
 }
 
+/**
+ * Returns the segments of the intersection between two coincident EDGES.
+ * Return value is either an empty list, or a list containing two points lines
+ * If the return value is the empty list, the two co-incident edges do not
+ * have any overlap.
+ * Otherwise, the return value is the two points defining the overlap
+ *
+ *
+ */
+Line.prototype.coincident_segment = function (l) {
+    // Lines MUST be parallel
+    var E = l.origin.sub(this.origin);
 
+    var D0 = this.canonical();
+    var D1 = l.canonical();
 
+    var sqrLen0 = D0.x * D0.x + D0.y * D0.y;
+    var sqrLen1 = D1.x * D1.x + D1.y * D1.y;
+    var sqrLenE = E.x * E.x + E.y * E.y;
+
+    /*kross = E.x * l.origin.y - E.y * l.origin.x;
+    if (kross * kross > 0.01 * sqrLen0 * sqrLenE) {
+        return [];
+    } */
+
+    // Test for overlap
+    var s0 = D0.dot(E) / sqrLen0;
+    var s1 = s0 + D0.dot(D1) / sqrLen0
+    var smin = s0 < s1 ? s0 : s1;
+    var smax = s0 > s1 ? s0 : s1;
+
+    var p = find_intersection(0.0, 1.0, smin, smax);
+    var segs = [];
+    for (var i = 0; i < p.length; i++) {
+        segs.push(this.origin.add(D0.mul(p[i])))
+    }
+    return segs;
+
+}
+
+function find_intersection(u0, u1, v0, v1) {
+    if (u1 < v0 || u0 > v1)
+        return [];
+
+    if (u1 > v0) {
+        if (u0 < v1) {
+            var p = []
+            if (u0 < v0) p.push(v0); else p.push(u0);
+            if (u1 > v1) p.push(v1); else p.push(u1);
+            return p
+        } else {
+            return [u0];
+        }
+    } else {
+        return [u1];
+    }
+}
 $V = function(x,y) {
     var v = new Vector(x,y);
     return v;
@@ -197,4 +252,8 @@ $L.move = function(l, v) {
 
 $L.intersects = function(l1,l2) {
     return l1.intersects(l2);
+}
+
+$L.coincident_segment = function(l1,l2) {
+    return l1.coincident_segment(l2);
 }
