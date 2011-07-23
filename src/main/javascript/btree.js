@@ -37,12 +37,9 @@ function bsp_gather_node(line, lines) {
     })
 
     if (bsp_node.pos.length > 0)
-        bsp_node.positive = bsp(bsp_node.pos)
+         bsp_node.positive = bsp(bsp_node.pos)
     if (bsp_node.neg.length > 0)
-        bsp_node.negative = bsp(bsp_node.neg)
-
-//    delete bsp_node.pos;
-//    delete bsp_node.neg;
+         bsp_node.negative = bsp(bsp_node.neg)
 
     return bsp_node;
 }
@@ -51,11 +48,11 @@ function classify(line, edge, bsp_node) {
 
     classification = line.intersects(edge);
 
-    if (classification == Line.INTERSECTS_BACKWARD) {
+    if (classification == Line.INTERSECTS_FORWARD) {
         var I = line.intersection(edge);
         bsp_node.neg.push($L(edge.origin, I))
         bsp_node.pos.push($L(I, edge.end));
-    } else if (classification == Line.INTERSECTS_FORWARD) {
+    } else if (classification == Line.INTERSECTS_BACKWARD) {
         var I = line.intersection(edge);
         bsp_node.pos.push($L(edge.origin, I))
         bsp_node.neg.push($L(I, edge.end));
