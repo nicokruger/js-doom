@@ -1,4 +1,4 @@
-describe("Basic polygon library", function() {
+describe("Basic polygon/BSP library", function() {
     it("should be possible to construct a poly using varargs constructor", function () {
         expect($P($V(0,0), $V(1,0), $V(2,2)).vertices.length).toBe(3);
 
@@ -10,13 +10,29 @@ describe("Basic polygon library", function() {
             $L($V(1,0), $V(2,2)),
         ])
     })
-})
-describe("Our binary space partitioning (BSP) library", function() {
+
 	it("should be able to create a BSP from a simple square", function() {
         bsptree = bsp($P($V(0,0), $V(1,0), $V(1,1), $V(0,1)).edges)
 
-        expect(bsptree.coincident).toEqual([$L($V(0,1), $V(0,0))]);
+        expect(bsptree.line).toEqual($L($V(0,1), $V(0,0)));
+            expect(bsptree.positive).toBe(null);
+            expect(bsptree.negative.line).toEqual($L($V(0,0), $V(1,0)))
+                expect(bsptree.negative.positive).toBe(null);
+                expect(bsptree.negative.negative.line).toEqual($L($V(1,0), $V(1,1)))
+                    expect(bsptree.negative.negative.positive).toBe(null);
+                    expect(bsptree.negative.negative.negative.line).toEqual($L($V(1,1), $V(0,1)))
+                        expect(bsptree.negative.negative.negative.positive).toBe(null);
+                        expect(bsptree.negative.negative.negative.negative).toBe(null);
 	})
+
+    it("should be able to partition a line into segments according to a BSP tree of a simple square", function() {
+        var square = $P($V(0,0), $V(10,0), $V(10,10), $V(0,10));
+        var partitioned_line = square.partition($L($V(-55,5), $V(15,5)));
+
+        expect(partitioned_line.pos).toEqual([$L($V(-55,5), $V(0,5)), $L($V(10,5), $V(15,5))]);
+        expect(partitioned_line.neg).toEqual([$L($V(0,5), $V(10,5))]);
+
+    })
 
 	it("should be able to create a BSP from a more complex (non-convex) polygon", function() {
 
@@ -55,7 +71,8 @@ describe("Our binary space partitioning (BSP) library", function() {
          *
          **************************************************************************************************************/
 
-        bsptree = bsp(Pp.edges)
+        bsptree = Pp.bsp;
+
         // partition on the first edge
         expect(bsptree.line).toEqual($L(v9, v0));
 
@@ -90,4 +107,6 @@ describe("Our binary space partitioning (BSP) library", function() {
 
 
 	})
+
+
 })
