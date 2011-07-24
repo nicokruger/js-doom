@@ -150,6 +150,15 @@ describe("Basic polygon/BSP library", function() {
         //expect(edges[1]).toEqual($L($V(10,5), $V(10,10)));
 
     })
+
+    it("should be able to determine the intersection and area of the resulting intersection polygon correctly", function() {
+        expect($P($V(1,0), $V(2,0), $V(2,1), $V(1,1)).intersection(circle_to_poly([1.5, 0.5], 1.0, 16)).area()).toBe(1.0);
+
+        // WTF is going on here?
+        expect($P($V(1,0), $V(2,0), $V(2,1), $V(1,1)).intersection(circle_to_poly([1.0, 0.29], 1.0, 16)).area()).toBe(1.0);
+        expect($P($V(1,0), $V(2,0), $V(2,1), $V(1,1)).intersection(circle_to_poly([1.0, 0.3], 1.0, 16)).area()).toBe(1.0);
+
+    })
     beforeEach(function() {
       /**************************************************************************************************************
          *    v9-----------v8
