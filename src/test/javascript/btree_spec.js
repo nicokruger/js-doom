@@ -115,21 +115,23 @@ describe("Basic polygon/BSP library", function() {
             $L($V(1.0, 1.5), $V(1.0, 1.0))]);
 
 
-        //poly2 = $P($V(15,5), $V(15,15), $V(5,15), $V(5,5))
-        //I = poly1.intersection(poly2);
-        //var Z = poly1.partition($L($V(15,5), $V(15,15)))
-        //expect(Z.neg).toEqual([]);
-        //expect(Z.pos).toNotEqual([]);
-        //Z = poly1.partition($L($V(15,15), $V(5,15)))
-        //expect(Z.neg).toEqual([]);
-        //expect(Z.pos).toNotEqual([]);
-        //expect(I.edges).toEqual([
-        //    $L($V(5,5), $V(10,5)),
-        //    $L($V(10,5), $V(10,10)),
-        //    $L($V(10,10), $V(5,10),
-        //    $L($V(5,10), $V(5,5)))
-        //]);
+        poly2 = $P($V(1.5,0.5), $V(1.5,1.5), $V(0.5,1.5), $V(0.5,0.5))
+        I = poly1.intersection(poly2);
+        expect(I.edges).toEqual([
+            $L($V(1.0,1.0), $V(1.5,1.0)),
+            $L($V(1.5,1.0), $V(1.5,1.5)),
+            $L($V(1.5,1.5), $V(1.0,1.5)),
+            $L($V(1.0,1.5), $V(1.0,1.0))
+        ]);
 
+        poly2 = $P($V(1.5,1.5), $V(2.5,1.5), $V(2.5,2.5), $V(1.5,2.5))
+        I = poly1.intersection(poly2);
+        expect(I.edges).toEqual([
+            $L($V(2.0,2.0), $V(1.5,2.0)),
+            $L($V(1.5,2.0), $V(1.5,1.5)),
+            $L($V(1.5,1.5), $V(2.0,1.5)),
+            $L($V(2.0,1.5), $V(2.0,2.0)),
+        ]);
         //var edges = I.edges;
         //expect(edges[0]).toEqual($L($V(5,5), $V(10,5)));
         //expect(edges[1]).toEqual($L($V(10,5), $V(10,10)));
