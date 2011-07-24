@@ -15,17 +15,21 @@ Polygon = function(vertices) {
 }
 
 Polygon.prototype.area = function() {
-    positive_diagonals = reduce(this.vertices.slice(1,this.vertices.length), function (a,b) {
+    var verts = [];
+    this.vertices.forEach(function (v) { verts.push(v); });
+    verts.push(this.vertices[0]);
+
+    positive_diagonals = reduce(verts.slice(1,verts.length), function (a,b) {
         a[0] += a[1].x * b.y;
         a[1] = b;
         return a;
-    }, [0, this.vertices[0]])[0];
+    }, [0, verts[0]])[0];
 
-    negative_diagonals = reduce(this.vertices.slice(1,this.vertices.length), function (a,b) {
+    negative_diagonals = reduce(verts.slice(1,verts.length), function (a,b) {
         a[0] += a[1].y * b.x;
         a[1] = b;
         return a;
-    }, [0, this.vertices[0]])[0];
+    }, [0, verts[0]])[0];
 
     return (positive_diagonals - negative_diagonals) / 2;
 }
@@ -72,7 +76,11 @@ Polygon.prototype.intersection = function(that) {
     })
 
 
-    return new Polygon(vertices);
+    if (vertices.length > 0) {
+        return new Polygon(vertices);
+    } else {
+        return null;
+    }
 }
 
 

@@ -13,18 +13,16 @@ Network.prototype.generateCalls = function (zones) {
 // Return the zones that are serviced by a tower.
 Network.prototype.zonesServiced = function(zones, tower) {
 	
-	tesselated_tower = tesselate_circle(tower["point"], tower["radius"], 16);
+    var serviced_zones = [];
 
-	serviced_zones = []
+    var circle_poly = circle_to_poly(tower["point"], tower["radius"], 16);
 	zones.forEach(function (zone) {
-		for (var i =0; i < tesselated_tower.length; i++) {
-			triangle = tesselated_tower[i];
-			if (poly_intersect_simple(zone["poly"], triangle)) {
-				serviced_zones.push(zone);
-				break;
-			}
-		}
-	});
+        var I = zone["poly"].intersection(circle_poly);
+        if (I != null) {
+            serviced_zones.push([zone, I.area()]);
+        }
+
+	})
 	return serviced_zones;
 }
 
@@ -49,7 +47,7 @@ Network.prototype.callDistribution = function(zone, towers) {
 
 // Calculate the spare capacity of all the towers in the network
 Network.prototype.towerCapacities = function(zones, towers) {
-	var that = this; // eish	
+	var that = this; // eish
 	network_calls = zones.map(function (zone) { return that.callDistribution(zone, towers);} )
 	tower_load = reduce(network_calls, function (a,b) { return zip(a,b,function (x,y) { return x+y; }) }, empty_array(towers.length));
 	return zip(towers, tower_load, function (a,b) { return a["capacity"] - b } )

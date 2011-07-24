@@ -27,4 +27,11 @@ describe("5. Our very simple object tesselator", function() {
 		//expect(triangles[1]).toBeInDeltaRange([1,0], 0.01);
 		//expect(triangles[2]).toBeInDeltaRange([0,1], 0.01);
 	});
+
+	it("should be able to create a polygon from a tower definition", function() {
+        var circle_poly = circle_to_poly([0.5,0.5], 1.0, 16);
+        var poly = $P($V(0,0), $V(1,0), $V(1,1), $V(0,1));
+
+        expect(circle_poly.intersection(poly).area()).toBe(1.0);
+	});
 });

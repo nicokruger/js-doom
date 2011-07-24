@@ -28,6 +28,12 @@ describe("Basic polygon/BSP library", function() {
     it("should be able to calculate the area of a polgyon", function() {
         var poly = $P($V(0,0), $V(1,0), $V(1,1), $V(0,1));
         expect(poly.area()).toBe(1.0);
+
+        expect($P($V(0,1), $V(0,0), $V(1,0), $V(1,1)).area()).toBe(1.0);
+        expect($P($V(0,0), $V(1,0), $V(1,1), $V(0,1)).area()).toBe(1.0);
+        expect($P($V(1,0), $V(1,1), $V(0,1), $V(0,0)).area()).toBe(1.0);
+        expect($P($V(1,1), $V(0,1), $V(0,0), $V(1,0)).area()).toBe(1.0);
+
     })
 
     it("should be able to partition a line into segments according to a BSP tree of a simple square", function() {
@@ -118,7 +124,7 @@ describe("Basic polygon/BSP library", function() {
             $L($V(1.5, 1.0), $V(1.5, 1.5)),
             $L($V(1.5, 1.5), $V(1.0, 1.5)),
             $L($V(1.0, 1.5), $V(1.0, 1.0))]);
-        expect(I.area()).toBe(0.5);
+        expect(I.area()).toBe(0.25);
 
         poly2 = $P($V(1.5,0.5), $V(1.5,1.5), $V(0.5,1.5), $V(0.5,0.5))
         I = poly1.intersection(poly2);
@@ -128,7 +134,7 @@ describe("Basic polygon/BSP library", function() {
             $L($V(1.5,1.5), $V(1.0,1.5)),
             $L($V(1.0,1.5), $V(1.0,1.0))
         ]);
-        expect(I.area()).toBe(0.5);
+        expect(I.area()).toBe(0.25);
 
         poly2 = $P($V(1.5,1.5), $V(2.5,1.5), $V(2.5,2.5), $V(1.5,2.5))
         I = poly1.intersection(poly2);

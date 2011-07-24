@@ -14,3 +14,18 @@ function tesselate_circle(p, r, points) {
 	return tris;
 }
 
+function circle_to_poly(p, r, points) {
+
+	var edges = []
+	var step = 2*Math.PI/points
+
+
+    var vertices = [];
+	for (var i = 0; i < points; i++) {
+		angle = step * i;
+		v = $V(p[0] + r*Math.cos(angle), p[1] + r*Math.sin(angle));
+		vertices.push(v);
+	}
+	return new Polygon(vertices);
+}
+
