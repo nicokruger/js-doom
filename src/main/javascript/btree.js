@@ -17,45 +17,43 @@ Polygon.prototype.partition = function(edge) {
 }
 
 Polygon.prototype.intersection = function(that) {
-    var vertices = []
+    var segs = []
 
     var me = this;
     that.edges.forEach(function(edge) {
         var partition_node = me.partition(edge);
 
         partition_node.neg.forEach(function(seg) {
-            vertices.push(seg.origin);
-            vertices.push(seg.end);
+            segs.push(seg);
         })
 
         partition_node.cosame.forEach(function(seg) {
-            vertices.push(seg.origin);
-            vertices.push(seg.end);
+            segs.push(seg);
         })
     });
 
-    that.edges.forEach(function (edge) {
-        var partition_node = this.partition(edge);
+    this.edges.forEach(function (edge) {
+        var partition_node = that.partition(edge);
 
         partition_node.neg.forEach(function(seg) {
-            vertices.push(seg.origin);
-            vertices.push(seg.end);
+            segs.push(seg);
         })
 
         partition_node.cosame.forEach(function(seg) {
-            vertices.push(seg.origin);
-            vertices.push(seg.end);
+            segs.push(seg);
         })
 
     })
 
-    // Drop same vertices
-    cleaned = reduce(vertices.slice(1,vertices.length), function (a,b) {
-        if (!a[a.length-1].equals(b)) {  a.push(b); };
-        return a;
-    }, [vertices[0]]);
+    vertices = []
+    console.log("Segs:");
+    segs.forEach(function (seg) {
+        vertices.push(seg.origin);
+        console.log("  seg: [" + seg.origin.x + "," + seg.origin.y + "] -> [" + seg.end.x + "," + seg.end.y + "]");
+    })
 
-    return new Polygon(cleaned);
+
+    return new Polygon(vertices);
 }
 
 
@@ -136,7 +134,7 @@ function get_partition(T, edge, partition_node) {
     if (T == null)
         return;
 
-    classification = T.line.intersects(edge);
+    var classification = T.line.intersects(edge);
 
     if (classification == Line.INTERSECTS_FORWARD) {
         var I = T.line.intersection(edge);
@@ -182,8 +180,8 @@ function get_partition(T, edge, partition_node) {
 
 function pos_partition(T, edge, partition_node) {
 
-    if (T != null && T.positive != null) {
-        get_partition(T.positive, edge, partition_node);
+    if (T != null) {
+        get_partition(T, edge, partition_node);
     } else {
         partition_node.pos.push(edge);
     }
@@ -191,8 +189,8 @@ function pos_partition(T, edge, partition_node) {
 
 function neg_partition(T, edge, partition_node) {
 
-    if (T != null && T.negative != null) {
-        get_partition(T.negative, edge, partition_node);
+    if (T != null) {
+        get_partition(T, edge, partition_node);
     } else {
         partition_node.neg.push(edge);
     }

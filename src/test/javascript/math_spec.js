@@ -81,6 +81,9 @@ describe('Using our simplistic 2D vector math',function(){
         expect($L.intersects($L($V(0,0), $V(10,10)), $L($V(0,10), $V(10,0)))).toBe(Line.INTERSECTS_FORWARD);
         expect($L.intersects($L($V(0,10), $V(10,0)), $L($V(0,0), $V(10,10)))).toBe(Line.INTERSECTS_BACKWARD);
 
+        expect($L.intersects($L($V(10,0), $V(10,10)), $L($V(15,15), $V(5,15)))).toBe(Line.INTERSECTS_BACKWARD);
+        expect($L.intersects($L($V(0,0), $V(10,0)), $L($V(15,15), $V(5,15)))).toBe(Line.LEFT);
+
         // test two lines that do NOT intersect
         expect($L.intersects($L($V(0,0), $V(0,2)), $L($V(-3,1), $V(-2,1)))).toBe(Line.LEFT)
         expect($L.intersects($L($V(5,5), $V(10,10)), $L($V(0,10), $V(10,0)))).toBe(Line.INTERSECTS_FORWARD);

@@ -2,7 +2,7 @@ describe("Basic polygon/BSP library", function() {
     it("should be possible to construct a poly using varargs constructor", function () {
         expect($P($V(0,0), $V(1,0), $V(2,2)).vertices.length).toBe(3);
 
-        edges = $P($V(0,0), $V(1,0), $V(2,2)).edges
+        var edges = $P($V(0,0), $V(1,0), $V(2,2)).edges
 
         expect($P($V(0,0), $V(1,0), $V(2,2)).edges).toEqual([
             $L($V(2,2), $V(0,0)),
@@ -90,7 +90,7 @@ describe("Basic polygon/BSP library", function() {
 	})
 
 
-    it("should be able to correctly parition a line over a more complex BSP tree from a more complex (non-convex) polygon", function() {
+    it("should be able to correctly partition a line over a more complex BSP tree from a more complex (non-convex) polygon", function() {
 
         var L = $L($V(-3,-3), $V(6,6))
         var partition = this.Pp.partition(L);
@@ -103,39 +103,38 @@ describe("Basic polygon/BSP library", function() {
     })
 
     it("should be possible to determine the intersection between two polygons", function() {
-        var poly1 = $P($V(0,0), $V(10,0), $V(10,10), $V(0,10));
-        var poly2 = $P($V(2,2), $V(5,2), $V(5,5), $V(2,5));
+        var poly1 = $P($V(1.0, 1.0), $V(2.0, 1.0), $V(2.0, 2.0), $V(1.0, 2.0));
+        var poly2 = $P($V(0.5, 0.5), $V(1.5, 0.5), $V(1.5, 1.5), $V(0.5, 1.5));
 
         var I = poly1.intersection(poly2);
 
-        expect(I.edges).toEqual([$L($V(2,5), $V(2,2)),
-            $L($V(2,2), $V(5,2)),
-            $L($V(5,2), $V(5,5)),
-            $L($V(5,5), $V(2,5))]);
+        expect(I.edges).toEqual([
+            $L($V(1.0, 1.0), $V(1.5,1.0)),
+            $L($V(1.5, 1.0), $V(1.5, 1.5)),
+            $L($V(1.5, 1.5), $V(1.0, 1.5)),
+            $L($V(1.0, 1.5), $V(1.0, 1.0))]);
 
 
-        poly2 = $P($V(5,5), $V(15,5), $V(15,15), $V(5,15))
-        I = poly1.intersection(poly2);
-        expect(I.edges).toEqual([]);
+        //poly2 = $P($V(15,5), $V(15,15), $V(5,15), $V(5,5))
+        //I = poly1.intersection(poly2);
+        //var Z = poly1.partition($L($V(15,5), $V(15,15)))
+        //expect(Z.neg).toEqual([]);
+        //expect(Z.pos).toNotEqual([]);
+        //Z = poly1.partition($L($V(15,15), $V(5,15)))
+        //expect(Z.neg).toEqual([]);
+        //expect(Z.pos).toNotEqual([]);
+        //expect(I.edges).toEqual([
+        //    $L($V(5,5), $V(10,5)),
+        //    $L($V(10,5), $V(10,10)),
+        //    $L($V(10,10), $V(5,10),
+        //    $L($V(5,10), $V(5,5)))
+        //]);
 
+        //var edges = I.edges;
+        //expect(edges[0]).toEqual($L($V(5,5), $V(10,5)));
+        //expect(edges[1]).toEqual($L($V(10,5), $V(10,10)));
+        //expect(edges[1]).toEqual($L($V(10,5), $V(10,10)));
 
-        var partition_node = poly1.partition($L($V(2,5), $V(2,2)));
-        expect(partition_node.neg).toEqual([$L($V(2,5), $V(2,2))]);
-        partition_node = poly1.partition($L($V(2,2), $V(5,2)));
-        expect(partition_node.neg).toEqual([$L($V(2,2), $V(5,2))]);
-        partition_node = poly1.partition($L($V(5,2), $V(5,5)));
-        expect(partition_node.neg).toEqual([$L($V(5,2), $V(5,5))]);
-        partition_node = poly1.partition($L($V(5,5), $V(2,5)));
-        expect(partition_node.neg).toEqual([$L($V(5,5), $V(2,5))]);
-
-        //partition_node = poly2.partition($L($V(0,10), $V(0,0)));
-        //expect(partition_node.neg).toEqual([]);
-        //partition_node = poly2.partition($L($V(0,0), $V(10,0)));
-        //expect(partition_node.neg).toEqual([]);
-        //partition_node = poly2.partition($L($V(10,0), $V(10,10)));
-        //expect(partition_node.neg).toEqual([]);
-        //partition_node = poly2.partition($L($V(10,10), $V(0,10)));
-        //expect(partition_node.neg).toEqual([]);
     })
     beforeEach(function() {
       /**************************************************************************************************************
