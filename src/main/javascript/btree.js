@@ -1,6 +1,8 @@
 Polygon = function(vertices) {
     // for easy drawing
-    this.vertices = vertices
+    this.vertices = [];
+    for (var i = 0; i < vertices.length; i++)
+        this.vertices[i] = vertices[i];
 
     // get the edges
     this.edges = reduce(this.vertices, function(e, b) {
@@ -11,6 +13,23 @@ Polygon = function(vertices) {
 
     this.bsp = bsp(this.edges)
 }
+
+Polygon.prototype.area = function() {
+    positive_diagonals = reduce(this.vertices.slice(1,this.vertices.length), function (a,b) {
+        a[0] += a[1].x * b.y;
+        a[1] = b;
+        return a;
+    }, [0, this.vertices[0]])[0];
+
+    negative_diagonals = reduce(this.vertices.slice(1,this.vertices.length), function (a,b) {
+        a[0] += a[1].y * b.x;
+        a[1] = b;
+        return a;
+    }, [0, this.vertices[0]])[0];
+
+    return (positive_diagonals - negative_diagonals) / 2;
+}
+
 
 Polygon.prototype.partition = function(edge) {
     return partition(this, edge);
@@ -46,10 +65,10 @@ Polygon.prototype.intersection = function(that) {
     })
 
     vertices = []
-    console.log("Segs:");
+    //console.log("Segs:");
     segs.forEach(function (seg) {
         vertices.push(seg.origin);
-        console.log("  seg: [" + seg.origin.x + "," + seg.origin.y + "] -> [" + seg.end.x + "," + seg.end.y + "]");
+        //console.log("  seg: [" + seg.origin.x + "," + seg.origin.y + "] -> [" + seg.end.x + "," + seg.end.y + "]");
     })
 
 

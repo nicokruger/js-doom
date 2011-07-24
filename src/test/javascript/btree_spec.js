@@ -25,6 +25,11 @@ describe("Basic polygon/BSP library", function() {
                         expect(bsptree.negative.negative.negative.negative).toBe(null);
 	})
 
+    it("should be able to calculate the area of a polgyon", function() {
+        var poly = $P($V(0,0), $V(1,0), $V(1,1), $V(0,1));
+        expect(poly.area()).toBe(1.0);
+    })
+
     it("should be able to partition a line into segments according to a BSP tree of a simple square", function() {
         var square = $P($V(0,0), $V(10,0), $V(10,10), $V(0,10));
         var partitioned_line = square.partition($L($V(-55,5), $V(5,5)));
@@ -113,7 +118,7 @@ describe("Basic polygon/BSP library", function() {
             $L($V(1.5, 1.0), $V(1.5, 1.5)),
             $L($V(1.5, 1.5), $V(1.0, 1.5)),
             $L($V(1.0, 1.5), $V(1.0, 1.0))]);
-
+        expect(I.area()).toBe(0.5);
 
         poly2 = $P($V(1.5,0.5), $V(1.5,1.5), $V(0.5,1.5), $V(0.5,0.5))
         I = poly1.intersection(poly2);
@@ -123,6 +128,7 @@ describe("Basic polygon/BSP library", function() {
             $L($V(1.5,1.5), $V(1.0,1.5)),
             $L($V(1.0,1.5), $V(1.0,1.0))
         ]);
+        expect(I.area()).toBe(0.5);
 
         poly2 = $P($V(1.5,1.5), $V(2.5,1.5), $V(2.5,2.5), $V(1.5,2.5))
         I = poly1.intersection(poly2);
