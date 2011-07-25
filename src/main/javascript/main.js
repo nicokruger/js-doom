@@ -58,6 +58,7 @@ function loop() {
         drawPoly(ctx, P2, "#ffff00");
     };
 
+  if (hack > 29) { hack = 29 };
   previousTime = currentTime;
 }
 
