@@ -1,4 +1,4 @@
-
+/*jslint devel: true, es5: false, vars: true, white: false, fragment: false, maxerr: 500, indent: 4 */
 Polygon = function(vertices) {
     // for easy drawing
     this.vertices = [];
@@ -10,9 +10,9 @@ Polygon = function(vertices) {
         if (!e[1].equals(b))
             e[0].push($L(e[1], b));
         return [e[0], b];
-    }, [[], this.vertices[this.vertices.length-1]])[0]
+    }, [[], this.vertices[this.vertices.length-1]])[0];
 
-    this.bsp = bsp(this.edges)
+    this.bsp = bsp(this.edges);
 }
 
 Polygon.prototype.area = function() {
@@ -61,15 +61,15 @@ Polygon.prototype.intersection = function(that) {
 
         partition_node.neg.forEach(function(seg) {
             segs.push(seg);
-        })
+        });
 
         partition_node.cosame.forEach(function(seg) {
             segs.push(seg);
-        })
+        });
 
-    })
+    });
 
-    var vertices = []
+    var vertices = [];
     //console.log("Segs:");
     if (segs.length > 0) {
         var SS = order_edges(segs);
@@ -95,7 +95,7 @@ $P = function(/* ...... */) {
 }
 
 function bsp(lines) {
-    var line = lines[0]
+    var line = lines[0];
 
     return bsp_gather_node(line, lines);
 
@@ -103,22 +103,22 @@ function bsp(lines) {
 
 function bsp_gather_node(line, lines) {
 
-    var bsp_node = {}
-    bsp_node.line = line
-    bsp_node.positive = null
-    bsp_node.negative = null
-    bsp_node.coincident = []
-    bsp_node.pos = []
-    bsp_node.neg = []
+    var bsp_node = {};
+    bsp_node.line = line;
+    bsp_node.positive = null;
+    bsp_node.negative = null;
+    bsp_node.coincident = [];
+    bsp_node.pos = [];
+    bsp_node.neg = [];
 
     lines.forEach(function (edge) {
         classify(line, edge, bsp_node)
-    })
+    });
 
     if (bsp_node.pos.length > 0)
-         bsp_node.positive = bsp(bsp_node.pos)
+         bsp_node.positive = bsp(bsp_node.pos);
     if (bsp_node.neg.length > 0)
-         bsp_node.negative = bsp(bsp_node.neg)
+         bsp_node.negative = bsp(bsp_node.neg);
 
     return bsp_node;
 }
