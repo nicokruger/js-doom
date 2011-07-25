@@ -115,7 +115,7 @@ new Zone(new Point(450,450), "a44", 1.0, [10,30,10,30,70,10,50])
     }
   }
 
-  setInterval(this.updateComponents, 500, this);
+  //setInterval(this.updateComponents, 500, this);
 
   this.update = function (deltaTime) {}
   
@@ -159,6 +159,7 @@ new Zone(new Point(450,450), "a44", 1.0, [10,30,10,30,70,10,50])
   }
 
   function drawPoly(ctx, poly, colour) {
+
     ctx.strokeStyle = colour;
     ctx.beginPath();
     poly.edges.forEach(function (edge) {
