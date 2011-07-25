@@ -120,29 +120,30 @@ describe("Basic polygon/BSP library", function() {
         var I = poly1.intersection(poly2);
 
         expect(I.edges).toEqual([
-            $L($V(1.0, 1.0), $V(1.5,1.0)),
             $L($V(1.5, 1.0), $V(1.5, 1.5)),
             $L($V(1.5, 1.5), $V(1.0, 1.5)),
-            $L($V(1.0, 1.5), $V(1.0, 1.0))]);
+            $L($V(1.0, 1.5), $V(1.0, 1.0)),
+            $L($V(1.0, 1.0), $V(1.5,1.0)),
+            ]);
         expect(I.area()).toBe(0.25);
 
         poly2 = $P($V(1.5,0.5), $V(1.5,1.5), $V(0.5,1.5), $V(0.5,0.5))
         I = poly1.intersection(poly2);
         expect(I.edges).toEqual([
-            $L($V(1.0,1.0), $V(1.5,1.0)),
             $L($V(1.5,1.0), $V(1.5,1.5)),
             $L($V(1.5,1.5), $V(1.0,1.5)),
-            $L($V(1.0,1.5), $V(1.0,1.0))
+            $L($V(1.0,1.5), $V(1.0,1.0)),
+            $L($V(1.0,1.0), $V(1.5,1.0))
         ]);
         expect(I.area()).toBe(0.25);
 
         poly2 = $P($V(1.5,1.5), $V(2.5,1.5), $V(2.5,2.5), $V(1.5,2.5))
         I = poly1.intersection(poly2);
         expect(I.edges).toEqual([
-            $L($V(2.0,2.0), $V(1.5,2.0)),
             $L($V(1.5,2.0), $V(1.5,1.5)),
             $L($V(1.5,1.5), $V(2.0,1.5)),
             $L($V(2.0,1.5), $V(2.0,2.0)),
+            $L($V(2.0,2.0), $V(1.5,2.0))
         ]);
         //var edges = I.edges;
         //expect(edges[0]).toEqual($L($V(5,5), $V(10,5)));
@@ -155,9 +156,26 @@ describe("Basic polygon/BSP library", function() {
         expect($P($V(1,0), $V(2,0), $V(2,1), $V(1,1)).intersection(circle_to_poly([1.5, 0.5], 1.0, 16)).area()).toBe(1.0);
 
         // WTF is going on here?
-        expect($P($V(1,0), $V(2,0), $V(2,1), $V(1,1)).intersection(circle_to_poly([1.0, 0.29], 1.0, 16)).area()).toBe(1.0);
-        expect($P($V(1,0), $V(2,0), $V(2,1), $V(1,1)).intersection(circle_to_poly([1.0, 0.3], 1.0, 16)).area()).toBe(1.0);
+        var P1 = $P($V(100,200), $V(200,200), $V(200,300), $V(100,300));
+        var P2 = circle_to_poly([100.0, 229.0], 150.0, 4);
 
+        var I1 = P1.intersection(P2);
+
+        var area1 = I1.area();
+        expect(area1).toBe(1.0);
+
+    })
+
+    it("should be able to order a set of vertices so that the resulting polygon is convex and non-intersecting", function() {
+        var e = order_edges([$L($V(0,0), $V(1,0)),
+            $L($V(0,1), $V(0,0)),
+            $L($V(1,1), $V(0,1)),
+            $L($V(1,0), $V(1,1))]);
+
+        expect(e).toEqual([$L($V(0,0), $V(1,0)),
+            $L($V(1,0), $V(1,1)),
+            $L($V(1,1), $V(0,1)),
+            $L($V(0,1), $V(0,0))])
     })
     beforeEach(function() {
       /**************************************************************************************************************

@@ -1,3 +1,4 @@
+
 Polygon = function(vertices) {
     // for easy drawing
     this.vertices = [];
@@ -40,7 +41,7 @@ Polygon.prototype.partition = function(edge) {
 }
 
 Polygon.prototype.intersection = function(that) {
-    var segs = []
+    var segs = [];
 
     var me = this;
     that.edges.forEach(function(edge) {
@@ -68,16 +69,20 @@ Polygon.prototype.intersection = function(that) {
 
     })
 
-    vertices = []
+    var vertices = []
     //console.log("Segs:");
-    segs.forEach(function (seg) {
-        vertices.push(seg.origin);
-        //console.log("  seg: [" + seg.origin.x + "," + seg.origin.y + "] -> [" + seg.end.x + "," + seg.end.y + "]");
-    })
-
+    if (segs.length > 0) {
+        var SS = order_edges(segs);
+        SS.forEach(function (seg) {
+            vertices.push(seg.origin);
+            //console.log("  seg: [" + seg.origin.x + "," + seg.origin.y + "] -> [" + seg.end.x + "," + seg.end.y + "]");
+        });
+        vertices.push(SS[SS.length-1].end);
+    };
 
     if (vertices.length > 0) {
-        return new Polygon(vertices);
+        var P = new Polygon(vertices);
+        return P;
     } else {
         return null;
     }
@@ -222,4 +227,39 @@ function neg_partition(T, edge, partition_node) {
         partition_node.neg.push(edge);
     }
 
+}
+
+function order_edges(edges) {
+    if (edges.length == 0) {
+        return [];
+    }
+    var edge_links = {};
+
+    var vertices = [];
+    edges.forEach(function (edge) {
+        edge_links[[edge.origin.x,edge.origin.y]] = edge.end;
+        vertices.push(edge.origin);
+        vertices.push(edge.end);
+    })
+
+    var new_edges = [];
+    var v = edges[0].origin;
+    var end = edge_links[[v.x, v.y]];
+    var finished = [];
+    // start - v
+    // end - edge_links[[v.x,v.y]]
+    while (end != null && finished.indexOf(end) == -1) {
+        var L = $L(v, end);
+        finished.push(v);
+        finished.push(end);
+
+        new_edges.push(L);
+
+        var tmp = [end.x, end.y];
+        v = end;
+        end = edge_links[tmp];
+
+    }
+
+    return new_edges;
 }

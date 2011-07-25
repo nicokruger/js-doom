@@ -119,7 +119,7 @@ new Zone(new Point(450,450), "a44", 1.0, [10,30,10,30,70,10,50])
   this.update = function (deltaTime) {}
   
   this.draw = function (ctx) {
-    ctx.font = "bold 12px sans-serif";
+/*    ctx.font = "bold 12px sans-serif";
     for (i=0; i < 7; i++) {
       if (i == this.currentHour)
         ctx.fillStyle = "rgba(220, 0, 0, 1)";
@@ -130,6 +130,37 @@ new Zone(new Point(450,450), "a44", 1.0, [10,30,10,30,70,10,50])
     }
 
     for (i in this.gameComponents)
-      this.gameComponents[i].draw(ctx)
+      this.gameComponents[i].draw(ctx); */
+
+    var P1 = $P($V(100,200), $V(200,200), $V(200,300), $V(100,300));
+    var P2 = circle_to_poly([100.0, 229.0], 120.0, 21);
+
+    var I1 = P1.intersection(P2);
+    //var I2 = P2.intersection(circle_to_poly([100.0, 30.0], 100.0, 64));
+
+    drawPoly(ctx, I1, "#ff00ff");
+
+    //drawPoly(ctx, P1, "#0000ff");
+    drawPoly(ctx, P2, "#ffff00");
+    //drawPoly(ctx, I2, "#FFFF00");
+    /*ctx.fillStyle = "rgba(255, 255, 255)";
+    ctx.strokeStyle = "#ffff00";
+    ctx.beginPath();
+    I2.edges.forEach(function (edge) {
+        ctx.moveTo(edge.origin.x, edge.origin.y);
+        ctx.lineTo(edge.end.x, edge.end.y);
+    });
+    ctx.stroke();*/
+
+  }
+
+  function drawPoly(ctx, poly, colour) {
+    ctx.strokeStyle = colour;
+    ctx.beginPath();
+    poly.edges.forEach(function (edge) {
+        ctx.moveTo(edge.origin.x, edge.origin.y);
+        ctx.lineTo(edge.end.x, edge.end.y);
+    });
+    ctx.stroke();
   }
 }
