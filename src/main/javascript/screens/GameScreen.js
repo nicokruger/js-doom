@@ -167,5 +167,8 @@ new Zone(new Point(450,450), "a44", 1.0, [10,30,10,30,70,10,50])
         ctx.lineTo(edge.end.x, edge.end.y);
     });
     ctx.stroke();
+
+
+
   }
 }

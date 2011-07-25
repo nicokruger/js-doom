@@ -61,7 +61,11 @@ function loop() {
         drawPoly(ctx, P2, "#ffff00");
     };
 
-  if (hack > 29) { hack = 29 };
+    ctx.fillStyle = "rgba(220, 220, 220, 1)";
+    ctx.font = "bold 12px sans-serif";
+    console.log("V: " + hack);
+    ctx.fillText("[" + hack +"]", 400, 400);
+
   previousTime = currentTime;
 }
 
@@ -74,6 +78,7 @@ function loop() {
         ctx.lineTo(edge.end.x, edge.end.y);
     });
     ctx.stroke();
+
   }
 
 var timer = setInterval(loop, 200);
