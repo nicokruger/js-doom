@@ -48,6 +48,9 @@ function loop() {
   currentTime = (Date.now());
   deltaTime = currentTime - previousTime;
     var P1 = $P($V(100,200), $V(200,200), $V(200,300),$V(100,300));
+    if (hack == 26) {
+        hack = 26;
+    }
     var P2 = circle_to_poly([100.0, 229.0], 120.0, hack);
     hack += 1;
     var I1 = P1.intersection(P2);
@@ -73,5 +76,5 @@ function loop() {
     ctx.stroke();
   }
 
-var timer = setInterval(loop, 1000);
+var timer = setInterval(loop, 200);
 init();
