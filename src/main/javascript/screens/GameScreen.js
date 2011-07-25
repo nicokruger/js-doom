@@ -41,6 +41,7 @@ function ConvertGameZones(zoneObjects) {
 }
 
 function GameScreen(src) {
+        hack = 0;
   var that = this;
   console.info("Loading level from: " + src);
 
@@ -131,11 +132,14 @@ new Zone(new Point(450,450), "a44", 1.0, [10,30,10,30,70,10,50])
 
     for (i in this.gameComponents)
       this.gameComponents[i].draw(ctx); */
-
     var P1 = $P($V(100,200), $V(200,200), $V(200,300), $V(100,300));
-    var P2 = circle_to_poly([100.0, 229.0], 120.0, 21);
+    var P2 = circle_to_poly([100.0, 229.0], 120.0, hack);
+    hack++;
 
     var I1 = P1.intersection(P2);
+    if (I1.area() < 10) {
+        alert("broken at: " + hack);
+    }
     //var I2 = P2.intersection(circle_to_poly([100.0, 30.0], 100.0, 64));
 
     drawPoly(ctx, I1, "#ff00ff");

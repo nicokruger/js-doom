@@ -43,7 +43,7 @@ Vector.prototype.offset = function(v) {
 }
 
 Vector.prototype.equals = function(o) {
-    return this.x === o.x && this.y === o.y;
+    return (Math.abs(this.x - o.x) < 0.001) && (Math.abs(this.y - o.y) < 0.001);
 }
 
 Vector.prototype.leftNormal = function() {

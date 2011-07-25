@@ -229,25 +229,35 @@ function neg_partition(T, edge, partition_node) {
 
 }
 
+
 function order_edges(edges) {
     if (edges.length == 0) {
         return [];
     }
-    var edge_links = {};
+    var edge_links_forward = {};
+    var edge_links_backward = {};
 
     var vertices = [];
     edges.forEach(function (edge) {
-        edge_links[[edge.origin.x,edge.origin.y]] = edge.end;
+        edge_links_forward[hash_vertex(edge.origin)] = edge.end;
+        edge_links_backward[hash_vertex(edge.end)] = edge.origin;
         vertices.push(edge.origin);
         vertices.push(edge.end);
     })
 
     var new_edges = [];
-    var v = edges[0].origin;
-    var end = edge_links[[v.x, v.y]];
+    var v = edges[0].end;
+    // Rewind
+    var visited = [];
+    while (edge_links_backward[hash_vertex(v)] != null && visited.indexOf(v) == -1) {
+        visited.push(v);
+        v = edge_links_backward[hash_vertex(v)];
+    }
+    var end = edge_links_forward[hash_vertex(v)];
+
+
     var finished = [];
-    // start - v
-    // end - edge_links[[v.x,v.y]]
+
     while (end != null && finished.indexOf(end) == -1) {
         var L = $L(v, end);
         finished.push(v);
@@ -255,11 +265,28 @@ function order_edges(edges) {
 
         new_edges.push(L);
 
-        var tmp = [end.x, end.y];
+        var tmp = end;
         v = end;
-        end = edge_links[tmp];
+        end = edge_links_forward[hash_vertex(tmp)];
 
     }
 
     return new_edges;
 }
+
+function hash_vertex(v) {
+    return [Math.round(v.x * 1000, 0), Math.round(v.y * 1000, 0)]
+}
+function find_v(l, v) {
+    for (var i = 0; i < l.length; i++) {
+        var x = l[i].x;
+        var y = l[i].y;
+
+        if ((Math.abs(v.x - x) < 0.0001) && (Math.abs(v.y - y) < 0.0001)) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+

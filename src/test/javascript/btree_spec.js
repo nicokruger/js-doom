@@ -152,6 +152,28 @@ describe("Basic polygon/BSP library", function() {
 
     })
 
+    it("should be able to detertmine the intersection even if an intersection point is on a vertex", function () {
+
+        var P1 = $P($V(100,200), $V(200,200), $V(200,300), $V(100,300));
+
+        var P2 = circle_to_poly([100.0, 229.0], 120.0, 10);
+        var I1 = P1.intersection(P2);
+        expect(Math.round(I1.area(),0)).toBe(9985);
+
+        P2 = circle_to_poly([100.0, 229.0], 120.0, 16);
+        I1 = P1.intersection(P2);
+        expect(Math.round(I1.area(),0)).toBe(9974);
+
+        P2 = circle_to_poly([100.0, 229.0], 120.0, 26);
+        I1 = P1.intersection(P2);
+        expect(Math.round(I1.area(),0)).toBe(9987);
+
+        P2 = circle_to_poly([100.0, 229.0], 120.0, 40);
+        I1 = P1.intersection(P2);
+        expect(Math.round(I1.area(),0)).toBe(9992);
+
+    })
+
     it("should be able to determine the intersection and area of the resulting intersection polygon correctly", function() {
         expect($P($V(1,0), $V(2,0), $V(2,1), $V(1,1)).intersection(circle_to_poly([1.5, 0.5], 1.0, 16)).area()).toBe(1.0);
 
@@ -176,6 +198,17 @@ describe("Basic polygon/BSP library", function() {
             $L($V(1,0), $V(1,1)),
             $L($V(1,1), $V(0,1)),
             $L($V(0,1), $V(0,0))])
+
+        var ee = order_edges([
+            $L($V(200, 290), $V(197, 299)),
+            $L($V(197, 299),$V(196, 300)),
+            $L($V(100, 300), $V(100, 200)),
+            $L($V(100, 200),$V(200, 200)),
+            $L($V(200, 200),$V(200, 290))
+        ]);
+
+        expect(ee.length).toBe(5);
+
     })
     beforeEach(function() {
       /**************************************************************************************************************

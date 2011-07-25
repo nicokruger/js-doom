@@ -22,8 +22,8 @@ function circle_to_poly(p, r, points) {
 
     var vertices = [];
 	for (var i = 0; i < points; i++) {
-		angle = step * i;
-		v = $V(p[0] + r*Math.cos(angle), p[1] + r*Math.sin(angle));
+		var angle = step * i;
+		var v = $V(p[0] + r*Math.cos(angle), p[1] + r*Math.sin(angle));
 		vertices.push(v);
 	}
 	return new Polygon(vertices);

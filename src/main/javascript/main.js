@@ -52,5 +52,5 @@ function loop() {
   previousTime = currentTime;
 }
 
-var timer = setInterval(loop, 1000 / 60);
+var timer = setInterval(loop, 1000);
 init();
