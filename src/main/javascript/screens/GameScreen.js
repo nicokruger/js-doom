@@ -146,6 +146,8 @@ new Zone(new Point(450,450), "a44", 1.0, [10,30,10,30,70,10,50])
 
     //drawPoly(ctx, P1, "#0000ff");
     drawPoly(ctx, P2, "#ffff00");
+
+    drawTexture(ctx, P1, "#ff0000");
     //drawPoly(ctx, I2, "#FFFF00");
     /*ctx.fillStyle = "rgba(255, 255, 255)";
     ctx.strokeStyle = "#ffff00";
@@ -171,4 +173,5 @@ new Zone(new Point(450,450), "a44", 1.0, [10,30,10,30,70,10,50])
 
 
   }
+
 }

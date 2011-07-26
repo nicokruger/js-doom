@@ -18,7 +18,9 @@ function init() {
 
         game = new Game();
         game.init();
+        loop();
     }
+
 }
 
 function documentMouseMoveHandler(e) {
@@ -44,27 +46,30 @@ hack = 16;
 function loop() {
   ctx.fillStyle = "rgba(76,76,78,0.5)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-
   currentTime = (Date.now());
   deltaTime = currentTime - previousTime;
     var P1 = $P($V(100,200), $V(200,200), $V(200,300),$V(100,300));
+    drawPoly(ctx, P1, "#ff00ff");
     if (hack == 26) {
         hack = 26;
     }
-    var P2 = circle_to_poly([100.0, 229.0], 120.0, hack);
-    hack += 1;
+    var P2 = circle_to_poly([150.0, 150.0], 50.0, 64);
+
+/*    hack += 1;
     var I1 = P1.intersection(P2);
     if (I1.area() < 10) {
         alert("failed at: " + hack);
     } else {
         drawPoly(ctx, I1, "#ff00ff");
         drawPoly(ctx, P2, "#ffff00");
-    };
+    };                       */
 
-    ctx.fillStyle = "rgba(220, 220, 220, 1)";
+    drawTexture(ctx, P2, "");
+
+/*    ctx.fillStyle = "rgba(220, 220, 220, 1)";
     ctx.font = "bold 12px sans-serif";
     console.log("V: " + hack);
-    ctx.fillText("[" + hack +"]", 400, 400);
+    ctx.fillText("[" + hack +"]", 400, 400);*/
 
   previousTime = currentTime;
 }
@@ -81,5 +86,28 @@ function loop() {
 
   }
 
-var timer = setInterval(loop, 200);
+
+  function drawTexture(ctx, poly, colour) {
+      var width = 100;
+      var height = 100;
+      var data = ctx.createImageData(width,height);
+
+      for (var y = 0; y < 100; y++) {
+          var ray = poly.partition($L($V(50, 100 + y), $V(250, 100 + y)));
+
+          ray.neg.forEach (function (seg) {
+              for (var x = seg.origin.x; x < seg.end.x; x++) {
+                var index = (x + y * width) * 4;
+                data.data[index + 0] = 255;
+                data.data[index + 1] = 255;
+                data.data[index + 2] = 0;
+                data.data[index + 3] = 128;
+              }
+          })
+      }
+
+      ctx.putImageData(data, 10, 10);
+    }
+
+//var timer = setInterval(loop, 100000);
 init();

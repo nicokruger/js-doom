@@ -45,6 +45,10 @@ describe("Basic polygon/BSP library", function() {
         partitioned_line = square.partition($L($V(-2,-2), $V(2,2)))
         expect(partitioned_line.neg).toEqual([$L($V(0,0), $V(2,2))])
 
+        var C = circle_to_poly([0.0,0.0], 50, 64);
+        var L = C.partition($L($V(-60, 0), $V(60,0)))
+        expect(L.neg).toNotBe([]);
+
     })
 
     it("should correctly partition a line that is co-incident to edges on the polygon (cosame)", function() {
@@ -188,8 +192,8 @@ describe("Basic polygon/BSP library", function() {
         expect($P($V(1,0), $V(2,0), $V(2,1), $V(1,1)).intersection(circle_to_poly([1.5, 0.5], 1.0, 16)).area()).toBe(1.0);
 
         // WTF is going on here?
-        var P1 = $P($V(100,200), $V(200,200), $V(200,300), $V(100,300));
-        var P2 = circle_to_poly([100.0, 229.0], 150.0, 4);
+        var P1 = $P($V(1.0, 2.0), $V(2.0, 2.0), $V(2.0, 3.0), $V(1.0, 3.0));
+        var P2 = circle_to_poly([1.5, 2.5], 1.5, 32);
 
         var I1 = P1.intersection(P2);
 
