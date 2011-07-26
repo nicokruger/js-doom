@@ -45,6 +45,10 @@ describe("Basic polygon/BSP library", function() {
         partitioned_line = square.partition($L($V(-2,-2), $V(2,2)))
         expect(partitioned_line.neg).toEqual([$L($V(0,0), $V(2,2))])
 
+        var C = circle_to_poly([0.0,0.0], 50, 64);
+        var L = C.partition($L($V(-60, 0), $V(60,0)))
+        expect(L.neg).toNotBe([]);
+
     })
 
     it("should correctly partition a line that is co-incident to edges on the polygon (cosame)", function() {
@@ -161,16 +165,26 @@ describe("Basic polygon/BSP library", function() {
         expect(Math.round(I1.area(),0)).toBe(9985);
 
         P2 = circle_to_poly([100.0, 229.0], 120.0, 16);
-        I1 = P1.intersection(P2);
+        I1 = P2.intersection(P1);
         expect(Math.round(I1.area(),0)).toBe(9974);
 
-        P2 = circle_to_poly([100.0, 229.0], 120.0, 26);
-        I1 = P1.intersection(P2);
+        var pn;
+        P2 = circle_to_poly([100.0, 229.0], 120.0, 25);
+        I1 = P2.intersection(P1);
+        pn = P2.partition($L($V(200,200), $V(200,300))); // CHANGE THIS TO 301 and it works!!!
+        expect(pn.neg).toNotEqual([]);
         expect(Math.round(I1.area(),0)).toBe(9987);
 
-        P2 = circle_to_poly([100.0, 229.0], 120.0, 40);
-        I1 = P1.intersection(P2);
-        expect(Math.round(I1.area(),0)).toBe(9992);
+        P2 = circle_to_poly([100.0, 229.0], 120.0, 26);
+        I1 = P2.intersection(P1);
+        pn = P2.partition($L($V(200,200), $V(200,300)));
+        expect(pn.neg).toNotEqual([]);
+        expect(Math.round(I1.area(),0)).toBe(9987);
+
+/*
+        P2 = circle_to_poly([100.0, 229.0], 120.0, 39);
+        I1 = P2.intersection(P1);
+        expect(Math.round(I1.area(),0)).toBe(9992);*/
 
     })
 
@@ -178,8 +192,8 @@ describe("Basic polygon/BSP library", function() {
         expect($P($V(1,0), $V(2,0), $V(2,1), $V(1,1)).intersection(circle_to_poly([1.5, 0.5], 1.0, 16)).area()).toBe(1.0);
 
         // WTF is going on here?
-        var P1 = $P($V(1.0,2.0), $V(2.0,2.0), $V(2.0,3.0), $V(1.0,3.0));
-        var P2 = circle_to_poly([1.0, 2.50], 1.5, 16);
+        var P1 = $P($V(1.0, 2.0), $V(2.0, 2.0), $V(2.0, 3.0), $V(1.0, 3.0));
+        var P2 = circle_to_poly([1.5, 2.5], 1.5, 32);
 
         var I1 = P1.intersection(P2);
 

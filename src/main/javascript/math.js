@@ -104,8 +104,8 @@ Line.prototype.intersection = function(l) {
     var d1 = normal_l.dot(l.end.sub(this.origin))
 
     var t = d0 / (d0 - d1);
-    if (Math.abs(t) < 0.01) t = 0;
-    if (Math.abs(t - 1) < 0.01) t = 1;
+    if (Math.abs(t) < 0.00001) t = 0;
+    if (Math.abs(t - 1) < 0.00001) t = 1;
 
     if ((t!= 0 && t!=1) && d0 * d1 < 0) {
         var from_origin = l.canonical();
@@ -136,8 +136,8 @@ Line.prototype.intersects = function(l) {
     var d1 = normal_l.dot(l.end.sub(this.origin))
 
     var t = d0 / (d0 - d1);
-    if (Math.abs(t) < 0.01) t = 0;
-    if (Math.abs(t - 1) < 0.01) t = 1;
+    if (Math.abs(t) < 0.00001) t = 0;
+    if (Math.abs(t - 1) < 0.00001) t = 1;
 
     if ((t!= 0 && t!=1) && d0 * d1 < 0) {
         if (d1 > 0) {

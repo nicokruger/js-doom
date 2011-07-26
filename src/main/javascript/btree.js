@@ -20,13 +20,13 @@ Polygon.prototype.area = function() {
     this.vertices.forEach(function (v) { verts.push(v); });
     verts.push(this.vertices[0]);
 
-    positive_diagonals = reduce(verts.slice(1,verts.length), function (a,b) {
+    var positive_diagonals = reduce(verts.slice(1,verts.length), function (a,b) {
         a[0] += a[1].x * b.y;
         a[1] = b;
         return a;
     }, [0, verts[0]])[0];
 
-    negative_diagonals = reduce(verts.slice(1,verts.length), function (a,b) {
+    var negative_diagonals = reduce(verts.slice(1,verts.length), function (a,b) {
         a[0] += a[1].y * b.x;
         a[1] = b;
         return a;
@@ -125,7 +125,7 @@ function bsp_gather_node(line, lines) {
 
 function classify(line, edge, bsp_node) {
 
-    classification = line.intersects(edge);
+    var classification = line.intersects(edge);
 
     if (classification == Line.INTERSECTS_FORWARD) {
         var I = line.intersection(edge);
