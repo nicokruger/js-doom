@@ -71,6 +71,20 @@ describe('Using our simplistic 2D vector math',function(){
         // test two lines that do NOT intersect
         expect($L.intersection($L($V(0,10), $V(10,0)), $L($V(9,9), $V(10,10)))).toEqual(null);
 
+        // test lines that intersect at, and close to, a vertex
+        var ray = $L($V(0,10), $V(10,10));
+        var edge = $L($V(10,0), $V(10,10));
+        expect($L.intersection(ray, edge)).toEqual($V(10,10));
+
+        edge = $L($V(10, 0), $V(9.99, 9.99));
+        expect($L.intersection(ray, edge)).toEqual($V(10,10));
+
+        edge = $L($V(10, 0), $V(9.99, 19.99));
+        expect($L.intersection(ray, edge)).toEqual($V(9.99,10));
+
+        ray = $L($V(100,100), $V(88, 92.07));
+        edge = $L($V(10000,99), $V(0,99));
+        expect($L.intersection(ray,edge)).toEqual([])
     })
 
     it("should be possible to determine whether an edge (bounded line) is to the left, intersecting, or to the right of another (unbounced, infinite) line", function() {

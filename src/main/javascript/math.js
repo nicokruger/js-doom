@@ -1,6 +1,6 @@
 Vector = function(x, y) {
-    this.x = x;
-    this.y = y;
+    this.x = Math.round(x*100,0) / 100;
+    this.y = Math.round(y*100,0) / 100;
 }
 
 Vector.prototype.add = function (other) {
@@ -43,7 +43,7 @@ Vector.prototype.offset = function(v) {
 }
 
 Vector.prototype.equals = function(o) {
-    return (Math.abs(this.x - o.x) < 0.001) && (Math.abs(this.y - o.y) < 0.001);
+    return (Math.abs(this.x - o.x) < 0.01) && (Math.abs(this.y - o.y) < 0.01);
 }
 
 Vector.prototype.leftNormal = function() {
@@ -100,14 +100,22 @@ Line.prototype.split = function(v) {
 Line.prototype.intersection = function(l) {
     var normal_l = this.canonical().leftNormal();
 
+    if (this.origin.equals(l.end) || this.origin.equals(l.origin)) {
+        return this.origin;
+    }
+
+    if (this.end.equals(l.origin) || this.end.equals(l.end)) {
+        return this.end;
+    }
+
     var d0 = normal_l.dot(l.origin.sub(this.origin))
     var d1 = normal_l.dot(l.end.sub(this.origin))
 
     var t = d0 / (d0 - d1);
-    if (Math.abs(t) < 0.00001) t = 0;
-    if (Math.abs(t - 1) < 0.00001) t = 1;
+    if (Math.abs(t) < 0.00005) t = 0;
+    if (Math.abs(t - 1) < 0.0005) t = 1;
 
-    if ((t!= 0 && t!=1) && d0 * d1 < 0) {
+    if (cc(t, d0, d1)) {
         var from_origin = l.canonical();
 
         return from_origin.mul(t).add(l.origin);
@@ -122,6 +130,11 @@ Line.INTERSECTS_BACKWARD = 1
 Line.RIGHT = 2
 Line.COINCIDENT = 3
 
+function cc(t, d0, d1) {
+    if (Math.abs(t) < 0.00001) t = 0;
+    if (Math.abs(t - 1) < 0.00001) t = 1;
+    return (d0 * d1 < 0);
+}
 /**
  * NOTE: this will be treated like an infinite line in space,
  * ie. a pure, unbounded line of the form y = ax + b
@@ -136,11 +149,9 @@ Line.prototype.intersects = function(l) {
     var d1 = normal_l.dot(l.end.sub(this.origin))
 
     var t = d0 / (d0 - d1);
-    if (Math.abs(t) < 0.00001) t = 0;
-    if (Math.abs(t - 1) < 0.00001) t = 1;
 
-    if ((t!= 0 && t!=1) && d0 * d1 < 0) {
-        if (d1 > 0) {
+    if (cc(t, d0, d1)) {
+        if (d1 >= 0) {
             return Line.INTERSECTS_FORWARD;
         } else {
             return Line.INTERSECTS_BACKWARD;

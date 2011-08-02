@@ -45,9 +45,33 @@ describe("Basic polygon/BSP library", function() {
         partitioned_line = square.partition($L($V(-2,-2), $V(2,2)))
         expect(partitioned_line.neg).toEqual([$L($V(0,0), $V(2,2))])
 
-        var C = circle_to_poly([0.0,0.0], 50, 64);
-        var L = C.partition($L($V(-60, 0), $V(60,0)))
-        expect(L.neg).toNotBe([]);
+        var C = circle_to_poly([0.0,0.0], 200, 16);
+        var L = C.partition($L($V(-60, 2), $V(60, 2)));
+        expect(L.neg.length).toBe(1);
+
+
+        var x = 12300.0;
+        var y = 45600.0;
+        var r = 16;
+        C = circle_to_poly([x, y], r, 5);
+
+        // inside the circle
+        L = C.partition($L($V(x-r/2, y), $V(x+r/2, y)));
+        expect(L.neg.length).toBe(1);
+
+        // check all rays
+        for (var i = 0; i < r*2-1; i++) {
+        //for (var i = 0; i < 1; i++) {
+            var Z = $L($V(x-r-20, y-r+1 + i), $V(x+r+20, y-r+1 + i))
+            L = C.partition(Z);
+            if (L.neg.length == 0) {
+                L = C.partition(Z);
+            }
+            if (L.neg.length != 1) {
+                console.info("0 at " + i);
+            }
+            expect(L.neg.length).toBe(1);
+        }
 
     })
 

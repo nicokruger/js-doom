@@ -48,7 +48,7 @@ function loop() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   currentTime = (Date.now());
   deltaTime = currentTime - previousTime;
-    var P1 = $P($V(100,200), $V(200,200), $V(200,300),$V(100,300));
+    var P1 = $P($V(100,100), $V(200,100), $V(200,200),$V(100,200));
     drawPoly(ctx, P1, "#ff00ff");
     if (hack == 26) {
         hack = 26;
@@ -65,7 +65,7 @@ function loop() {
     };                       */
 
     drawTexture(ctx, P2, "");
-
+    drawPoly(ctx, P2, "#ff0000");
 /*    ctx.fillStyle = "rgba(220, 220, 220, 1)";
     ctx.font = "bold 12px sans-serif";
     console.log("V: " + hack);
@@ -96,17 +96,27 @@ function loop() {
           var ray = poly.partition($L($V(50, 100 + y), $V(250, 100 + y)));
 
           ray.neg.forEach (function (seg) {
-              for (var x = seg.origin.x; x < seg.end.x; x++) {
+                ctx.strokeStyle = colour;
+                ctx.beginPath();
+                ctx.moveTo(seg.origin.x, y);
+                ctx.lineTo(seg.end.x, y);
+                ctx.stroke();
+
+              var x1 = Math.round(seg.origin.x, 0);
+              var x2 = Math.round(seg.end.x, 0);
+
+              for (var x = x1; x < x2; x++) {
                 var index = (x + y * width) * 4;
                 data.data[index + 0] = 255;
-                data.data[index + 1] = 255;
-                data.data[index + 2] = 0;
-                data.data[index + 3] = 128;
+                data.data[index + 1] = 0;
+                data.data[index + 2] = 255;
+                data.data[index + 3] = 255;
               }
           })
       }
 
       ctx.putImageData(data, 10, 10);
+
     }
 
 //var timer = setInterval(loop, 100000);
