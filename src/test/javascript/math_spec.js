@@ -82,9 +82,10 @@ describe('Using our simplistic 2D vector math',function(){
         edge = $L($V(10, 0), $V(9.99, 19.99));
         expect($L.intersection(ray, edge)).toEqual($V(9.99,10));
 
+
         ray = $L($V(100,100), $V(88, 92.07));
         edge = $L($V(10000,99), $V(0,99));
-        expect($L.intersection(ray,edge)).toEqual([])
+        expect($L.intersection(ray,edge)).toEqual($V(98.49, 99))
     })
 
     it("should be possible to determine whether an edge (bounded line) is to the left, intersecting, or to the right of another (unbounced, infinite) line", function() {

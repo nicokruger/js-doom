@@ -56,7 +56,7 @@ function loop() {
     if (hack == 26) {
         hack = 26;
     }
-    var P2 = circle_to_poly([150.0, 150.0], 32.0, 6);
+    var P2 = circle_to_poly([150.0, 150.0], 32.0, 128);
 
 /*    hack += 1;
     var I1 = P1.intersection(P2);
@@ -112,9 +112,9 @@ function loop() {
 
               for (var x = x1; x < x2; x++) {
                 var index = (x + y * width) * 4;
-                data.data[index + 0] = texture.r(x-x1,y-20);
-                data.data[index + 1] = texture.g(x-x1,y-20);
-                data.data[index + 2] = texture.b(x-x1,y-20);
+                data.data[index + 0] = texture.r(x-(150-32),y-20);
+                data.data[index + 1] = texture.g(x-(150-32),y-20);
+                data.data[index + 2] = texture.b(x-(150-32),y-20);
                 data.data[index + 3] = 255;
               }
           })
