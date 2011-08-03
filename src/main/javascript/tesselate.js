@@ -26,6 +26,6 @@ function circle_to_poly(p, r, points) {
 		var v = $V(p[0] + r*Math.cos(angle), p[1] + r*Math.sin(angle));
 		vertices.push(v);
 	}
-	return new Polygon(vertices);
+	return $P(vertices);
 }
 

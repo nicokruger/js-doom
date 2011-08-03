@@ -2,8 +2,10 @@
 Polygon = function(vertices) {
     // for easy drawing
     this.vertices = [];
-    for (var i = 0; i < vertices.length; i++)
+
+    for (var i = 0; i < vertices.length; i++) {
         this.vertices[i] = vertices[i];
+    }
 
     // get the edges
     this.edges = reduce(this.vertices, function(e, b) {
@@ -12,7 +14,23 @@ Polygon = function(vertices) {
         return [e[0], b];
     }, [[], this.vertices[this.vertices.length-1]])[0];
 
-    this.bsp = bsp(this.edges);
+}
+
+function get_bb(vertices) {
+    var bounds = {
+        x1: 9999999,
+        x2: -9999999,
+        y1: 9999999,
+        y2: -9999999
+    }
+    for (var i = 0; i < vertices.length; i++) {
+        if (vertices[i].x < bounds.x1) bounds.x1 = vertices[i].x;
+        if (vertices[i].x > bounds.x2) bounds.x2 = vertices[i].x;
+        if (vertices[i].y < bounds.y1) bounds.y1 = vertices[i].y;
+        if (vertices[i].y > bounds.y2) bounds.y2 = vertices[i].y;
+    }
+
+    return $BoundingBox($V(bounds.x1,bounds.y1), $V(bounds.x2,bounds.y1), $V(bounds.x2,bounds.y2), $V(bounds.x1,bounds.y2));
 }
 
 Polygon.prototype.area = function() {
@@ -81,7 +99,7 @@ Polygon.prototype.intersection = function(that) {
     };
 
     if (vertices.length > 0) {
-        var P = new Polygon(vertices);
+        var P = $P(vertices);
         return P;
     } else {
         return null;
@@ -90,7 +108,24 @@ Polygon.prototype.intersection = function(that) {
 
 
 $P = function(/* ...... */) {
-    var p = new Polygon(arguments);
+    var p;
+    if (arguments[0].push !== undefined) {
+        p = new Polygon(arguments[0]);
+    } else {
+        p = new Polygon(arguments);
+    }
+    p.bsp = bsp(p.edges);
+    p.bounds = get_bb(p.vertices);
+    return p;
+}
+
+$BoundingBox = function(/* ....... */) {
+    var p;
+    if (arguments[0].push !== undefined) {
+        p = new Polygon(arguments[0]);
+    } else {
+        p = new Polygon(arguments);
+    }
     return p;
 }
 

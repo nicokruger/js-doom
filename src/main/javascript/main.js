@@ -1,8 +1,8 @@
 var canvas, ctx;
 var game;
 var previousTime, currentTime, deltaTime;
-textureLoader = new TextureLoader();
-textureLoader.load("name", "textures/tiles-64.xpm.png", 64, 64);
+//textureLoader = new TextureLoader();
+//textureLoader.load("name", "textures/tiles-64.xpm.png", 64, 64);
 
 
 function init() {

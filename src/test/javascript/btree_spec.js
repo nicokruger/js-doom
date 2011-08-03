@@ -82,6 +82,16 @@ describe("Basic polygon/BSP library", function() {
         expect(partitioned_line.cosame).toEqual([$L($V(0,10), $V(0,0))]);
     })
 
+    it("should be able to correctly determine a bounding box for an arb. polygon", function () {
+        var P = $P($V(10,10), $V(15,15), $V(5,15), $V(5,-10))
+        expect(P.bounds.edges).toEqual([
+            $L($V(5,15), $V(5,-10)),
+            $L($V(5,-10), $V(15,-10)),
+            $L($V(15,-10), $V(15,15)),
+            $L($V(15,15), $V(5,15))
+            ]);
+    });
+
     it("should correctly partition a line that is co-incident to edges on the polygon (codiff)", function() {
         var square = $P($V(0,0), $V(10,0), $V(10,10), $V(0,10));
         var partitioned_line = square.partition($L($V(0,-15), $V(0,55)));
