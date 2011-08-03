@@ -96,10 +96,10 @@ function loop() {
 
       var width = poly.width;
       var height = poly.height;
-      var data = ctx.createImageData(width,height);
 
       var x1 = poly.extremes.x1;
       var y1 = poly.extremes.y1;
+      var data = ctx.getImageData(x1,y1, width,height);
 
       for (var y = 0; y < height; y++) {
           var ray = poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1)));
@@ -126,7 +126,10 @@ function loop() {
           })
       }
 
+      var canvas = document.createElement("canvas");
+
       ctx.putImageData(data, x1, y1);
+      //ctx.drawImage
 
     }
 
