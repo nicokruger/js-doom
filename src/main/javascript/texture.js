@@ -15,7 +15,10 @@ TextureLoader.prototype.load = function(name, image, width, height) {
         ctx.drawImage(im, 0, 0);
 
         //this.textures[name] = ctx.getImageData(200,100,width,height);
-        that.texture[name] = new Texture(ctx.getImageData(0,0,width,height), width, height);
+        that.texture[name] = {
+            once: new Texture(ctx.getImageData(0,0,width,height), width, height),
+            repeat: new TextureRepeat(ctx.getImageData(0,0,width,height), width, height)
+        }
 
         /*{
             r: function(x,y) { return 255; },
@@ -47,5 +50,29 @@ Texture.prototype.g = function(x,y) {
 Texture.prototype.b = function(x,y) {
     if (x <0 || x>this.width) return 0;
     if (y <0 || y>this.height) return 0;
+    return this.imageData.data[(x + y*this.width) * 4 + 2];
+}
+
+TextureRepeat = function(imageData, width, height) {
+    this.imageData = imageData;
+    this.width = width;
+    this.height = height;
+}
+
+TextureRepeat.prototype.r = function(x,y) {
+    x = x % this.width;
+    y = y % this.height;
+    return this.imageData.data[(x + y*this.width) * 4 + 0];
+}
+
+TextureRepeat.prototype.g = function(x,y) {
+    x = x % this.width;
+    y = y % this.height;
+    return this.imageData.data[(x + y*this.width) * 4 + 1];
+}
+
+TextureRepeat.prototype.b = function(x,y) {
+    x = x % this.width;
+    y = y % this.height;
     return this.imageData.data[(x + y*this.width) * 4 + 2];
 }

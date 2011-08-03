@@ -58,8 +58,23 @@ function loop() {
     }
     var P2 = circle_to_poly([150.0, 150.0], 32, 32);
 
-    drawTexture(ctx, P2, textureLoader.texture["name"]);
+    drawTexture(ctx, P2, textureLoader.texture["name"].once);
     drawPoly(ctx, P2, "#ffff00");
+
+    var v0 = $V(0*64 + 200,0*64 + 200);
+    var v1 = $V(2*64 + 200,0*64 + 200);
+    var v2 = $V(2*64 + 200,2*64 + 200);
+    var v3 = $V(1*64 + 200,2*64 + 200);
+    var v4 = $V(1*64 + 200,5*64 + 200);
+    var v5 = $V(5*64 + 200,5*64 + 200);
+    var v6 = $V(5*64 + 200,4*64 + 200);
+    var v7 = $V(7*64 + 200,4*64 + 200);
+    var v8 = $V(7*64 + 200,6*64 + 200);
+    var v9 = $V(0*64 + 200,6*64 + 200);
+
+    var bigPolygon = $P(v0, v1, v2, v3, v4, v5, v6, v7, v8, v9);
+    drawTexture(ctx, bigPolygon, textureLoader.texture["name"].repeat);
+    drawPoly(ctx, bigPolygon, "#ffff00");
 
     previousTime = currentTime;
 }
