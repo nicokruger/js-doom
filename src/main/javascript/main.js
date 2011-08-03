@@ -1,8 +1,8 @@
 var canvas, ctx;
 var game;
 var previousTime, currentTime, deltaTime;
-//textureLoader = new TextureLoader();
-//textureLoader.load("name", "textures/tiles-64.xpm.png", 64, 64);
+textureLoader = new TextureLoader();
+textureLoader.load("name", "textures/tiles-64.xpm.png", 64, 64);
 
 
 function init() {
@@ -56,26 +56,12 @@ function loop() {
     if (hack == 26) {
         hack = 26;
     }
-    var P2 = circle_to_poly([150.0, 150.0], 32.0, 128);
-
-/*    hack += 1;
-    var I1 = P1.intersection(P2);
-    if (I1.area() < 10) {
-        alert("failed at: " + hack);
-    } else {
-        drawPoly(ctx, I1, "#ff00ff");
-        drawPoly(ctx, P2, "#ffff00");
-    };                       */
-
-/*    ctx.fillStyle = "rgba(220, 220, 220, 1)";
-    ctx.font = "bold 12px sans-serif";
-    console.log("V: " + hack);
-    ctx.fillText("[" + hack +"]", 400, 400);*/
+    var P2 = circle_to_poly([150.0, 150.0], 32, 32);
 
     drawTexture(ctx, P2, textureLoader.texture["name"]);
     drawPoly(ctx, P2, "#ffff00");
 
-  previousTime = currentTime;
+    previousTime = currentTime;
 }
 
   function drawPoly(ctx, poly, colour) {
@@ -93,12 +79,15 @@ function loop() {
 
   function drawTexture(ctx, poly, texture) {
 
-      var width = 100;
-      var height = 100;
+      var width = poly.width;
+      var height = poly.height;
       var data = ctx.createImageData(width,height);
 
-      for (var y = 0; y < 100; y++) {
-          var ray = poly.partition($L($V(50, 100 + y), $V(250, 100 + y)));
+      var x1 = poly.extremes.x1;
+      var y1 = poly.extremes.y1;
+
+      for (var y = 0; y < height; y++) {
+          var ray = poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1)));
 
           ray.neg.forEach (function (seg) {
                 ctx.strokeStyle = "#00ff00";
@@ -107,22 +96,24 @@ function loop() {
                 ctx.lineTo(seg.end.x, y);
                 ctx.stroke();
 
-              var x1 = Math.round(seg.origin.x, 0);
-              var x2 = Math.round(seg.end.x, 0);
+              var rx1 = Math.round(seg.origin.x, 0);
+              var rx2 = Math.round(seg.end.x, 0);
 
-              for (var x = x1; x < x2; x++) {
+              for (var scanx = rx1; scanx < rx2; scanx++) {
+                var x = scanx-x1;
                 var index = (x + y * width) * 4;
-                data.data[index + 0] = texture.r(x-(150-32),y-20);
-                data.data[index + 1] = texture.g(x-(150-32),y-20);
-                data.data[index + 2] = texture.b(x-(150-32),y-20);
+
+                data.data[index + 0] = texture.r(x,y);
+                data.data[index + 1] = texture.g(x,y);
+                data.data[index + 2] = texture.b(x,y);
                 data.data[index + 3] = 255;
               }
           })
       }
 
-      ctx.putImageData(data, 10, 10);
+      ctx.putImageData(data, x1, y1);
 
     }
 
-var timer = setInterval(loop, 10000);
+var timer = setInterval(loop, 1000);
 init();

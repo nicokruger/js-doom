@@ -2,10 +2,19 @@
 Polygon = function(vertices) {
     // for easy drawing
     this.vertices = [];
+    var bounds = {
+        x1: 9999999,x2: -9999999,
+        y1: 9999999,y2: -9999999
+    }
 
     for (var i = 0; i < vertices.length; i++) {
         this.vertices[i] = vertices[i];
+        if (vertices[i].x < bounds.x1) bounds.x1 = vertices[i].x;
+        if (vertices[i].x > bounds.x2) bounds.x2 = vertices[i].x;
+        if (vertices[i].y < bounds.y1) bounds.y1 = vertices[i].y;
+        if (vertices[i].y > bounds.y2) bounds.y2 = vertices[i].y;
     }
+    this.extremes = bounds;
 
     // get the edges
     this.edges = reduce(this.vertices, function(e, b) {
@@ -14,6 +23,8 @@ Polygon = function(vertices) {
         return [e[0], b];
     }, [[], this.vertices[this.vertices.length-1]])[0];
 
+    this.width = bounds.x2 - bounds.x1;
+    this.height = bounds.y2 - bounds.y1;
 }
 
 function get_bb(vertices) {
