@@ -76,3 +76,49 @@ TextureRepeat.prototype.b = function(x,y) {
     y = y % this.height;
     return this.imageData.data[(x + y*this.width) * 4 + 2];
 }
+
+
+
+function drawPoly(ctx, poly, colour) {
+
+    ctx.strokeStyle = colour;
+    ctx.beginPath();
+    poly.edges.forEach(function (edge) {
+        ctx.moveTo(edge.origin.x, edge.origin.y);
+        ctx.lineTo(edge.end.x, edge.end.y);
+    });
+    ctx.stroke();
+
+}
+
+
+function drawTexture(ctx, poly, texture) {
+
+  var width = poly.width;
+  var height = poly.height;
+
+  var x1 = poly.extremes.x1;
+  var y1 = poly.extremes.y1;
+  var data = ctx.getImageData(x1,y1, width,height);
+
+  for (var y = 0; y < height; y++) {
+      var ray = poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1)));
+
+      ray.neg.forEach (function (seg) {
+          var rx1 = Math.round(seg.origin.x, 0);
+          var rx2 = Math.round(seg.end.x, 0);
+
+          for (var scanx = rx1; scanx < rx2; scanx++) {
+            var x = scanx-x1;
+            var index = (x + y * width) * 4;
+
+            data.data[index + 0] = texture.r(x,y);
+            data.data[index + 1] = texture.g(x,y);
+            data.data[index + 2] = texture.b(x,y);
+            data.data[index + 3] = 255;
+          }
+      })
+  }
+
+  ctx.putImageData(data, x1, y1);
+}

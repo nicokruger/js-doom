@@ -17,7 +17,7 @@ Polygon = function(vertices) {
     this.extremes = bounds;
 
     // get the edges
-    this.edges = reduce(this.vertices, function(e, b) {
+    this.edges = _.reduce(this.vertices, function(e, b) {
         if (!e[1].equals(b))
             e[0].push($L(e[1], b));
         return [e[0], b];
@@ -49,13 +49,13 @@ Polygon.prototype.area = function() {
     this.vertices.forEach(function (v) { verts.push(v); });
     verts.push(this.vertices[0]);
 
-    var positive_diagonals = reduce(verts.slice(1,verts.length), function (a,b) {
+    var positive_diagonals = _.reduce(verts.slice(1,verts.length), function (a,b) {
         a[0] += a[1].x * b.y;
         a[1] = b;
         return a;
     }, [0, verts[0]])[0];
 
-    var negative_diagonals = reduce(verts.slice(1,verts.length), function (a,b) {
+    var negative_diagonals = _.reduce(verts.slice(1,verts.length), function (a,b) {
         a[0] += a[1].y * b.x;
         a[1] = b;
         return a;
