@@ -56,7 +56,7 @@ function GameScreen(src) {
 
 
   var that = this;
-  $.getJSON("data/level1.json", function(data) {
+  $.getJSON("data/doom.json", function(data) {
       alert("loaded level");
       that.zoneObjects = get_zones(data);
       that.zoneObjects.forEach(function (zone) { that.gameComponents.push(zone) } );
