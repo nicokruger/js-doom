@@ -1,15 +1,22 @@
 describe('3. The actual game',function(){
 
-	describe("The converter between Game objects and Simulator objects", function () {
-		it("should be able to convert from a Game Zone object to a zone simulator struct", function () {
-			var z = new Zone(new Point(55, 70), "z1", 0.5, [1, 1, 5, 5, 5, 1, 1]);
+    describe("It should be possible to load a level, which is a list of polygons, from a JSON file", function() {
+        var d;
 
-			z = ConvertGameZones([z])[0];
-			expect(z["poly"]).toEqual($P(  $V(5,20), $V(105, 20),  $V(105,120), $V(5,120)))
-			expect(z["callFactor"]).toBe(0.5);
-			expect(z["label"]).toEqual("z1");
-			//expect(5).toBe(5);
-		});
+        runs(function() {
+            $.getJSON("../../src/main/javascript/level/level1.json", function(data) {
+               d = data;
+            });
+        })
+
+        waitsFor(function() { return d != null; }, "Could not retrieve example JSON level");
+
+        runs(function() {
+            expect(d["test"]).toBe("1");
+        })
+    });
+
+	describe("The converter between Game objects and Simulator objects", function () {
 
 		it("should be able to convert from a Game Tower object to a tower simulator struct", function() {
 			var t = new Tower(new Point(70, 130), 10);
@@ -30,11 +37,17 @@ describe('3. The actual game',function(){
 			new Tower(new Point(350, 300), 10)
 		]
 
+        var p1 = $P($V(55 - 50, 70 - 50), $V(55 + 50, 70 - 50), $V(55 + 50, 70 + 50), $V(55-50, 70+50));
+        var p2 = $P($V(60 - 50, 200 - 50), $V(60+ 50, 200 - 50), $V(60 + 50, 200 + 50), $V(60-50, 200+50));
+        var p3 = $P($V(370- 50, 60 - 50), $V(370 + 50, 60- 50), $V(370 + 50, 60 + 50), $V(370-50, 60+50));
+        var p4 = $P($V(340 - 50, 290 - 50), $V(340+ 50, 290 - 50), $V(340 + 50, 290 + 50), $V(340-50, 290+50));
+
+
 		zoneObjects = [
-			new Zone(new Point(55, 70), "z1", 0.5, [1, 1, 5, 5, 5, 1, 1]),
-			new Zone(new Point(60, 200), "z2", 0.5, [1, 1, 5, 5, 5, 1, 1]),
-			new Zone(new Point(370, 60), "z3", 0.35, [5, 5, 1, 1, 1, 5, 5]),
-			new Zone(new Point(340, 290), "z4", 0.8, [5, 5, 1, 1, 1, 5, 5])
+			new Zone(p1, "z1", 0.5, [1, 1, 5, 5, 5, 1, 1]),
+			new Zone(p2, "z2", 0.5, [1, 1, 5, 5, 5, 1, 1]),
+			new Zone(p3, "z3", 0.35, [5, 5, 1, 1, 1, 5, 5]),
+			new Zone(p4, "z4", 0.8, [5, 5, 1, 1, 1, 5, 5])
 		]
 
 		var zones = ConvertGameZones(zoneObjects);

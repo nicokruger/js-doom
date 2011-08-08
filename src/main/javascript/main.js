@@ -1,11 +1,13 @@
 var canvas, ctx;
 var game;
 var previousTime, currentTime, deltaTime;
-textureLoader = new TextureLoader();
-textureLoader.load("name", "textures/tiles-64.xpm.png", 64, 64);
+
 
 
 function init() {
+    textureLoader = new TextureLoader();
+    textureLoader.load("name", "textures/tiles-64.xpm.png", 64, 64);
+
     canvas = document.getElementById("canvas");
     if (canvas && canvas.getContext) {
         ctx = canvas.getContext("2d");
@@ -22,6 +24,7 @@ function init() {
         game = new Game();
         game.init();
         loop();
+        setInterval(loop, 1000);
     }
 
 }
@@ -56,5 +59,3 @@ function loop() {
 }
 
 
-var timer = setInterval(loop, 1000);
-init();
