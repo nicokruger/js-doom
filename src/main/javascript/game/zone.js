@@ -1,5 +1,6 @@
-function Zone(poly, label, callFactor, population) {
+function Zone(poly, label, callFactor, population, texture) {
 
+  this.texture = texture;
   this.poly = poly;
   this.label = label;
   this.callFactor = callFactor;
@@ -20,7 +21,7 @@ function Zone(poly, label, callFactor, population) {
 
   this.draw = function (ctx) {
 
-    drawTexture(ctx, this.poly, textureLoader.texture["name"].repeat);
+    drawTexture(ctx, this.poly, textureLoader.texture[this.texture].repeat);
 
     ctx.fillStyle = "rgba(220, 220, 220, 1)";
     ctx.font = "bold 12px sans-serif";
