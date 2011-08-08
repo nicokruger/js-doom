@@ -21,7 +21,7 @@ describe('3. The actual game',function(){
 	describe("The converter between Game objects and Simulator objects", function () {
 
 		it("should be able to convert from a Game Tower object to a tower simulator struct", function() {
-			var t = new Tower(new Point(70, 130), 10);
+			var t = new Tower($V(70, 130), 10);
 
 			t = ConvertGameTowers([t])[0];
 			expect(t["point"]).toEqual([70,130]);
@@ -34,9 +34,9 @@ describe('3. The actual game',function(){
 	it("should be possible to run the simulation on the first set of example data", function() {
 	
 		towerObjects = [
-			new Tower(new Point(70, 130), 10),
-			new Tower(new Point(350, 60), 20),
-			new Tower(new Point(350, 300), 10)
+			new Tower($V(70, 130), 10),
+			new Tower($V(350, 60), 20),
+			new Tower($V(350, 300), 10)
 		]
 
         var p1 = $P($V(55 - 50, 70 - 50), $V(55 + 50, 70 - 50), $V(55 + 50, 70 + 50), $V(55-50, 70+50));

@@ -48,9 +48,9 @@ function GameScreen(src) {
 
   // Create towers
   this.towerObjects = [
-  	new Tower(new Point(70, 130), 10), 
-  	new Tower(new Point(350, 60), 20),
-	new Tower(new Point(350, 300), 10)
+  	new Tower($V(70, 130), 10),
+  	new Tower($V(350, 60), 20),
+	new Tower($V(350, 300), 10)
   ]
   this.towerObjects.forEach(function (tower) { that.gameComponents.push(tower) } );
 
