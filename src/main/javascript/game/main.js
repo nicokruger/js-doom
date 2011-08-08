@@ -5,8 +5,9 @@ var previousTime, currentTime, deltaTime;
 
 
 function init() {
+
     textureLoader = new TextureLoader();
-    textureLoader.load("name", "textures/tiles-64.xpm.png", 64, 64);
+    textureLoader.load("name", "data/tiles-64.xpm.png", 64, 64);
 
     canvas = document.getElementById("canvas");
     if (canvas && canvas.getContext) {
@@ -24,7 +25,6 @@ function init() {
         game = new Game();
         game.init();
         loop();
-        setInterval(loop, 1000);
     }
 
 }
@@ -59,3 +59,4 @@ function loop() {
 }
 
 
+setInterval(loop, 5000);

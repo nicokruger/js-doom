@@ -4,7 +4,7 @@ describe('3. The actual game',function(){
         var polygons;
 
         runs(function() {
-            $.getJSON("../../src/main/javascript/level/level1.json", function(data) {
+            $.getJSON("../../src/main/javascript/data/level1.json", function(data) {
                polygons = data["polygons"];
             }).error(function(e) {
                 alert("error:" + e.statusText);

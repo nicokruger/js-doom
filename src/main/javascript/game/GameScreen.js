@@ -107,11 +107,12 @@ new Zone(createBlock(450,450, w, h), "a44", 1.0, [10,30,10,30,70,10,50])
 
   }
 
-  setInterval(this.updateComponents, 500, this);
+  setInterval(this.updateComponents, 5000, this);
 
   this.update = function (deltaTime) {}
   
   this.draw = function (ctx) {
+  alert("draW");
     ctx.font = "bold 12px sans-serif";
     for (i=0; i < 7; i++) {
       if (i == this.currentHour)
