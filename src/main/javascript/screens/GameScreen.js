@@ -36,6 +36,7 @@ function ConvertGameZones(zoneObjects) {
 function createBlock(x,y, width, height) {
     return $P($V(x-width,y-width), $V(x+width,y-height), $V(x+width,y+height), $V(x-width,y+height))
 }
+
 function GameScreen(src) {
         hack = 0;
   var that = this;
