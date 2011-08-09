@@ -23,6 +23,8 @@ function Zone(poly, label, callFactor, population, texture) {
 
     drawTexture(ctx, this.poly, textureLoader.texture[this.texture].repeat);
 
+    drawPoly(ctx, this.poly, "#0000ff");
+
     ctx.fillStyle = "rgba(220, 220, 220, 1)";
     ctx.font = "bold 12px sans-serif";
     var x = this.poly.extremes.x1;

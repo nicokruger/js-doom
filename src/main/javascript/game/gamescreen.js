@@ -84,7 +84,7 @@ function GameScreen(src) {
 
   }
 
-  setInterval(this.updateComponents, 5000, this);
+  //setInterval(this.updateComponents, 5000, this);
 
   this.update = function (deltaTime) {}
   

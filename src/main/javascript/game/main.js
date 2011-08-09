@@ -8,6 +8,17 @@ function init() {
 
     textureLoader = new TextureLoader();
     textureLoader.load("name", "data/tiles-64.xpm.png", 64, 64);
+    textureLoader.load("flat5_5", "data/flat5_5.png", 256, 256);
+    textureLoader.load("floor4_8", "data/floor4_8.png", 256, 256);
+    textureLoader.load("flat18", "data/flat18.png", 256, 256);
+    textureLoader.load("flat20", "data/flat20.png", 256, 256);
+    textureLoader.load("flat14", "data/flat14.png", 256, 256);
+    textureLoader.load("floor5_1", "data/floor5_1.png", 256, 256);
+    textureLoader.load("floor5_2", "data/floor5_2.png", 256, 256);
+    textureLoader.load("step2", "data/step2.png", 256, 256);
+    textureLoader.load("floor1_1", "data/floor1_1.png", 256, 256);
+    textureLoader.load("nukage3", "data/nukage3.png", 256, 256);
+    textureLoader.load("floor7_1", "data/floor7_1.png", 256, 256);
 
     canvas = document.getElementById("canvas");
     if (canvas && canvas.getContext) {
