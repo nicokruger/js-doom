@@ -8,13 +8,14 @@ TextureLoader.prototype.load = function(name, image, width, height) {
     var that = this;
     im.onload = function(ev) {
         var element = document.getElementById("canvas");
-        var ctx = element.getContext("2d");
+        var ctx = document.createElement("canvas").getContext("2d");
+        ctx.canvas.width = width;
+        ctx.canvas.height = height;
 
         im = ev.target;
 
         ctx.drawImage(im, 0, 0);
 
-        //this.textures[name] = ctx.getImageData(200,100,width,height);
         that.texture[name] = {
             once: new Texture(ctx.getImageData(0,0,width,height), width, height),
             repeat: new TextureRepeat(ctx.getImageData(0,0,width,height), width, height)

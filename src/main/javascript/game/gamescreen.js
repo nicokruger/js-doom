@@ -99,9 +99,14 @@ function GameScreen(src) {
       ctx.fillText(i, i * 80, 500);
     }
 
-    for (var i in this.gameComponents)
+    var t1 = Date.now();
+    for (var i in this.gameComponents) {
+      var tt1 = Date.now();
       this.gameComponents[i].draw(ctx);
-
+      var tt2 = Date.now();
+      console.log("Polygon time: " + (tt2-tt1));
+    }
+    console.log("Total time:" + (Date.now() - t1));
   }
 
 
