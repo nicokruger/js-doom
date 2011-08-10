@@ -104,7 +104,6 @@ Polygon.prototype.intersection = function(that) {
         var SS = order_edges(segs);
         SS.forEach(function (seg) {
             vertices.push(seg.origin);
-            //console.log("  seg: [" + seg.origin.x + "," + seg.origin.y + "] -> [" + seg.end.x + "," + seg.end.y + "]");
         });
         vertices.push(SS[SS.length-1].end);
     };

@@ -54,8 +54,8 @@ function documentMouseUpHandler(e) {
 }
 
 function windowResizeHandler() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    //canvas.width = window.innerWidth;
+    //canvas.height = window.innerHeight;
 }
 
 hack = 16;
@@ -64,10 +64,13 @@ function loop() {
   ctx.fillStyle = "rgba(76,76,78,0.5)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   currentTime = (Date.now());
+  thisFrame1 = currentTime;
   deltaTime = currentTime - previousTime;
   game.draw(ctx);
+  frameTime = (Date.now()) - thisFrame1;
   previousTime = currentTime;
+  console.log("Frame took: " + frameTime);
+  //setTimeout(loop, 1000);
 }
 
 
-setInterval(loop, 5000);
