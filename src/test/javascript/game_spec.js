@@ -1,27 +1,5 @@
 describe('3. The actual game',function(){
 
-    describe("It should be possible to load a level, which is a list of polygons, from a JSON file", function() {
-
-        var polygons;
-
-        runs(function() {
-            $.getJSON("../../src/main/javascript/data/level1.json", function(data) {
-               polygons = data;
-            }).error(function(e) {
-                alert("error:" + e.statusText);
-            });
-        });
-
-        waitsFor(function() { return polygons != null; }, "Could not retrieve example JSON level");
-
-        runs(function() {
-            expect(polygons["zones"][0]["points"].length).toBe(4);
-
-            zones = get_zones(polygons);
-            expect(zones.length).toBe(1);
-        })
-    });
-
 	describe("The converter between Game objects and Simulator objects", function () {
 
 		it("should be able to convert from a Game Tower object to a tower simulator struct", function() {
@@ -73,8 +51,31 @@ describe('3. The actual game',function(){
 		var s = new Simulator(zones, towers);
 		state = s.simulate()	
 
-		expect(state["zones"][0]["calls"]).toBe(0.5);
-		expect(state["towers"][0]["utilisation"]).toBe(9);
+		expect(state["zones"][0]["calls"]).toBe(100);
+		expect(state["towers"][0]["utilisation"]).toBe(-190);
 	});
+
+    it("It should be possible to load a level, which is a list of polygons, from a JSON file", function() {
+
+        var polygons;
+
+        runs(function() {
+            $.getJSON("../../src/main/javascript/data/level1.json", function(data) {
+               polygons = data;
+            }).error(function(e) {
+                alert("error:" + e.statusText);
+            });
+        });
+
+        waitsFor(function() { return polygons != null; }, "Could not retrieve example JSON level");
+
+        runs(function() {
+            expect(polygons["zones"][0]["points"].length).toBe(4);
+
+            zones = get_zones(polygons);
+            expect(zones.length).toBe(1);
+        })
+    });
+
 
 });
