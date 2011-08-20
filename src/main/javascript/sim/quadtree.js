@@ -55,9 +55,6 @@ QuadTree.prototype.forEach = function(o, f) {
 }
 
 
-
-
-
 PointPlacer = function(v) {
     return {
         topLeft: function (x,y,operation) {
@@ -71,6 +68,27 @@ PointPlacer = function(v) {
         },
         bottomRight: function (x,y,operation) {
             (v.x >= x && v.y <= y) && operation(v);
+        }
+    }
+}
+
+PolyPlacer = function(p) {
+    var makeSquare = function (x1,y1,x2,y2) {
+        return $P($V(x1,y1), $V(x2,y1), $V(x2,y2), $V(x1,y2));
+    };
+    var threshold = 10000;
+    return {
+        topLeft: function (x,y,operation) {
+            poly_intersect_simple(makeSquare(x-threshold,y,x,y+threshold), p) && operation(p);
+        },
+        topRight: function (x,y,operation) {
+            poly_intersect_simple(makeSquare(x,y,x+threshold,y+threshold), p) && operation(p);
+        },
+        bottomLeft: function (x,y,operation) {
+            poly_intersect_simple(makeSquare(x-threshold,y-threshold,x,y), p) && operation(p);
+        },
+        bottomRight: function (x,y,operation) {
+            poly_intersect_simple(makeSquare(x,y-threshold,x+threshold,y), p) && operation(p);
         }
     }
 }

@@ -21,6 +21,33 @@ describe("Quad tree optimisation", function () {
         expect(q.br[1]).toEqual($V(50,50));
     });
 
+    it("should be possible to place an object, represented by a polygon into the correct quad", function () {
+        var q = new Quad(50,50);
+        var p1 = $P($V(0,0), $V(49,0),$V(49,49),$V(0,49));
+        var p2 = $P($V(51,0), $V(100,0),$V(100,49),$V(51,49));
+        var p3 = $P($V(0,51), $V(49,51),$V(49,100),$V(0,100));
+        var p4 = $P($V(51,51), $V(100,51),$V(100,100),$V(51,51));
+        // edge case
+        var p5 = $P($V(49,49), $V(51,49), $V(51,51), $V(49,51));
+
+        q.add(PolyPlacer(p1));
+        q.add(PolyPlacer(p2));
+        q.add(PolyPlacer(p3));
+        q.add(PolyPlacer(p4));
+
+        expect(q.bl.length).toBe(1); expect(q.bl[0]).toBe(p1);
+        expect(q.br.length).toBe(1); expect(q.br[0]).toBe(p2);
+        expect(q.tl.length).toBe(1); expect(q.tl[0]).toBe(p3);
+        expect(q.tr.length).toBe(1); expect(q.tr[0]).toBe(p4);
+
+        q.add(PolyPlacer(p5));
+        // test the edge case
+        expect(q.bl[1]).toBe(p5);
+        expect(q.br[1]).toBe(p5);
+        expect(q.tl[1]).toBe(p5);
+        expect(q.tr[1]).toBe(p5);
+    });
+
     it("should be possible to create a recursive quadtree by combining quads", function () {
         var q1 = new Quad(25,75); var q2 = new Quad(75,75);
         var q3 = new Quad(25,25); var q4 = new Quad(75,25);
