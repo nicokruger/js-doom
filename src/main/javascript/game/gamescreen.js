@@ -138,12 +138,10 @@ function GameScreen(src) {
     }*/
     Timer.start("Polydraw");
     this.quadtree.forEach(Square(0,500,500,1000), function (zone) {
-        Timer.start(zone.label);
         var tt1 = Date.now();
         zone.draw(ctx);
         var tt2 = Date.now();
         i++
-        Timer.end();
         //console.log("   [" + zone.label + "] " + (tt2-tt1));
     });
     Timer.end();

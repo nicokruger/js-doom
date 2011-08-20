@@ -21,11 +21,9 @@ function Zone(poly, label, callFactor, population, texture) {
 
   this.draw = function (ctx) {
 
-    Timer.start("sector texture");
     drawTexture(ctx, this.poly, textureLoader.texture[this.texture].repeat);
-    Timer.end();
 
-    Timer.start("sector rest");
+    Timer.substart("sector rest");
     drawPoly(ctx, this.poly, "#0000ff");
 
     ctx.fillStyle = "rgba(220, 220, 220, 1)";
@@ -34,6 +32,6 @@ function Zone(poly, label, callFactor, population, texture) {
     var y = this.poly.extremes.y1;
 
     ctx.fillText("[" + this.calls +"] " + this.label + " - " + this.population[this.currentHour], x, y);
-    Timer.end();
+    Timer.subend();
   }
 }

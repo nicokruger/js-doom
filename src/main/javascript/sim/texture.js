@@ -108,11 +108,10 @@ function drawTexture(ctx, poly, texture) {
     return;
   }
 
-  Timer.start("retrieve image buffer");
+  Timer.substart("retrieve image buffer");
   var data = ctx.getImageData(x1,y1, width,height);
-  Timer.end();
+  Timer.subend();
 
-  Timer.start("rasterize process");
   for (var y = 0; y < height; y++) {
       Timer.substart("partition");
       var ray = poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1)));
@@ -122,9 +121,8 @@ function drawTexture(ctx, poly, texture) {
       texture.rasterize(data, y, ray, poly);
       Timer.subend();
   }
-  Timer.end();
 
-  Timer.start("put image buffer");
+  Timer.substart("put image buffer");
   ctx.putImageData(data, x1, y1);
-  Timer.end();
+  Timer.subend();
 }
