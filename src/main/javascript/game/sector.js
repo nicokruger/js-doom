@@ -14,6 +14,10 @@ Sector = function (poly, label, texture) {
         this.rays.push(poly.partition($L($V(this.x1-1, y+this.y1), $V(this.x1+this.width+1, y+this.y1))))
     }
 
+    this.ctx = document.createElement("canvas").getContext("2d");
+    this.ctx.canvas.width = this.width;
+    this.ctx.canvas.height = this.height;
+
 }
 
 Sector.prototype.updateComponents = function(x) {
@@ -27,7 +31,7 @@ Sector.prototype.draw = function(ctx) {
     }
 
     Timer.substart("get image buffer");
-    var data = ctx.createImageData(this.width,this.height);
+    var data = this.ctx.createImageData(this.width,this.height);
     Timer.subend();
 
     Timer.substart("rasterization");
@@ -37,7 +41,8 @@ Sector.prototype.draw = function(ctx) {
     Timer.subend();
 
     Timer.substart("Put image buffer");
-    ctx.putImageData(data, this.x1, this.y1);
+    this.ctx.putImageData(data, 0, 01);
+    ctx.drawImage(this.ctx.canvas, this.x1, this.y1);
     Timer.subend();
 
     Timer.substart("sector rest");
