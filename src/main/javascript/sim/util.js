@@ -33,6 +33,7 @@ printTimer = function (t,indent) {
     var prefix="";
     for (var i = 0; i < indent; i++) prefix+=" ";
 
+    $("#console").val("");
     // print the subtimers
     var subtimers = t[3];
     _.keys(subtimers).forEach(function (subtimername) {

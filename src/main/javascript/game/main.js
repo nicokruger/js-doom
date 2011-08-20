@@ -79,8 +79,10 @@ function windowResizeHandler() {
 hack = 16;
 
 function loop() {
-  ctx.fillStyle = "rgba(76,76,78,0.5)";
+  //ctx.globalCompositeOperation = "copy";
+  ctx.fillStyle = "rgba(76,76,78,1.0)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+  //ctx,globalCompositeOperation = "source-over";
   currentTime = (Date.now());
   thisFrame1 = currentTime;
   deltaTime = currentTime - previousTime;
