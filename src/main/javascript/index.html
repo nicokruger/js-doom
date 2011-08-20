@@ -17,13 +17,23 @@
 	</style>
     
 </head>
-<body onload="init()">
+<body onload="init()" style="background-color: #000000">
 <div>
-<button onclick="loop()">Draw</button>
-    <textarea id="console" style="width:500px; height:200px"></textarea>
+    <div>
+        <textarea id="console" style="width:500px; height:200px"></textarea>
+    </div>
+    <div>
+        <span>
+            <button onclick="loop()">Draw</button>
+            <button onclick="up()">Up</button>
+            <button onclick="down()">Down</button>
+            <button onclick="left()">Left</button>
+            <button onclick="right()">Right</button>
+        </span>
+    </div>
 </div>
 
-<canvas id='canvas' width="3000" height="3000"></canvas>
+<canvas id='canvas' width="1024" height="768"></canvas>
 
 <!-- 3rd party -->
 <script language="javascript" src="vendor/underscore.js"></script>

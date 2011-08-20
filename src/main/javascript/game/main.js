@@ -33,11 +33,25 @@ function init() {
 
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        game = new Game();
+        game = new Game(canvas.width, canvas.height);
         game.init();
         loop();
     }
 
+}
+
+function left() {
+    _.last(game.screenStack).x -= 32;
+}
+
+function right() {
+    _.last(game.screenStack).x += 32;
+}
+function up() {
+    _.last(game.screenStack).y += 32;
+}
+function down() {
+    _.last(game.screenStack).y -= 32;
 }
 
 function documentMouseMoveHandler(e) {

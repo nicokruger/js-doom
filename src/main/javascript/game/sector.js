@@ -23,7 +23,7 @@ Sector = function (poly, label, texture) {
 Sector.prototype.updateComponents = function(x) {
 }
 
-Sector.prototype.draw = function(ctx) {
+Sector.prototype.draw = function(viewport_x, viewport_y, ctx) {
 
     // TODO: handle at some pre-processing step.
     if (this.width == 0 || this.height == 0) {
@@ -44,11 +44,11 @@ Sector.prototype.draw = function(ctx) {
     this.ctx.putImageData(data, 0, 0);
     Timer.subend();
     Timer.substart("Draw image onto screen")
-    ctx.drawImage(this.ctx.canvas, this.x1, this.y1);
+    ctx.drawImage(this.ctx.canvas, this.x1 - viewport_x , this.y1 - viewport_y);
     Timer.subend();
 
     Timer.substart("sector rest");
-    drawPoly(ctx, this.label, this.poly, "#0000ff");
+    drawPoly(viewport_x, viewport_y, ctx, this.label, this.poly, "#0000ff");
     Timer.subend();
 }
 
@@ -86,19 +86,19 @@ function drawTexture(ctx, poly, texture) {
 /**
  * For testing only.
  */
-function drawPoly(ctx, label, poly, colour) {
+function drawPoly(viewport_x, viewport_y, ctx, label, poly, colour) {
     ctx.strokeStyle = colour;
     ctx.beginPath();
     poly.edges.forEach(function (edge) {
-        ctx.moveTo(edge.origin.x, edge.origin.y);
-        ctx.lineTo(edge.end.x, edge.end.y);
+        ctx.moveTo(edge.origin.x - viewport_x, edge.origin.y - viewport_y);
+        ctx.lineTo(edge.end.x - viewport_x, edge.end.y - viewport_y);
     });
     ctx.stroke();
 
     ctx.fillStyle = "rgba(220, 220, 220, 1)";
     ctx.font = "bold 12px sans-serif";
-    var x = poly.extremes.x1;
-    var y = poly.extremes.y1;
+    var x = poly.extremes.x1 - viewport_x;
+    var y = poly.extremes.y1 - viewport_y;
 
     ctx.fillText(label, x, y);
 
