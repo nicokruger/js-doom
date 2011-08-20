@@ -17,42 +17,12 @@ TextureLoader.prototype.load = function(name, image, width, height) {
         ctx.drawImage(im, 0, 0);
 
         that.texture[name] = {
-            once: new Texture(ctx.getImageData(0,0,width,height), width, height),
             repeat: new TextureRepeat(ctx.getImageData(0,0,width,height), width, height)
         }
-
-        /*{
-            r: function(x,y) { return 255; },
-            g: function(x,y) { return 0; },
-            b: function(x,y) { return 0; }
-        } */
     }
     im.src = image;
 }
 
-Texture = function(imageData, width, height) {
-    this.imageData = imageData;
-    this.width = width;
-    this.height = height;
-}
-
-Texture.prototype.r = function(x,y) {
-    if (x <0 || x>this.width) return 255;
-    if (y <0 || y>this.height) return 255;
-    return this.imageData.data[(x + y*this.width) * 4 + 0];
-}
-
-Texture.prototype.g = function(x,y) {
-    if (x <0 || x>this.width) return 255;
-    if (y <0 || y>this.height) return 255;
-    return this.imageData.data[(x + y*this.width) * 4 + 1];
-}
-
-Texture.prototype.b = function(x,y) {
-    if (x <0 || x>this.width) return 0;
-    if (y <0 || y>this.height) return 0;
-    return this.imageData.data[(x + y*this.width) * 4 + 2];
-}
 
 TextureRepeat = function(imageData, width, height) {
     this.imageData = imageData;
@@ -61,7 +31,6 @@ TextureRepeat = function(imageData, width, height) {
 }
 
 TextureRepeat.prototype.rasterize = function(data, y, ray, poly) {
-    //Timer.start("Texture Rasterize");
     var ty = y % this.height;
     var x1 = poly.extremes.x1;
     var y1 = poly.extremes.y1;
@@ -80,7 +49,6 @@ TextureRepeat.prototype.rasterize = function(data, y, ray, poly) {
             data.data[index + 3] = 255;
         }
     }
-    //Timer.end();
 }
 
 function drawPoly(ctx, poly, colour) {
@@ -92,9 +60,7 @@ function drawPoly(ctx, poly, colour) {
         ctx.lineTo(edge.end.x, edge.end.y);
     });
     ctx.stroke();
-
 }
-
 
 function drawTexture(ctx, poly, texture) {
 

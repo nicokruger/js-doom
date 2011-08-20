@@ -71,8 +71,31 @@ Timer.subend = function() {
     subtimertotal[1] += 1;
     return subtimertotal;
 }
-//exports.map = map
-//exports.reduce = reduce
-//exports.sum = sum
-//exports.zip = zip
-//exports.combine = combine
+
+function createBlock(x,y, width, height) {
+    return $P($V(x-width,y-width), $V(x+width,y-height), $V(x+width,y+height), $V(x-width,y+height))
+}
+
+function SectorPlacer(sector) {
+    var polyPlacer = PolyPlacer(sector.poly);
+
+    var operationInterceptor = function(operation) {
+        return function (polygon) {
+            operation(sector);
+        };
+    }
+    return {
+        topLeft: function (x,y,operation) {
+            polyPlacer.topLeft(x,y,operationInterceptor(operation));
+        },
+        topRight: function (x,y,operation) {
+            polyPlacer.topRight(x,y,operationInterceptor(operation));
+        },
+        bottomLeft: function (x,y,operation) {
+            polyPlacer.bottomLeft(x,y,operationInterceptor(operation));
+        },
+        bottomRight: function (x,y,operation) {
+            polyPlacer.bottomRight(x,y,operationInterceptor(operation));
+        }
+    }
+}
