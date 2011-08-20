@@ -62,33 +62,4 @@ function drawPoly(ctx, poly, colour) {
     ctx.stroke();
 }
 
-function drawTexture(ctx, poly, texture) {
 
-  var width = poly.width;
-  var height = poly.height;
-  var x1 = poly.extremes.x1;
-  var y1 = poly.extremes.y1;
-
-  // TODO: handle at some pre-processing step.
-  if (width == 0 || height == 0) {
-    return;
-  }
-
-  Timer.substart("retrieve image buffer");
-  var data = ctx.getImageData(x1,y1, width,height);
-  Timer.subend();
-
-  for (var y = 0; y < height; y++) {
-      Timer.substart("partition");
-      var ray = poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1)));
-      Timer.subend();
-
-      Timer.substart("rasterizing");
-      texture.rasterize(data, y, ray, poly);
-      Timer.subend();
-  }
-
-  Timer.substart("put image buffer");
-  ctx.putImageData(data, x1, y1);
-  Timer.subend();
-}
