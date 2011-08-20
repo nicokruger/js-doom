@@ -32,12 +32,12 @@ TextureRepeat = function(imageData, width, height) {
 
 TextureRepeat.prototype.rasterize = function(data, y, ray, poly) {
     var ty = y % this.height;
-    var x1 = poly.extremes.x1;
-    var y1 = poly.extremes.y1;
+    var x1 = (poly.extremes.x1 + 0.5) << 0;
+    var y1 = (poly.extremes.y1 + 0.5) << 0;
     for (var i = 0; i < ray.neg.length; i++) {
         var seg = ray.neg[i];
-        var rx1 = Math.round(seg.origin.x, 0);
-        var rx2 = Math.round(seg.end.x, 0);
+        var rx1 = (0.5 + seg.origin.x) << 0;
+        var rx2 = (0.5 + seg.end.x) << 0;
         for (var scanx = rx1; scanx < rx2; scanx++) {
             var x = (scanx-x1);
             var tx = x % this.width;
