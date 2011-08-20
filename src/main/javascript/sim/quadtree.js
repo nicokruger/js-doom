@@ -103,3 +103,22 @@ Square = function(x1,y1,x2,y2) {
     }
 
 }
+
+function setupQuadTree(x1,y1,x2,y2,max_width,max_height) {
+    var width = x2 - x1;
+    var height = y2 - y1;
+
+    var x = (x2+x1)/2;
+    var y = (y2+y1)/2;
+
+    if (width <= max_width && height <= max_height) {
+        return new Quad(x,y);
+    } else {
+        var bl = setupQuadTree(x1, y1, x, y, max_width, max_height);
+        var br = setupQuadTree(x, y1, x2, y, max_width, max_height);
+        var tr = setupQuadTree(x, y, x2, y2, max_width, max_height);
+        var tl = setupQuadTree(x1, y, x, y2, max_width, max_height);
+        return new QuadTree(x, y, bl, br, tr, tl);
+
+    }
+}

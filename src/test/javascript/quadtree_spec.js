@@ -154,4 +154,27 @@ describe("Quad tree optimisation", function () {
         });
         expect(l.length).toBe(1);
     })
+
+    it("should be possible to create a quad tree for given dimensions with all quads smaller than a specified size", function() {
+        var qt = setupQuadTree(0,0,10,10,5,5);
+        expect(qt.bl.x).toBe(2.5); expect(qt.bl.y).toBe(2.5);
+        expect(qt.br.x).toBe(7.5); expect(qt.br.y).toBe(2.5);
+        expect(qt.tr.x).toBe(7.5); expect(qt.tr.y).toBe(7.5);
+        expect(qt.tl.x).toBe(2.5); expect(qt.tl.y).toBe(7.5);
+    })
+
+    it("should be possible to create a quad tree for given dimensions with all quads smaller than a specified size #2", function() {
+        var qt = setupQuadTree(0,0,10,10,2.5,2.5);
+        expect(qt.bl.x).toBe(2.5); expect(qt.bl.y).toBe(2.5);
+        expect(qt.br.x).toBe(7.5); expect(qt.br.y).toBe(2.5);
+        expect(qt.tr.x).toBe(7.5); expect(qt.tr.y).toBe(7.5);
+        expect(qt.tl.x).toBe(2.5); expect(qt.tl.y).toBe(7.5);
+
+        expect(qt.bl.bl.x).toBe(1.25); expect(qt.bl.bl.y).toBe(1.25);
+        expect(qt.bl.br.x).toBe(3.75); expect(qt.bl.br.y).toBe(1.25);
+        expect(qt.bl.tr.x).toBe(3.75); expect(qt.bl.tr.y).toBe(3.75);
+        expect(qt.bl.tl.x).toBe(1.25); expect(qt.bl.tl.y).toBe(3.75);
+
+    })
+
 })

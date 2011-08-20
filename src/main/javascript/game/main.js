@@ -42,16 +42,20 @@ function init() {
 
 function left() {
     _.last(game.screenStack).x -= 32;
+    loop();
 }
 
 function right() {
     _.last(game.screenStack).x += 32;
+    loop();
 }
 function up() {
     _.last(game.screenStack).y += 32;
+    loop();
 }
 function down() {
     _.last(game.screenStack).y -= 32;
+    loop();
 }
 
 function documentMouseMoveHandler(e) {
