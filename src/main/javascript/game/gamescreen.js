@@ -3,12 +3,12 @@ GameScreen = function(width,height,src) {
     // QuadTree setup
     var bl = new Quad(250,250); var br = new Quad(750,250);
     var tr = new Quad(750,750); var tl = new Quad(250,750);
-    this.quadtree = setupQuadTree(0,0,4000,4000, 50, 50);
+    this.quadtree = setupQuadTree(0,0,4000,4000, 100, 100);
 
     this.x = 0;
     this.y = 600;
-    this.width = 800;
-    this.height = 800;
+    this.width = width;
+    this.height = height;
     // Load level
     var that = this;
     $.getJSON("data/doom.json", function(data) {
