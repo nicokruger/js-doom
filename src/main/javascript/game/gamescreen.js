@@ -20,6 +20,19 @@ GameScreen = function(width,height,src) {
         alert("error:" + e.statusText);
     });
 }
+GameScreen.prototype.left = function () {
+    this.x -= 32;
+}
+
+GameScreen.prototype.right = function () {
+    this.x += 32;
+}
+GameScreen.prototype.up = function () {
+    this.y += 32;
+}
+GameScreen.prototype.down = function () {
+    this.y -= 32;
+}
 
 GameScreen.prototype.draw = function (ctx) {
     ctx.font = "bold 12px sans-serif";
@@ -30,9 +43,10 @@ GameScreen.prototype.draw = function (ctx) {
 
     $("#viewport").html("Viewport: [" + that.x + "," + that.y + " x " + (that.x+that.width) + "," + (that.y+that.height));
 
+    var viewport = [this.x, this.y, this.x + this.width, this.y + this.height];
     this.quadtree.forEach(Square(that.x,that.y,that.x + that.width, that.y + that.height), function (sector) {
         var tt1 = Date.now();
-        sector.draw(that.x, that.y, ctx);
+        sector.draw(viewport, ctx);
         var tt2 = Date.now();
         i++;
     });

@@ -23,20 +23,27 @@ Sector = function (poly, label, texture) {
 Sector.prototype.updateComponents = function(x) {
 }
 
-Sector.prototype.draw = function(viewport_x, viewport_y, ctx) {
+Sector.prototype.draw = function(viewport, ctx) {
 
     // TODO: handle at some pre-processing step.
     if (this.width == 0 || this.height == 0) {
         return;
     }
 
+    var y1 = _.max([this.y1, viewport[1]]);
+    var y2 = _.min([this.y1 + this.height, viewport[3]]);
+    var x1 = _.max([this.x1, viewport[0]]);
+    var x2 = _.min([this.x1 + this.width, viewport[2]]);
+
     Timer.substart("get image buffer");
     var data = this.ctx.createImageData(this.width,this.height);
     Timer.subend();
 
     Timer.substart("rasterization");
-    for (var y = 0; y < this.height; y++) {
-      textureLoader.texture[this.texture].repeat.rasterize(data, y, this.rays[y], this.poly);
+    for (var y = y1 - this.y1; y < y2 - this.y1; y++) {
+      textureLoader.texture[this.texture].repeat.rasterize(data,
+        y, this.rays[y],
+        this.poly, x1, x2);
     }
     Timer.subend();
 
@@ -44,43 +51,12 @@ Sector.prototype.draw = function(viewport_x, viewport_y, ctx) {
     this.ctx.putImageData(data, 0, 0);
     Timer.subend();
     Timer.substart("Draw image onto screen")
-    ctx.drawImage(this.ctx.canvas, this.x1 - viewport_x , this.y1 - viewport_y);
+    ctx.drawImage(this.ctx.canvas, this.x1 - viewport[0] , this.y1 - viewport[1]);
     Timer.subend();
 
     Timer.substart("sector rest");
-    drawPoly(viewport_x, viewport_y, ctx, this.label, this.poly, "#0000ff");
+    drawPoly(viewport[0], viewport[1], ctx, this.label, this.poly, "#0000ff");
     Timer.subend();
-}
-
-function drawTexture(ctx, poly, texture) {
-
-  var width = poly.width;
-  var height = poly.height;
-  var x1 = poly.extremes.x1;
-  var y1 = poly.extremes.y1;
-
-  // TODO: handle at some pre-processing step.
-  if (width == 0 || height == 0) {
-    return;
-  }
-
-  Timer.substart("retrieve image buffer");
-  var data = ctx.getImageData(x1,y1, width,height);
-  Timer.subend();
-
-  for (var y = 0; y < height; y++) {
-      Timer.substart("partition");
-      var ray = poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1)));
-      Timer.subend();
-
-      Timer.substart("rasterizing");
-      texture.rasterize(data, y, ray, poly);
-      Timer.subend();
-  }
-
-  Timer.substart("put image buffer");
-  ctx.putImageData(data, x1, y1);
-  Timer.subend();
 }
 
 /**

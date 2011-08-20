@@ -41,20 +41,20 @@ function init() {
 }
 
 function left() {
-    _.last(game.screenStack).x -= 32;
+    _.last(game.screenStack).left();
     loop();
 }
 
 function right() {
-    _.last(game.screenStack).x += 32;
+    _.last(game.screenStack).right();
     loop();
 }
 function up() {
-    _.last(game.screenStack).y += 32;
+    _.last(game.screenStack).up();
     loop();
 }
 function down() {
-    _.last(game.screenStack).y -= 32;
+    _.last(game.screenStack).down();
     loop();
 }
 
