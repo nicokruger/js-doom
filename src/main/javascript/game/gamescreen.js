@@ -22,7 +22,7 @@ GameScreen.prototype.draw = function (ctx) {
 
     Timer.start("Sectordraw");
     var i = 0;
-    this.quadtree.forEach(Square(0,500,500,1000), function (sector) {
+    this.quadtree.forEach(Square(0,500,1000,1000), function (sector) {
         var tt1 = Date.now();
         sector.draw(ctx);
         var tt2 = Date.now();

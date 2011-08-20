@@ -41,7 +41,9 @@ Sector.prototype.draw = function(ctx) {
     Timer.subend();
 
     Timer.substart("Put image buffer");
-    this.ctx.putImageData(data, 0, 01);
+    this.ctx.putImageData(data, 0, 0);
+    Timer.subend();
+    Timer.substart("Draw image onto screen")
     ctx.drawImage(this.ctx.canvas, this.x1, this.y1);
     Timer.subend();
 
