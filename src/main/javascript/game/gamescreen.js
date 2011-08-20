@@ -130,22 +130,24 @@ function GameScreen(src) {
       ctx.fillText(i, i * 80, 500);
     }
 
-    var t1 = Date.now();
     /*for (var i in this.gameComponents) {
       var tt1 = Date.now();
       this.gameComponents[i].draw(ctx);
       var tt2 = Date.now();
       console.log("Polygon time: " + (tt2-tt1));
     }*/
-    var i = 0;
+    Timer.start("Polydraw");
     this.quadtree.forEach(Square(0,500,500,1000), function (zone) {
+        Timer.start(zone.label);
         var tt1 = Date.now();
         zone.draw(ctx);
         var tt2 = Date.now();
         i++
-        console.log("   [" + zone.label + "] " + (tt2-tt1));
+        Timer.end();
+        //console.log("   [" + zone.label + "] " + (tt2-tt1));
     });
-    console.log("[ " + i + " polygons ] Total time:" + (Date.now() - t1));
+    Timer.end();
+    console.log("[ " + i + " polygons ]");
   }
 
 

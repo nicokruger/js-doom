@@ -61,7 +61,7 @@ TextureRepeat = function(imageData, width, height) {
 }
 
 TextureRepeat.prototype.rasterize = function(data, y, ray, poly) {
-
+    //Timer.start("Texture Rasterize");
     var ty = y % this.height;
     var x1 = poly.extremes.x1;
     var y1 = poly.extremes.y1;
@@ -80,6 +80,7 @@ TextureRepeat.prototype.rasterize = function(data, y, ray, poly) {
             data.data[index + 3] = 255;
         }
     }
+    //Timer.end();
 }
 
 function drawPoly(ctx, poly, colour) {
@@ -107,13 +108,23 @@ function drawTexture(ctx, poly, texture) {
     return;
   }
 
+  Timer.start("retrieve image buffer");
   var data = ctx.getImageData(x1,y1, width,height);
+  Timer.end();
 
+  Timer.start("rasterize process");
   for (var y = 0; y < height; y++) {
+      Timer.substart("partition");
       var ray = poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1)));
+      Timer.subend();
 
+      Timer.substart("rasterizing");
       texture.rasterize(data, y, ray, poly);
+      Timer.subend();
   }
+  Timer.end();
 
+  Timer.start("put image buffer");
   ctx.putImageData(data, x1, y1);
+  Timer.end();
 }

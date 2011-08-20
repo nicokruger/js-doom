@@ -20,18 +20,55 @@ empty_array = function(size) {
 }
 
 Timer = {
-    timers : []
+    timers : [],
 };
 Timer.start = function (label) {
-    var timer = [label, Date.now()];
+    var timer = [label, Date.now(), [], {}];
     this.timers.push(timer);
     return timer;
 }
+
+printTimer = function (t,indent) {
+    var prefix="";
+    for (var i = 0; i < indent; i++) prefix+=" ";
+
+    // print the subtimers
+    var subtimers = t[3];
+    _.keys(subtimers).forEach(function (subtimername) {
+        var subtimes = subtimers[subtimername][1];
+        var subtiming = subtimers[subtimername][0];
+
+        console.log(prefix + "  [S][" + subtimername +"] " + subtiming + " <" + subtimes + ">");
+    });
+    console.log(prefix + "[T][" + t[0] + "] " + (t[1]));
+}
 Timer.end = function () {
     var t = this.timers.pop();
+    t[1] = (Date.now()-t[1]);
     if (typeof(console) !== 'undefined')
-        console.log("[Timer " + t[0] + "] " + (Date.now()-t[1]));
+        printTimer(t, this.timers.length*4);
     return t;
+}
+
+Timer.substart = function(label) {
+    var t = _.last(this.timers);
+    var subtimers = t[2];
+    var subtimerstotals = t[3];
+    if (!_.contains(_.keys(subtimerstotals), label)) {
+        subtimerstotals[label] = [0,0];
+    };
+    var subtimer = [label, Date.now()]
+    subtimers.push(subtimer);
+    return subtimer;
+}
+
+Timer.subend = function() {
+    var t = _.last(this.timers);
+    var subtimer = t[2].pop();
+    var subtimertotal = t[3][subtimer[0]];
+    subtimertotal[0] += (Date.now() - subtimer[1]);
+    subtimertotal[1] += 1;
+    return subtimertotal;
 }
 //exports.map = map
 //exports.reduce = reduce
