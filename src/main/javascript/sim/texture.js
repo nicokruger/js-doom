@@ -61,6 +61,7 @@ TextureRepeat = function(imageData, width, height) {
 }
 
 TextureRepeat.prototype.rasterize = function(data, y, ray, poly) {
+
     var ty = y % this.height;
     var x1 = poly.extremes.x1;
     var y1 = poly.extremes.y1;

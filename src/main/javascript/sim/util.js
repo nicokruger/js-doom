@@ -18,6 +18,21 @@ empty_array = function(size) {
 	}
 	return a;
 }
+
+Timer = {
+    timers : []
+};
+Timer.start = function (label) {
+    var timer = [label, Date.now()];
+    this.timers.push(timer);
+    return timer;
+}
+Timer.end = function () {
+    var t = this.timers.pop();
+    if (typeof(console) !== 'undefined')
+        console.log("[Timer " + t[0] + "] " + (Date.now()-t[1]));
+    return t;
+}
 //exports.map = map
 //exports.reduce = reduce
 //exports.sum = sum

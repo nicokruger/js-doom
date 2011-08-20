@@ -8,4 +8,15 @@ describe("Misc. Utitilies", function() {
 	});
 
 
+    it("should be posssible to keep a stack of timers", function () {
+        var t = Timer.start("test")
+        expect(t[0]).toBe("test");
+        t = Timer.start("test2");
+        expect(t[0]).toBe("test2");
+
+        t = Timer.end();
+        expect(t[0]).toBe("test2");
+        t = Timer.end();
+        expect(t[0]).toBe("test");
+    });
 });
