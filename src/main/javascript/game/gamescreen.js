@@ -55,6 +55,11 @@ function GameScreen(src) {
   this.towerObjects.forEach(function (tower) { that.gameComponents.push(tower) } );
 
 
+  var q1 = new Quad(2500,2500); var q2 = new Quad(75,75);
+  var q3 = new Quad(25,25); var q4 = new Quad(75,25);
+  var qt = new QuadTree(50, 50, q1, q2, q3, q4);
+
+  this.quadtree = new QuadTree
   var that = this;
   $.getJSON("data/doom.json", function(data) {
       alert("loaded level");

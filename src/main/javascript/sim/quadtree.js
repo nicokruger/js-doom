@@ -27,7 +27,7 @@ Quad.prototype.forEach = function(o, f) {
     l.forEach(f);
 }
 
-QuadTree = function (x,y,tl,tr,bl,br) {
+QuadTree = function (x,y,bl,br,tr,tl) {
     this.x = x;
     this.y = y;
     this.tl = tl;

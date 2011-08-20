@@ -49,28 +49,28 @@ describe("Quad tree optimisation", function () {
     });
 
     it("should be possible to create a recursive quadtree by combining quads", function () {
-        var q1 = new Quad(25,75); var q2 = new Quad(75,75);
-        var q3 = new Quad(25,25); var q4 = new Quad(75,25);
+        var tl = new Quad(25,75); var tr = new Quad(75,75);
+        var bl = new Quad(25,25); var br = new Quad(75,25);
 
-        spyOn(q1, "add"); spyOn(q2, "add"); spyOn(q3, "add"); spyOn(q4, "add");
+        spyOn(bl, "add"); spyOn(br, "add"); spyOn(tr, "add"); spyOn(tl, "add");
 
-        var qt = new QuadTree(50, 50, q1, q2, q3, q4);
+        var qt = new QuadTree(50, 50, bl, br, tr, tl);
 
         qt.add(PointPlacer($V(10,10)));
-        expect(q3.add).toHaveBeenCalled();
+        expect(bl.add).toHaveBeenCalled();
         qt.add(PointPlacer($V(60,60)));
-        expect(q2.add).toHaveBeenCalled();
+        expect(tr.add).toHaveBeenCalled();
         qt.add(PointPlacer($V(60,10)));
-        expect(q4.add).toHaveBeenCalled();
+        expect(br.add).toHaveBeenCalled();
         qt.add(PointPlacer($V(10,60)));
-        expect(q1.add).toHaveBeenCalled();
+        expect(tl.add).toHaveBeenCalled();
 
         // The edge case
         qt.add(PointPlacer($V(50,50)));
-        expect(q1.add).toHaveBeenCalled();
-        expect(q2.add).toHaveBeenCalled();
-        expect(q3.add).toHaveBeenCalled();
-        expect(q4.add).toHaveBeenCalled();
+        expect(bl.add).toHaveBeenCalled();
+        expect(br.add).toHaveBeenCalled();
+        expect(tr.add).toHaveBeenCalled();
+        expect(tl.add).toHaveBeenCalled();
 
     });
 
@@ -112,12 +112,12 @@ describe("Quad tree optimisation", function () {
     });
 
     it("should be possible to retrieve the objects in a quadtree for a given viewport", function () {
-        var q1 = new Quad(25,75); var q2 = new Quad(75,75);
-        var q3 = new Quad(25,25); var q4 = new Quad(75,25);
+        var tl = new Quad(25,75); var tr = new Quad(75,75);
+        var bl = new Quad(25,25); var br = new Quad(75,25);
 
-        spyOn(q1, "forEach"); spyOn(q2, "forEach"); spyOn(q3, "forEach"); spyOn(q4, "forEach");
+        spyOn(bl, "forEach"); spyOn(br, "forEach"); spyOn(tr, "forEach"); spyOn(tl, "forEach");
 
-        var qt = new QuadTree(50, 50, q1, q2, q3, q4);
+        var qt = new QuadTree(50, 50, bl, br, tr, tl);
         qt.add(PointPlacer($V(10,10)));
         qt.add(PointPlacer($V(60,10)));
         qt.add(PointPlacer($V(10,60)));
@@ -127,7 +127,7 @@ describe("Quad tree optimisation", function () {
 
         qt.forEach(a, function (x) {} );
 
-        expect(q3.forEach).toHaveBeenCalled();
+        expect(bl.forEach).toHaveBeenCalled();
     });
 
     it("should not duplicate iterate through items which are in more than one quad", function () {
@@ -143,9 +143,9 @@ describe("Quad tree optimisation", function () {
     })
 
     it("should not duplicate iterate through items which are in more than one quadtree", function () {
-        var q1 = new Quad(25,75); var q2 = new Quad(75,75);
-        var q3 = new Quad(25,25); var q4 = new Quad(75,25);
-        var qt = new QuadTree(50, 50, q1, q2, q3, q4);
+        var tl = new Quad(25,75); var tr = new Quad(75,75);
+        var bl = new Quad(25,25); var br = new Quad(75,25);
+        var qt = new QuadTree(50, 50, bl, br, tr, tl);
         qt.add(PointPlacer($V(50,50)));
 
         var l = [];
