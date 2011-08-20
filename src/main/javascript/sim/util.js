@@ -20,8 +20,9 @@ empty_array = function(size) {
 }
 
 Timer = {
-    timers : [],
+    timers : []
 };
+
 Timer.start = function (label) {
     var timer = [label, Date.now(), [], {}];
     this.timers.push(timer);
@@ -38,9 +39,9 @@ printTimer = function (t,indent) {
         var subtimes = subtimers[subtimername][1];
         var subtiming = subtimers[subtimername][0];
 
-        console.log(prefix + "  [S][" + subtimername +"] " + subtiming + " <" + subtimes + ">");
+        $("#console").val($("#console").val() + "\n" + prefix + "  [S][" + subtimername +"] " + subtiming + " <" + subtimes + ">");
     });
-    console.log(prefix + "[T][" + t[0] + "] " + (t[1]));
+    $("#console").val($("#console").val() + "\n" + "[T][" + t[0] + "] " + (t[1]));
 }
 Timer.end = function () {
     var t = this.timers.pop();
