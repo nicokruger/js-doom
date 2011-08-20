@@ -58,6 +58,15 @@ function down() {
     loop();
 }
 
+function set() {
+    var a = _.last(game.screenStack);
+
+    a.x = parseInt($("#viewportx").val());
+    a.y = parseInt($("#viewporty").val());
+
+    loop();
+}
+
 function documentMouseMoveHandler(e) {
     mouseX = e.clientX;
     mouseY = e.clientY;
