@@ -20,9 +20,13 @@ function init() {
     textureLoader.load("nukage3", "data/nukage3.png", 256, 256);
     textureLoader.load("floor7_1", "data/floor7_1.png", 256, 256);
 
+/*
     canvas = document.getElementById("canvas");
+*/
     if (canvas && canvas.getContext) {
+/*
         ctx = canvas.getContext("2d");
+*/
 
         document.addEventListener('mousemove', documentMouseMoveHandler, false);
         document.addEventListener('mousedown', documentMouseDownHandler, false);
@@ -31,7 +35,7 @@ function init() {
         window.addEventListener('resize', windowResizeHandler, false);
         windowResizeHandler();
 
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        //ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         game = new Game(canvas.width, canvas.height);
         game.init();
@@ -89,8 +93,8 @@ hack = 16;
 
 function loop() {
   //ctx.globalCompositeOperation = "copy";
-  ctx.fillStyle = "rgba(76,76,78,1.0)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  //ctx.fillStyle = "rgba(76,76,78,1.0)";
+  //ctx.fillRect(0, 0, canvas.width, canvas.height);
   //ctx,globalCompositeOperation = "source-over";
   currentTime = (Date.now());
   thisFrame1 = currentTime;

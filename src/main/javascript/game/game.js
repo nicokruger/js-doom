@@ -5,7 +5,7 @@ Game = function(width,height) {
 }
 
 Game.prototype.init = function() {
-    this.screenStack.push(new GameScreen(this.width, this.height, "resources/levels/doom.json"));
+    this.screenStack.push(new GameScreenGL(this.width, this.height, "resources/levels/doom.json"));
 }
 
 
