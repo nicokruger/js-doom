@@ -23,7 +23,7 @@ Sector = function (poly, label, texture) {
 Sector.prototype.updateComponents = function(x) {
 }
 
-Sector.prototype.draw = function(viewport, ctx) {
+Sector.prototype.draw = function(viewport, data, width, height) {
 
     // TODO: handle at some pre-processing step.
     if (this.width == 0 || this.height == 0) {
@@ -35,58 +35,12 @@ Sector.prototype.draw = function(viewport, ctx) {
     var x1 = _.max([this.x1, viewport[0]]);
     var x2 = _.min([this.x1 + this.width, viewport[2]]);
 
-    Timer.substart("get image buffer");
-    var data = this.ctx.createImageData(this.width,this.height);
-    for (var i = 0; i < data.data.length; i++)
-        data.data[i] = 255;
-
-    Timer.subend();
-
     Timer.substart("rasterization");
     for (var y = y1 - this.y1; y < y2 - this.y1; y++) {
-      textureLoader.texture[this.texture].repeat.rasterize(data,
-        y, this.rays[y],
-        this.poly, x1, x2);
+      textureLoader.texture[this.texture].repeat.rasterize(data, y, this.rays[y], this.poly, x1, x2, width, height);
     }
     Timer.subend();
 
-    Timer.substart("Put image buffer");
-
-/*
-    this.ctx = document.createElement("canvas").getContext("2d");
-    this.ctx.canvas.width = 256;
-    this.ctx.canvas.height = 256;
-    var data = this.ctx.createImageData(this.width,this.height);
-    for (var i = 0; i < data.data.length; i++)
-        data.data[i] = 129;
-*/
-    this.ctx.putImageData(data, 0, 0);
-
-    Timer.subend();
-
-    Timer.substart("create texture");
-    myctx = document.createElement("canvas").getContext("2d");
-    myctx.canvas.width = 256;
-    myctx.canvas.height = 256;
-    myctx.drawImage(this.ctx.canvas, 0, 0);
-    Timer.subend();
-
-    Timer.substart("convert to image");
-    var img = new Image();
-    img.src = myctx.canvas.toDataURL();
-    Timer.subend();
-
-    return img;
-    /*
-    Timer.subend();
-    Timer.substart("Draw image onto screen")
-    ctx.drawImage(this.ctx.canvas, this.x1 - viewport[0] , this.y1 - viewport[1]);
-    Timer.subend();
-
-    Timer.substart("sector rest");
-    drawPoly(viewport[0], viewport[1], ctx, this.label, this.poly, "#0000ff");
-    Timer.subend();
-*/
 }
 
 /**
