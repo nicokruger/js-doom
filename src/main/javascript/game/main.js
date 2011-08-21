@@ -33,28 +33,34 @@ function init() {
 
         //ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        game = new Game(canvas.width, canvas.height);
-        game.init();
+        $.getJSON("data/doom.json", function(data) {
+            $("#viewport").html("Level loaded");
+            startGame(data);
+        }).error(function(e) {
+            $("#viewport").html("Error loading level: " + e.statusText);
+        });
     }
 
 }
 
+function startGame(data) {
+    game = new Game(canvas.width, canvas.height, data);
+
+    requestAnimFrame(loop);
+}
+
 function left() {
     _.last(game.screenStack).left();
-    loop();
 }
 
 function right() {
     _.last(game.screenStack).right();
-    loop();
 }
 function up() {
     _.last(game.screenStack).up();
-    loop();
 }
 function down() {
     _.last(game.screenStack).down();
-    loop();
 }
 
 function set() {
@@ -63,7 +69,6 @@ function set() {
     a.x = parseInt($("#viewportx").val());
     a.y = parseInt($("#viewporty").val());
 
-    loop();
 }
 
 function documentMouseMoveHandler(e) {
@@ -87,18 +92,8 @@ function windowResizeHandler() {
 hack = 16;
 
 function loop() {
-  //ctx.globalCompositeOperation = "copy";
-  //ctx.fillStyle = "rgba(76,76,78,1.0)";
-  //ctx.fillRect(0, 0, canvas.width, canvas.height);
-  //ctx,globalCompositeOperation = "source-over";
-  currentTime = (Date.now());
-  thisFrame1 = currentTime;
-  deltaTime = currentTime - previousTime;
   game.draw(ctx);
-  frameTime = (Date.now()) - thisFrame1;
-  previousTime = currentTime;
-  console.log("Frame took: " + frameTime);
-  //setTimeout(loop, 1000);
+  requestAnimFrame(loop);
 }
 
 

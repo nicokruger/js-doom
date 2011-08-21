@@ -1,5 +1,5 @@
 
-GameScreenGL = function(width,height,src) {
+GameScreenGL = function(width,height,data) {
     // QuadTree setup
     this.quadtree = setupQuadTree(0,0,4000,4000, 250, 250);
 
@@ -8,15 +8,10 @@ GameScreenGL = function(width,height,src) {
     this.width = width;
     this.height = height;
     // Load level
-    var that = this;
-    $.getJSON("data/doom.json", function(data) {
-        $("#viewport").html("Level loaded");
-        that.sectors = get_sectors(data);
-        that.sectors.forEach(function (sector) {
-            that.quadtree.add(SectorPlacer(sector));
-        });
-    }).error(function(e) {
-        alert("error:" + e.statusText);
+    var that=this;
+    this.sectors = get_sectors(data);
+    this.sectors.forEach(function (sector) {
+        that.quadtree.add(SectorPlacer(sector));
     });
 
     this.tmpctx = document.createElement("canvas").getContext("2d");
@@ -49,8 +44,6 @@ GameScreenGL.prototype.draw = function (ctx) {
     var i = 0;
     var that = this;
     this.data = this.tmpctx.createImageData(this.width,this.height);
-    for (var i = 0; i < this.data.data.length; i++)
-        this.data.data[i] = 255;
 
     this.quadtree.forEach(Square(that.x,that.y,that.x + that.width, that.y + that.height), function (sector) {
         sector.draw(viewport, that.data);
@@ -66,7 +59,6 @@ GameScreenGL.prototype.draw = function (ctx) {
     Timer.subend();
 
     Timer.end();
-    console.log("[ " + i + " sectors ]");
 }
 
 

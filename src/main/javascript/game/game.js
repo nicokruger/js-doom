@@ -1,13 +1,10 @@
-Game = function(width,height) {
+Game = function(width,height,data) {
     this.screenStack = [];
     this.width = width;
     this.height = height;
-}
 
-Game.prototype.init = function() {
-    this.screenStack.push(new GameScreenGL(this.width, this.height, "resources/levels/doom.json"));
+    this.screenStack.push(new GameScreenGL(this.width, this.height, data));
 }
-
 
 Game.prototype.update = function(deltaTime) {
     this.screenStack[this.screenStack.length - 1].update(deltaTime);
