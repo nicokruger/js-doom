@@ -37,7 +37,6 @@ function init() {
 
         game = new Game(canvas.width, canvas.height);
         game.init();
-        loop();
     }
 
 }

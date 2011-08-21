@@ -15,8 +15,8 @@ Sector = function (poly, label, texture) {
     }
 
     this.ctx = document.createElement("canvas").getContext("2d");
-    this.ctx.canvas.width = 256;
-    this.ctx.canvas.height = 256;
+    this.ctx.canvas.width = this.width;
+    this.ctx.canvas.height = this.height;
 
 }
 
@@ -36,7 +36,7 @@ Sector.prototype.draw = function(viewport, ctx) {
     var x2 = _.min([this.x1 + this.width, viewport[2]]);
 
     Timer.substart("get image buffer");
-    var data = this.ctx.createImageData(256,256);
+    var data = this.ctx.createImageData(this.width,this.height);
     for (var i = 0; i < data.data.length; i++)
         data.data[i] = 255;
 
@@ -64,8 +64,13 @@ Sector.prototype.draw = function(viewport, ctx) {
 
     Timer.subend();
 
+    myctx = document.createElement("canvas").getContext("2d");
+    myctx.canvas.width = 256;
+    myctx.canvas.height = 256;
+    myctx.drawImage(this.ctx.canvas, 0, 0);
+
     var img = new Image();
-    img.src = this.ctx.canvas.toDataURL();
+    img.src = myctx.canvas.toDataURL();
 
     return img;
     /*

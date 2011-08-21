@@ -10,6 +10,7 @@ GameScreenGL = function(width,height,src) {
     // Load level
     var that = this;
     $.getJSON("data/doom.json", function(data) {
+        $("#viewport").html("Level loaded");
         that.sectors = get_sectors(data);
         that.sectors.forEach(function (sector) {
             that.quadtree.add(SectorPlacer(sector));
@@ -48,6 +49,12 @@ GameScreenGL.prototype.draw = function (ctx) {
     $("#viewport").html("Viewport: [" + that.x + "," + that.y + " x " + (that.x+that.width) + "," + (that.y+that.height));
 
     var viewport = [this.x, this.y, this.x + this.width, this.y + this.height];
+    var texdata = this.sectors[42].draw(viewport, ctx);
+    handleLoadedTexture(neheTexture, texdata);
+
+/*
+
+    var viewport = [this.x, this.y, this.x + this.width, this.y + this.height];
     this.quadtree.forEach(Square(that.x,that.y,that.x + that.width, that.y + that.height), function (sector) {
         var tt1 = Date.now();
         var texdata = sector.draw(viewport, ctx);
@@ -57,6 +64,7 @@ GameScreenGL.prototype.draw = function (ctx) {
         var tt2 = Date.now();
         i++;
     });
+*/
     drawScene();
         //ctx.font = "bold 12px sans-serif";
 
@@ -299,9 +307,9 @@ function drawScene() {
 
     mat4.translate(mvMatrix, [0.0, 0.0, -5.0]);
 
-    mat4.rotate(mvMatrix, 1.7, [1, 0, 0]);
-    mat4.rotate(mvMatrix, 1.7, [0, 1, 0]);
-    mat4.rotate(mvMatrix, 1.7, [0, 0, 1]);
+    mat4.rotate(mvMatrix, 0, [1, 0, 0]);
+    mat4.rotate(mvMatrix, 0, [0, 1, 0]);
+    mat4.rotate(mvMatrix, 0, [0, 0, 1]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
