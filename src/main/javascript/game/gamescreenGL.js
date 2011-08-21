@@ -3,10 +3,12 @@ GameScreenGL = function(width,height,data) {
     // QuadTree setup
     this.quadtree = setupQuadTree(0,0,4000,4000, 250, 250);
 
-    this.x = 0;
-    this.y = 600;
     this.width = width;
     this.height = height;
+    this.x = data.player1[0] - width/2;
+    this.y = data.player1[1] - height/2;
+    if (this.x < 0) this.x = 0;
+    if (this.y < 0) this.y = 0;
 
     //var textureLoader = new TextureLoader();
     // Load textures
@@ -170,7 +172,7 @@ function initShaders() {
 
 function handleLoadedTexture(texture, data) {
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.pixelStorei(gl.UNPACK_ALIGNMENT, true);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, data);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
