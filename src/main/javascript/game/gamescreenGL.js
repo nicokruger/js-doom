@@ -19,6 +19,11 @@ GameScreenGL = function(width,height,src) {
         alert("error:" + e.statusText);
     });
 
+    this.tmpctx = document.createElement("canvas").getContext("2d");
+    this.tmpctx.canvas.width = this.width;
+    this.tmpctx.canvas.height = this.height;
+
+    this.data = this.tmpctx.createImageData(this.width, this.height);
 }
 GameScreenGL.prototype.left = function () {
     this.x -= 32;
@@ -42,43 +47,23 @@ GameScreenGL.prototype.draw = function (ctx) {
         a = false;
     }
 
-    var tmpctx = document.createElement("canvas").getContext("2d");
-    tmpctx.canvas.width = this.width;
-    tmpctx.canvas.height = this.height;
-
     Timer.start("Sectordraw");
-    var i = 0;
-    var that = this;
-
-    $("#viewport").html("Viewport: [" + that.x + "," + that.y + " x " + (that.x+that.width) + "," + (that.y+that.height));
+    $("#viewport").html("Viewport: [" + this.x + "," + this.y + " x " + (this.x+this.width) + "," + (this.y+this.height));
 
     var viewport = [this.x, this.y, this.x + this.width, this.y + this.height];
 
-    var data = tmpctx.createImageData(this.width, this.height);
-    for (var i = 0; i < data.data.length; i++)
-        data.data[i] = 255;
+    //texdata = this.sectors[42].draw(viewport, this.data, this.width, this.height);
 
-    texdata = this.sectors[42].draw(viewport, data, this.width, this.height);
-    tmpctx.putImageData(data, 0, 0);
+    var i = 0;
+    var that = this;
+    this.data = this.tmpctx.createImageData(this.width,this.height);
 
-
-
-    Timer.substart("create texture");
-    myctx = document.createElement("canvas").getContext("2d");
-    myctx.canvas.width = 1024;
-    myctx.canvas.height = 1024;
-    myctx.drawImage(tmpctx.canvas, 0, 0);
-    Timer.subend();
-
-
-
-    Timer.substart("convert to image");
-    var img = new Image();
-    img.src = myctx.canvas.toDataURL();
-    Timer.subend();
-
+    this.quadtree.forEach(Square(that.x,that.y,that.x + that.width, that.y + that.height), function (sector) {
+        sector.draw(viewport, that.data);
+        i++;
+    });
     Timer.substart("Loading texture");
-    handleLoadedTexture(neheTexture, img);
+    handleLoadedTexture(neheTexture, this.data);
     Timer.subend();
 
     Timer.substart("Draw scene");
@@ -86,7 +71,7 @@ GameScreenGL.prototype.draw = function (ctx) {
     Timer.subend();
 
     Timer.end();
-    //console.log("[ " + i + " sectors ]");
+    console.log("[ " + i + " sectors ]");
 }
 
 var gl;

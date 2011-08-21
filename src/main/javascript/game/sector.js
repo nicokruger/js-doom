@@ -23,7 +23,7 @@ Sector = function (poly, label, texture) {
 Sector.prototype.updateComponents = function(x) {
 }
 
-Sector.prototype.draw = function(viewport, data, width, height) {
+Sector.prototype.draw = function(viewport, data) {
 
     // TODO: handle at some pre-processing step.
     if (this.width == 0 || this.height == 0) {
@@ -34,7 +34,8 @@ Sector.prototype.draw = function(viewport, data, width, height) {
     var y2 = _.min([this.y1 + this.height, viewport[3]]);
     var x1 = _.max([this.x1, viewport[0]]);
     var x2 = _.min([this.x1 + this.width, viewport[2]]);
-
+    var width = viewport[2] - viewport[0];
+    var height = viewport[3] - viewport[1];
     Timer.substart("rasterization");
     for (var y = y1 - this.y1; y < y2 - this.y1; y++) {
       textureLoader.texture[this.texture].repeat.rasterize(data, y, this.rays[y], this.poly, x1, x2, width, height);
