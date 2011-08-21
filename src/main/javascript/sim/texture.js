@@ -30,8 +30,8 @@ TextureRepeat = function(imageData, width, height) {
     this.height = height;
 }
 
-TextureRepeat.prototype.rasterize = function(outsideImageData, y, ray, poly, extreme_x1, extreme_x2, width, height) {
-    var ty = y % this.height;
+TextureRepeat.prototype.rasterize = function(outsideImageData, y, ray, poly, extreme_x1, extreme_x2, width, height, viewport) {
+    var ty = (y + viewport[1]) % this.height;
     var x1 = (poly.extremes.x1 + 0.5) << 0;
     var y1 = (poly.extremes.y1 + 0.5) << 0;
     var data = outsideImageData.data;
@@ -43,8 +43,8 @@ TextureRepeat.prototype.rasterize = function(outsideImageData, y, ray, poly, ext
         rx1 = _.max([rx1, extreme_x1]);
         rx2 = _.min([rx2, extreme_x2]);
         for (var scanx = rx1; scanx < rx2; scanx++) {
-            var x = (scanx-x1);
-            var tx = x % this.width;
+            var x = (scanx - viewport[0]);
+            var tx = scanx % this.width;
             var index = (x + y * width) * 4;
             var tindex = (tx + ty*this.width) * 4;
             data[index + 0] = thisdata[tindex + 0];

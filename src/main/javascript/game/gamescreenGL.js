@@ -23,8 +23,9 @@ GameScreenGL = function(width,height,src) {
     this.tmpctx.canvas.width = this.width;
     this.tmpctx.canvas.height = this.height;
 
-    this.data = this.tmpctx.createImageData(this.width, this.height);
+    webGLStart(document.getElementById("canvas"));
 }
+
 GameScreenGL.prototype.left = function () {
     this.x -= 32;
 }
@@ -39,29 +40,23 @@ GameScreenGL.prototype.down = function () {
     this.y -= 32;
 }
 
-var a = true;
 GameScreenGL.prototype.draw = function (ctx) {
-
-    if (a) {
-        webGLStart(document.getElementById("canvas"));
-        a = false;
-    }
-
     Timer.start("Sectordraw");
     $("#viewport").html("Viewport: [" + this.x + "," + this.y + " x " + (this.x+this.width) + "," + (this.y+this.height));
 
     var viewport = [this.x, this.y, this.x + this.width, this.y + this.height];
 
-    //texdata = this.sectors[42].draw(viewport, this.data, this.width, this.height);
-
     var i = 0;
     var that = this;
     this.data = this.tmpctx.createImageData(this.width,this.height);
+    for (var i = 0; i < this.data.data.length; i++)
+        this.data.data[i] = 255;
 
     this.quadtree.forEach(Square(that.x,that.y,that.x + that.width, that.y + that.height), function (sector) {
         sector.draw(viewport, that.data);
         i++;
     });
+
     Timer.substart("Loading texture");
     handleLoadedTexture(neheTexture, this.data);
     Timer.subend();
@@ -73,6 +68,26 @@ GameScreenGL.prototype.draw = function (ctx) {
     Timer.end();
     console.log("[ " + i + " sectors ]");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 var gl;
 function initGL(canvas) {
@@ -191,10 +206,10 @@ function setMatrixUniforms() {
         gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
         vertices = [
             // Front face
-            -1.0, -1.0,  1.0,
-             1.0, -1.0,  1.0,
-             1.0,  1.0,  1.0,
-            -1.0,  1.0,  1.0,
+             0.0, 0.0,  1.0,
+             1024.0, 0.0,  1.0,
+             1024.0,  1024.0,  1.0,
+             0.0,  1024.0,  1.0,
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         cubeVertexPositionBuffer.itemSize = 3;
@@ -225,19 +240,14 @@ function setMatrixUniforms() {
 
 function initTexture() {
     neheTexture = gl.createTexture();
-    neheTexture.image = new Image();
-    neheTexture.image.onload = function () {
-        handleLoadedTexture(neheTexture, neheTexture.image)
-    }
-
-    neheTexture.image.src = "data/nehe.gif";
 }
 
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+    //mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+    mat4.ortho(0,1024,0,1024, 0.1, 100.0, pMatrix)
     mat4.identity(mvMatrix);
     mat4.translate(mvMatrix, [0.0, 0.0, -5.0]);
 
@@ -263,7 +273,7 @@ function webGLStart(canvas) {
     initBuffers();
     initTexture();
 
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clearColor(1.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
 
     drawScene();

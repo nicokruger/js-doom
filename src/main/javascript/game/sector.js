@@ -37,8 +37,9 @@ Sector.prototype.draw = function(viewport, data) {
     var width = viewport[2] - viewport[0];
     var height = viewport[3] - viewport[1];
     Timer.substart("rasterization");
-    for (var y = y1 - this.y1; y < y2 - this.y1; y++) {
-      textureLoader.texture[this.texture].repeat.rasterize(data, y, this.rays[y], this.poly, x1, x2, width, height);
+
+    for (var y = y1; y < y2; y++) {
+      textureLoader.texture[this.texture].repeat.rasterize(data, y - viewport[1], this.rays[y-this.y1], this.poly, x1, x2, width, height, viewport);
     }
     Timer.subend();
 
