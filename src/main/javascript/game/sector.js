@@ -64,13 +64,17 @@ Sector.prototype.draw = function(viewport, ctx) {
 
     Timer.subend();
 
+    Timer.substart("create texture");
     myctx = document.createElement("canvas").getContext("2d");
     myctx.canvas.width = 256;
     myctx.canvas.height = 256;
     myctx.drawImage(this.ctx.canvas, 0, 0);
+    Timer.subend();
 
+    Timer.substart("convert to image");
     var img = new Image();
     img.src = myctx.canvas.toDataURL();
+    Timer.subend();
 
     return img;
     /*

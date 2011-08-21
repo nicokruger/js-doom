@@ -50,7 +50,9 @@ GameScreenGL.prototype.draw = function (ctx) {
 
     var viewport = [this.x, this.y, this.x + this.width, this.y + this.height];
     var texdata = this.sectors[42].draw(viewport, ctx);
+    Timer.substart("Loading texture");
     handleLoadedTexture(neheTexture, texdata);
+    Timer.subend();
 
 /*
 
@@ -65,7 +67,9 @@ GameScreenGL.prototype.draw = function (ctx) {
         i++;
     });
 */
+    Timer.substart("Draw scene");
     drawScene();
+    Timer.subend();
         //ctx.font = "bold 12px sans-serif";
 
     Timer.end();

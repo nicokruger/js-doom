@@ -20,9 +20,7 @@ function init() {
     textureLoader.load("nukage3", "data/nukage3.png", 256, 256);
     textureLoader.load("floor7_1", "data/floor7_1.png", 256, 256);
 
-/*
     canvas = document.getElementById("canvas");
-*/
     if (canvas && canvas.getContext) {
         ctx = canvas.getContext("experimental-webgl");
 
