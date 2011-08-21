@@ -7,6 +7,13 @@ GameScreenGL = function(width,height,data) {
     this.y = 600;
     this.width = width;
     this.height = height;
+
+    //var textureLoader = new TextureLoader();
+    // Load textures
+    _.keys(data.texturedata).forEach(function (texturename) {
+        textureLoader.add(texturename, data.texturedata[texturename]);
+    });
+
     // Load level
     var that=this;
     this.sectors = get_sectors(data);
