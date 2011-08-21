@@ -23,16 +23,18 @@ GameScreenGL = function(width,height,data) {
 
 GameScreenGL.prototype.left = function () {
     this.x -= 32;
+    if (this.x < 0) this.x = 0;
 }
 
 GameScreenGL.prototype.right = function () {
     this.x += 32;
 }
 GameScreenGL.prototype.up = function () {
-    this.y += 32;
+    this.y -= 32;
+    if (this.y < 0) this.y = 0;
 }
 GameScreenGL.prototype.down = function () {
-    this.y -= 32;
+    this.y += 32;
 }
 
 GameScreenGL.prototype.draw = function (ctx) {
