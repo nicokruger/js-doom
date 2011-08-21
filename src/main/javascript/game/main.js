@@ -21,7 +21,7 @@ function init() {
 
         //ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        $.getJSON("data/doom.json", function(data) {
+        $.getJSON("data/map01.json", function(data) {
             $("#viewport").html("Level loaded");
             startGame(data);
         }).error(function(e) {

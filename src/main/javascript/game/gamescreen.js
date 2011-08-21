@@ -1,5 +1,5 @@
 
-GameScreen = function(width,height,src) {
+GameScreen = function(width,height,data) {
     // QuadTree setup
     this.quadtree = setupQuadTree(0,0,4000,4000, 250, 250);
 
@@ -9,7 +9,8 @@ GameScreen = function(width,height,src) {
     this.height = height;
     // Load level
     var that = this;
-    $.getJSON("data/doom.json", function(data) {
+/*
+    $.getJSON("data/map01.json", function(data) {
         that.sectors = get_sectors(data);
         that.sectors.forEach(function (sector) {
             that.quadtree.add(SectorPlacer(sector));
@@ -17,6 +18,7 @@ GameScreen = function(width,height,src) {
     }).error(function(e) {
         alert("error:" + e.statusText);
     });
+*/
 }
 GameScreen.prototype.left = function () {
     this.x -= 32;
