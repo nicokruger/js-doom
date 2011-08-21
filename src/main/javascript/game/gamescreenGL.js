@@ -3,6 +3,8 @@ GameScreenGL = function(width,height,data) {
     // QuadTree setup
     this.quadtree = setupQuadTree(0,0,4000,4000, 250, 250);
 
+    $("#viewport").html("Hello?");
+
     this.width = width;
     this.height = height;
     this.x = data.player1[0] - width/2;
@@ -12,9 +14,14 @@ GameScreenGL = function(width,height,data) {
 
     //var textureLoader = new TextureLoader();
     // Load textures
+    var tkeys = [];
     _.keys(data.texturedata).forEach(function (texturename) {
-        textureLoader.add(texturename, data.texturedata[texturename]);
+        tkeys.push(texturename);
     });
+    for (var i = 0; i < tkeys.length; i++) {
+        textureLoader.add(tkeys[i], data.texturedata[tkeys[i]]);
+        $("#console").val($("#console").val() + "\nLoading texture " + tkeys[i]);
+    }
 
     // Load level
     var that=this;

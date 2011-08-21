@@ -5,18 +5,22 @@ TextureLoader = function() {
 
 TextureLoader.prototype.add = function(name, data) {
     var img = new Image();
-    img.src = data;
 
     console.log("Loading texture " + name + " - " + img.width + " / " + img.height);
+    var that = this;
 
-    var ctx = document.createElement("canvas").getContext("2d");
-    ctx.canvas.width = img.width;
-    ctx.canvas.height = img.height;
-    ctx.drawImage(img, 0, 0);
+    img.onload = function() {
+        var ctx = document.createElement("canvas").getContext("2d");
+        ctx.canvas.width = img.width;
+        ctx.canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
 
-    this.texture[name] = {
-        repeat: new TextureRepeat(ctx.getImageData(0,0, img.width, img.height), img.width, img.height)
-    }
+        that.texture[name] = {
+            repeat: new TextureRepeat(ctx.getImageData(0,0, img.width, img.height), img.width, img.height)
+        }
+    };
+
+    img.src = data;
 
 }
 TextureLoader.prototype.load = function(name, image, width, height) {
