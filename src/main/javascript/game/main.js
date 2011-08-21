@@ -24,9 +24,7 @@ function init() {
     canvas = document.getElementById("canvas");
 */
     if (canvas && canvas.getContext) {
-/*
-        ctx = canvas.getContext("2d");
-*/
+        ctx = canvas.getContext("experimental-webgl");
 
         document.addEventListener('mousemove', documentMouseMoveHandler, false);
         document.addEventListener('mousedown', documentMouseDownHandler, false);

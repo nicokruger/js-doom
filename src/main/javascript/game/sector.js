@@ -15,8 +15,8 @@ Sector = function (poly, label, texture) {
     }
 
     this.ctx = document.createElement("canvas").getContext("2d");
-    this.ctx.canvas.width = this.width;
-    this.ctx.canvas.height = this.height;
+    this.ctx.canvas.width = 256;
+    this.ctx.canvas.height = 256;
 
 }
 
@@ -36,7 +36,10 @@ Sector.prototype.draw = function(viewport, ctx) {
     var x2 = _.min([this.x1 + this.width, viewport[2]]);
 
     Timer.substart("get image buffer");
-    var data = this.ctx.createImageData(this.width,this.height);
+    var data = this.ctx.createImageData(256,256);
+    for (var i = 0; i < data.data.length; i++)
+        data.data[i] = 255;
+
     Timer.subend();
 
     Timer.substart("rasterization");
@@ -48,7 +51,24 @@ Sector.prototype.draw = function(viewport, ctx) {
     Timer.subend();
 
     Timer.substart("Put image buffer");
+
+/*
+    this.ctx = document.createElement("canvas").getContext("2d");
+    this.ctx.canvas.width = 256;
+    this.ctx.canvas.height = 256;
+    var data = this.ctx.createImageData(this.width,this.height);
+    for (var i = 0; i < data.data.length; i++)
+        data.data[i] = 129;
+*/
     this.ctx.putImageData(data, 0, 0);
+
+    Timer.subend();
+
+    var img = new Image();
+    img.src = this.ctx.canvas.toDataURL();
+
+    return img;
+    /*
     Timer.subend();
     Timer.substart("Draw image onto screen")
     ctx.drawImage(this.ctx.canvas, this.x1 - viewport[0] , this.y1 - viewport[1]);
@@ -57,6 +77,7 @@ Sector.prototype.draw = function(viewport, ctx) {
     Timer.substart("sector rest");
     drawPoly(viewport[0], viewport[1], ctx, this.label, this.poly, "#0000ff");
     Timer.subend();
+*/
 }
 
 /**

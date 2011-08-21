@@ -41,10 +41,7 @@ GameScreenGL.prototype.draw = function (ctx) {
         a = false;
     }
 
-    drawScene();
-        //ctx.font = "bold 12px sans-serif";
-
-    /*Timer.start("Sectordraw");
+    Timer.start("Sectordraw");
     var i = 0;
     var that = this;
 
@@ -53,11 +50,17 @@ GameScreenGL.prototype.draw = function (ctx) {
     var viewport = [this.x, this.y, this.x + this.width, this.y + this.height];
     this.quadtree.forEach(Square(that.x,that.y,that.x + that.width, that.y + that.height), function (sector) {
         var tt1 = Date.now();
-        sector.draw(viewport, ctx);
+        var texdata = sector.draw(viewport, ctx);
+
+        handleLoadedTexture(neheTexture, texdata);
+
         var tt2 = Date.now();
         i++;
     });
-    Timer.end();*/
+    drawScene();
+        //ctx.font = "bold 12px sans-serif";
+
+    Timer.end();
     //console.log("[ " + i + " sectors ]");
 }
 
@@ -139,10 +142,10 @@ function initShaders() {
     shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
 }
 
-function handleLoadedTexture(texture) {
+function handleLoadedTexture(texture, data) {
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, data);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     gl.bindTexture(gl.TEXTURE_2D, null);
@@ -280,7 +283,7 @@ function initTexture() {
     neheTexture = gl.createTexture();
     neheTexture.image = new Image();
     neheTexture.image.onload = function () {
-        handleLoadedTexture(neheTexture)
+        handleLoadedTexture(neheTexture, neheTexture.image)
     }
 
     neheTexture.image.src = "data/nehe.gif";
