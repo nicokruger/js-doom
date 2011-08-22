@@ -218,7 +218,7 @@ function initShaders() {
 
 function handleLoadedTexture(texture, data) {
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.pixelStorei(gl.UNPACK_ALIGNMENT, true);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, data);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -296,7 +296,7 @@ function drawScene() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     //mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
-    mat4.ortho(0,1024,0,1024, 0.1, 100.0, pMatrix)
+    mat4.ortho(0, 1024, 0, 1024, 0.1, 100.0, pMatrix)
     mat4.identity(mvMatrix);
     mat4.translate(mvMatrix, [0.0, 0.0, -5.0]);
 

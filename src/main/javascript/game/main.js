@@ -21,9 +21,9 @@ function init() {
             $("#viewport").html("Level loaded");
             startGame(data);
 
-            document.addEventListener('mousemove', documentMouseMoveHandler, false);
-            document.addEventListener('mousedown', documentMouseDownHandler, false);
-            document.addEventListener('mouseup', documentMouseUpHandler, false);
+            ctx.addEventListener('mousemove', documentMouseMoveHandler, false);
+            ctx.addEventListener('mousedown', documentMouseDownHandler, false);
+            ctx.addEventListener('mouseup', documentMouseUpHandler, false);
 
         }).error(function(e) {
             $("#viewport").html("Error loading level: " + e.statusText);
