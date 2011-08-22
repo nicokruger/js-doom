@@ -59,6 +59,19 @@ function set() {
 
 }
 
+function loadmap() {
+    var map = $("#map").val();
+    alert("Loading: " + map);
+
+    $.getJSON(map, function(data) {
+        $("#viewport").html("Level loaded");
+        startGame(data);
+    }).error(function(e) {
+        $("#viewport").html("Error loading level: " + e.statusText);
+    });
+
+}
+
 function documentMouseMoveHandler(e) {
     mouseX = e.clientX;
     mouseY = e.clientY;
