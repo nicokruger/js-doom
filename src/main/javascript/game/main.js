@@ -10,7 +10,7 @@ function init() {
 
     canvas = document.getElementById("canvas");
     if (canvas && canvas.getContext) {
-        ctx = canvas.getContext("experimental-webgl");
+        ctx = canvas.getContext("2d");
 
         window.addEventListener('resize', windowResizeHandler, false);
         windowResizeHandler();
@@ -20,11 +20,6 @@ function init() {
         $.getJSON("data/map01.json", function(data) {
             $("#viewport").html("Level loaded");
             startGame(data);
-
-            ctx.addEventListener('mousemove', documentMouseMoveHandler, false);
-            ctx.addEventListener('mousedown', documentMouseDownHandler, false);
-            ctx.addEventListener('mouseup', documentMouseUpHandler, false);
-
         }).error(function(e) {
             $("#viewport").html("Error loading level: " + e.statusText);
         });

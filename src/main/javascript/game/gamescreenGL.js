@@ -55,7 +55,7 @@ GameScreenGL.prototype.down = function () {
 }
 
 GameScreenGL.prototype.draw = function (ctx) {
-    if (!textureLoader.ready()) {
+    /*if (!textureLoader.ready()) {
         console.log("Textureloader not ready... aborting draw");
         return;
     }
@@ -76,12 +76,12 @@ GameScreenGL.prototype.draw = function (ctx) {
     Timer.substart("Loading texture");
     handleLoadedTexture(neheTexture, this.data);
     Timer.subend();
-
-    Timer.substart("Draw scene");
+      k
+    Timer.substart("Draw scene");*/
     drawScene();
-    Timer.subend();
+    /*Timer.subend();
 
-    Timer.end();
+    Timer.end();*/
 }
 
 //
@@ -218,7 +218,8 @@ function initShaders() {
 
 function handleLoadedTexture(texture, data) {
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    //gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.pixelStorei(gl.UNPACK_ALIGNMENT, true);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, data);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -289,6 +290,12 @@ function setMatrixUniforms() {
 
 function initTexture() {
     neheTexture = gl.createTexture();
+    neheTexture.img = new Image();
+    neheTexture.img.src = "data/nehe.gif";
+    neheTexture.onload = new function() {
+        handleLoadedTexture(neheTexture, neheTexture.img);
+        drawScene();
+    }
 }
 
 function drawScene() {
@@ -325,6 +332,5 @@ function webGLStart(canvas) {
     gl.clearColor(1.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
 
-    drawScene();
 }
 

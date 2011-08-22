@@ -3,7 +3,8 @@ Game = function(width,height,data) {
     this.width = width;
     this.height = height;
 
-    this.screenStack.push(new GameScreenGL(this.width, this.height, data));
+    //this.screenStack.push(new GameScreenGL(this.width, this.height, data));
+    this.screenStack.push(new GameScreen(this.width, this.height, data));
 
 }
 
@@ -22,13 +23,13 @@ Game.prototype.draw = function (ctx) {
 //
 
 Game.prototype.mouseMove = function (x,y) {
-    this.screenStack[this.screenStack.length - 1].mouseMove(x,y);
+    //this.screenStack[this.screenStack.length - 1].mouseMove(x,y);
 }
 
 Game.prototype.mouseUp = function (x,y) {
-    this.screenStack[this.screenStack.length - 1].mouseUp(x,y);
+    //this.screenStack[this.screenStack.length - 1].mouseUp(x,y);
 }
 
 Game.prototype.mouseDown = function (x,y) {
-    this.screenStack[this.screenStack.length - 1].mouseDown(x,y);
+    //this.screenStack[this.screenStack.length - 1].mouseDown(x,y);
 }

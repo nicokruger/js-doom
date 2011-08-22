@@ -45,25 +45,3 @@ Sector.prototype.draw = function(viewport, data) {
 
 }
 
-/**
- * For testing only.
- */
-function drawPoly(viewport_x, viewport_y, ctx, label, poly, colour) {
-    ctx.strokeStyle = colour;
-    ctx.beginPath();
-    poly.edges.forEach(function (edge) {
-        ctx.moveTo(edge.origin.x - viewport_x, edge.origin.y - viewport_y);
-        ctx.lineTo(edge.end.x - viewport_x, edge.end.y - viewport_y);
-    });
-    ctx.stroke();
-
-    ctx.fillStyle = "rgba(220, 220, 220, 1)";
-    ctx.font = "bold 12px sans-serif";
-    var x = poly.extremes.x1 - viewport_x;
-    var y = poly.extremes.y1 - viewport_y;
-
-    ctx.fillText(label, x, y);
-
-}
-
-
