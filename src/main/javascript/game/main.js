@@ -12,10 +12,6 @@ function init() {
     if (canvas && canvas.getContext) {
         ctx = canvas.getContext("experimental-webgl");
 
-        document.addEventListener('mousemove', documentMouseMoveHandler, false);
-        document.addEventListener('mousedown', documentMouseDownHandler, false);
-        document.addEventListener('mouseup', documentMouseUpHandler, false);
-
         window.addEventListener('resize', windowResizeHandler, false);
         windowResizeHandler();
 
@@ -24,6 +20,11 @@ function init() {
         $.getJSON("data/map01.json", function(data) {
             $("#viewport").html("Level loaded");
             startGame(data);
+
+            document.addEventListener('mousemove', documentMouseMoveHandler, false);
+            document.addEventListener('mousedown', documentMouseDownHandler, false);
+            document.addEventListener('mouseup', documentMouseUpHandler, false);
+
         }).error(function(e) {
             $("#viewport").html("Error loading level: " + e.statusText);
         });
@@ -73,15 +74,16 @@ function loadmap() {
 }
 
 function documentMouseMoveHandler(e) {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+    game.mouseMove(e.clientX, e.clientY);
 }
 
 function documentMouseDownHandler(e) {
+    game.mouseDown(e.clientX, e.clientY);
     mouseDown = true;
 }
 
 function documentMouseUpHandler(e) {
+    game.mouseUp(e.clientX, e.clientY);
     mouseDown = false;
 }
 

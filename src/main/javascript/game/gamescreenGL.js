@@ -12,7 +12,6 @@ GameScreenGL = function(width,height,data) {
     if (this.x < 0) this.x = 0;
     if (this.y < 0) this.y = 0;
 
-    //var textureLoader = new TextureLoader();
     // Load textures
     var tkeys = [];
     _.keys(data.texturedata).forEach(function (texturename) {
@@ -35,6 +34,8 @@ GameScreenGL = function(width,height,data) {
     this.tmpctx.canvas.height = this.height;
 
     webGLStart(document.getElementById("canvas"));
+
+    this.isMouseDown = false;
 }
 
 GameScreenGL.prototype.left = function () {
@@ -83,9 +84,43 @@ GameScreenGL.prototype.draw = function (ctx) {
     Timer.end();
 }
 
+//
+// Basic input stuff
+//
 
+GameScreenGL.prototype.mouseMove = function (x,y) {
+    if (this.isMouseDown) {
+        var x1 = x - this.prev_mousex;
+        var y1 = y - this.prev_mousey;
+        this.place(this.x+x1, this.y+y1);
+    }
 
+    this.prev_mousex = x;
+    this.prev_mousey = y;
 
+}
+
+GameScreenGL.prototype.mouseUp = function (x,y) {
+    this.isMouseDown = false;
+}
+
+GameScreenGL.prototype.mouseDown = function (x,y) {
+    this.isMouseDown = true;
+    this.prev_mousex = x;
+    this.prev_mousey = y;
+    this.place(x,y);
+}
+
+GameScreenGL.prototype.place = function(x,y) {
+    this.x = (x + this.x - this.width/2);
+    this.y = (y + this.y - this.height/2);
+    if (this.x < 0) {
+        this.x = 0;
+    }
+    if (this.y < 0) {
+        this.y = 0;
+    }
+}
 
 
 
