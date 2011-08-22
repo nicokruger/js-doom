@@ -1,9 +1,16 @@
 
 TextureLoader = function() {
     this.texture = {}
+    this.unloaded = 0;
+}
+
+TextureLoader.prototype.ready = function() {
+    return this.unloaded == 0;
 }
 
 TextureLoader.prototype.add = function(name, data) {
+    this.unloaded += 1;
+
     var img = new Image();
 
     console.log("Loading texture " + name + " - " + img.width + " / " + img.height);
@@ -18,6 +25,8 @@ TextureLoader.prototype.add = function(name, data) {
         that.texture[name] = {
             repeat: new TextureRepeat(ctx.getImageData(0,0, img.width, img.height), img.width, img.height)
         }
+
+        that.unloaded -= 1
     };
 
     img.src = data;

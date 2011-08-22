@@ -54,6 +54,10 @@ GameScreenGL.prototype.down = function () {
 }
 
 GameScreenGL.prototype.draw = function (ctx) {
+    if (!textureLoader.ready()) {
+        console.log("Textureloader not ready... aborting draw");
+        return;
+    }
     Timer.start("Sectordraw");
     $("#viewport").html("Viewport: [" + this.x + "," + this.y + " x " + (this.x+this.width) + "," + (this.y+this.height));
 
