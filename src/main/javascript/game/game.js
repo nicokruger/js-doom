@@ -4,7 +4,7 @@ Game = function(width,height,data) {
     this.height = height;
 
     //this.screenStack.push(new GameScreenGL(this.width, this.height, data));
-    this.screenStack.push(new GameScreen(this.width, this.height, data));
+    this.screenStack.push(new GameScreenGL(this.width, this.height, data));
 
 }
 
