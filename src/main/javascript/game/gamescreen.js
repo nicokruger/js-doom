@@ -3,12 +3,12 @@ GameScreen = function(width,height,data) {
     // QuadTree setup
     this.quadtree = setupQuadTree(0,0,4000,4000, 250, 250);
 
-    this.x = data.player1[0] - width/2;
-    this.y = data.player1[1] - height/2;
-    if (this.x < 0) this.x = 0;
-    if (this.y < 0) this.y = 0;
+
     this.width = width;
     this.height = height;
+    this.setCenter(data.player1[0], data.player1[1]);
+    $("#console").val($("console").val() + "\nPlayer start at " + data.player1[0] + "," + data.player1[1]);
+    console.log("Player start at " + data.player1[0] + "," + data.player1[1]);
     // Load textures
     var tkeys = [];
     _.keys(data.texturedata).forEach(function (texturename) {
@@ -43,6 +43,11 @@ GameScreen.prototype.down = function () {
     this.y += 32;
 }
 
+GameScreen.prototype.setCenter = function (x,y) {
+    this.x = x - this.width / 2;
+    this.y = y - this.height / 2;
+}
+
 GameScreen.prototype.draw = function (ctx) {
     if (!textureLoader.ready()) {
         console.log("Textureloader not ready... aborting draw");
@@ -50,9 +55,12 @@ GameScreen.prototype.draw = function (ctx) {
     }
 
     ctx.font = "bold 12px sans-serif";
+    ctx.fillStyle = "rgba(0,0,0,1.0)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     Timer.start("Sectordraw");
-    var i = 0;
+
+    /*var i = 0;
     var that = this;
 
     $("#viewport").html("Viewport: [" + that.x + "," + that.y + " x " + (that.x+that.width) + "," + (that.y+that.height));
@@ -69,10 +77,14 @@ GameScreen.prototype.draw = function (ctx) {
     Timer.substart("Put image buffer");
     ctx.putImageData(data, 0, 0);
     Timer.subend();
+    */
 
+    var viewport = [this.x, this.y, this.x + this.width, this.y + this.height];
+    var that = this;
+    $("#viewport").html("Viewport: [" + that.x + "," + that.y + " x " + (that.x+that.width) + "," + (that.y+that.height));
     this.quadtree.forEach(Square(that.x,that.y,that.x + that.width, that.y + that.height), function (sector) {
         Timer.substart("sector rest");
-        drawPoly(viewport[0], viewport[1], ctx, sector.label, sector.poly, "#0000ff");
+        drawPoly(viewport, ctx, sector.label, sector.poly, "#0000ff");
         Timer.subend();
     });
 
@@ -82,19 +94,26 @@ GameScreen.prototype.draw = function (ctx) {
 /**
  * For testing only.
  */
-function drawPoly(viewport_x, viewport_y, ctx, label, poly, colour) {
+
+function cartesian2screenx(x, viewport) {
+    return x - viewport[0];
+}
+function cartesian2screeny(y, viewport) {
+    return viewport[3] + (-1 * (y - viewport[1]));
+}
+function drawPoly(viewport, ctx, label, poly, colour) {
     ctx.strokeStyle = colour;
     ctx.beginPath();
     poly.edges.forEach(function (edge) {
-        ctx.moveTo(edge.origin.x - viewport_x, edge.origin.y - viewport_y);
-        ctx.lineTo(edge.end.x - viewport_x, edge.end.y - viewport_y);
+        ctx.moveTo(cartesian2screenx(edge.origin.x, viewport), cartesian2screeny(edge.origin.y, viewport));
+        ctx.lineTo(cartesian2screenx(edge.end.x, viewport), cartesian2screeny(edge.end.y, viewport));
     });
     ctx.stroke();
 
     ctx.fillStyle = "rgba(220, 220, 220, 1)";
     ctx.font = "bold 12px sans-serif";
-    var x = poly.extremes.x1 - viewport_x;
-    var y = poly.extremes.y1 - viewport_y;
+    var x = cartesian2screenx(poly.extremes.x1,viewport);
+    var y = cartesian2screeny(poly.extremes.y1,viewport);
 
     ctx.fillText(label, x, y);
 

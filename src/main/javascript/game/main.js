@@ -17,7 +17,7 @@ function init() {
 
         //ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        $.getJSON("data/map01.json", function(data) {
+        $.getJSON("data/MAP01.json", function(data) {
             $("#viewport").html("Level loaded");
             startGame(data);
         }).error(function(e) {
@@ -48,10 +48,7 @@ function down() {
 }
 
 function set() {
-    var a = _.last(game.screenStack);
-
-    a.x = parseInt($("#viewportx").val());
-    a.y = parseInt($("#viewporty").val());
+    _.last(game.screenStack).setCenter(parseInt($("#viewportx")), parseInt($("#viewporty")));
 
 }
 
