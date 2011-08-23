@@ -1,5 +1,16 @@
 
 GameScreenGL = function(width,height,data) {
+    // Load textures
+    var tkeys = [];
+    _.keys(data.texturedata).forEach(function (texturename) {
+        tkeys.push(texturename);
+    });
+
+    for (var i = 0; i < tkeys.length; i++) {
+        textureLoader.add(tkeys[i], data.texturedata[tkeys[i]]);
+        $("#console").val($("#console").val() + "\nLoading texture " + tkeys[i]);
+    }
+
     // QuadTree setup
     this.quadtree = setupQuadTree(0,0,4000,4000, 250, 250);
 

@@ -1,35 +1,19 @@
-Game = function(width,height,data) {
+Game = function(data) {
     this.screenStack = [];
-    this.width = width;
-    this.height = height;
+    this.setCenter(data.player1[0], data.player1[1]);
 
-    //this.screenStack.push(new GameScreenGL(this.width, this.height, data));
-    this.screenStack.push(new GameScreen(this.width, this.height, data));
+    $("#console").val($("console").val() + "\nPlayer start at " + data.player1[0] + "," + data.player1[1]);
+    console.log("Player start at " + data.player1[0] + "," + data.player1[1]);
+
+    // Load level
+    var that=this;
+    this.sectors = get_sectors(data);
 
 }
 
-Game.prototype.update = function(deltaTime) {
-    this.screenStack[this.screenStack.length - 1].update(deltaTime);
-}
-
-Game.prototype.draw = function (ctx) {
-    this.screenStack[this.screenStack.length -1].draw(ctx);
+Game.prototype.setCenter = function (x,y) {
+    this.x = x;
+    this.y = y;
 }
 
 
-
-//
-// Basic input stuff
-//
-
-Game.prototype.mouseMove = function (x,y) {
-    //this.screenStack[this.screenStack.length - 1].mouseMove(x,y);
-}
-
-Game.prototype.mouseUp = function (x,y) {
-    //this.screenStack[this.screenStack.length - 1].mouseUp(x,y);
-}
-
-Game.prototype.mouseDown = function (x,y) {
-    //this.screenStack[this.screenStack.length - 1].mouseDown(x,y);
-}

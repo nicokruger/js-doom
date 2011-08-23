@@ -1,93 +1,58 @@
 var canvas, ctx;
 var game;
 var previousTime, currentTime, deltaTime;
-
-
+var gamescreen;
 
 function init() {
 
-    textureLoader = new TextureLoader();
 
     canvas = document.getElementById("canvas");
     if (canvas && canvas.getContext) {
         ctx = canvas.getContext("2d");
 
-        window.addEventListener('resize', windowResizeHandler, false);
-        windowResizeHandler();
-
-        //ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        $.getJSON("data/MAP01.json", function(data) {
-            $("#viewport").html("Level loaded");
-            startGame(data);
-        }).error(function(e) {
-            $("#viewport").html("Error loading level: " + e.statusText);
-        });
+        loadMap();
     }
 
 }
 
-function startGame(data) {
-    game = new Game(canvas.width, canvas.height, data);
-
-    requestAnimFrame(loop);
-}
-
-function left() {
-    _.last(game.screenStack).left();
-}
-
-function right() {
-    _.last(game.screenStack).right();
-}
-function up() {
-    _.last(game.screenStack).up();
-}
-function down() {
-    _.last(game.screenStack).down();
-}
-
-function set() {
-    _.last(game.screenStack).setCenter(parseInt($("#viewportx")), parseInt($("#viewporty")));
-
-}
-
-function loadmap() {
+function loadMap() {
     var map = $("#map").val();
     alert("Loading: " + map);
 
     $.getJSON(map, function(data) {
         $("#viewport").html("Level loaded");
-        startGame(data);
+        game = new Game(data);
+
+        gamescreen = new GameScreen(canvas.width, canvas.height, data, game);
+
+        requestAnimFrame(loop);
     }).error(function(e) {
         $("#viewport").html("Error loading level: " + e.statusText);
     });
 
 }
 
-function documentMouseMoveHandler(e) {
-    game.mouseMove(e.clientX, e.clientY);
+function left() {
+    gamescreen.left();
 }
 
-function documentMouseDownHandler(e) {
-    game.mouseDown(e.clientX, e.clientY);
-    mouseDown = true;
+function right() {
+    gamescreen.right();
+}
+function up() {
+    gamescreen.up();
+}
+function down() {
+    gamescreen.down();
 }
 
-function documentMouseUpHandler(e) {
-    game.mouseUp(e.clientX, e.clientY);
-    mouseDown = false;
+function set() {
+    game.setCenter(parseInt($("#viewportx")), parseInt($("#viewporty")));
 }
 
-function windowResizeHandler() {
-    //canvas.width = window.innerWidth;
-    //canvas.height = window.innerHeight;
-}
-
-hack = 16;
 
 function loop() {
-  game.draw(ctx);
+  gamescreen.draw();
   requestAnimFrame(loop);
 }
 
