@@ -4,15 +4,12 @@ var previousTime, currentTime, deltaTime;
 var gamescreen;
 
 function init() {
-
-
     canvas = document.getElementById("canvas");
     if (canvas && canvas.getContext) {
         ctx = canvas.getContext("2d");
 
         loadMap();
     }
-
 }
 
 function loadMap() {
@@ -35,7 +32,6 @@ function loadMap() {
 function left() {
     gamescreen.left();
 }
-
 function right() {
     gamescreen.right();
 }
@@ -49,7 +45,6 @@ function down() {
 function set() {
     game.setCenter(parseInt($("#viewportx")), parseInt($("#viewporty")));
 }
-
 
 function loop() {
   gamescreen.draw();
