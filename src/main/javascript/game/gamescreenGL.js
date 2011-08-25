@@ -237,8 +237,8 @@ function handleLoadedTexture(texture, data) {
     gl.bindTexture(gl.TEXTURE_2D, null);
 }
 
-var mvMatrix = mat4.create();
-var pMatrix = mat4.create();
+//var mvMatrix = mat4.create();
+//var pMatrix = mat4.create();
 var mvMatrixStack = [];
 function mvPushMatrix() {
     var copy = mat4.create();

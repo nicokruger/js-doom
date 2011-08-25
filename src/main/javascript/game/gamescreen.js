@@ -6,8 +6,6 @@ GameScreen = function(width,height,data,game) {
     this.width = width;
     this.height = height;
 
-    this.setCenter(game.x, game.y);
-
     textureLoader = new TextureLoader();
     _.keys(data.texturedata).forEach(function (texturename) {
         textureLoader.add(texturename, data.texturedata[texturename]);
@@ -26,6 +24,8 @@ GameScreen = function(width,height,data,game) {
     } else {
         alert("cannot find canvas");
     }
+    
+    this.setCenter(game.x, game.y);
 
 }
 
@@ -46,6 +46,7 @@ GameScreen.prototype.down = function () {
 GameScreen.prototype.setCenter = function (x,y) {
     this.x = x - this.width / 2;
     this.y = y - this.height / 2;
+    this.viewport = new Viewport(this.quadtree, this.x, this.y, this.x + this.width, this.y + this.width);
 }
 
 GameScreen.prototype.draw = function () {
@@ -60,34 +61,8 @@ GameScreen.prototype.draw = function () {
 
     Timer.start("Sectordraw");
 
-    /*var i = 0;
-    var that = this;
-
-    $("#viewport").html("Viewport: [" + that.x + "," + that.y + " x " + (that.x+that.width) + "," + (that.y+that.height));
-
-    Timer.substart("get image buffer");
-    var data = ctx.createImageData(this.width,this.height);
-    Timer.subend();
-
-    var viewport = [this.x, this.y, this.x + this.width, this.y + this.height];
-    this.quadtree.forEach(Square(that.x,that.y,that.x + that.width, that.y + that.height), function (sector) {
-        sector.draw(viewport, data);
-    });
-
     Timer.substart("Put image buffer");
-    ctx.putImageData(data, 0, 0);
-    Timer.subend();
-    */
-
-    Timer.substart("get image buffer");
-    var data = ctx.createImageData(this.width,this.height);
-    Timer.subend();
-    var viewport = [this.x, this.y, this.x + this.width, this.y + this.height];
-    
-    drawSector(viewport, game.sectors[8], data);
-    
-    Timer.substart("Put image buffer");
-    ctx.putImageData(data, 0, 0);
+    this.ctx.putImageData(this.viewport.singleBitmap(), 0, 0);
     Timer.subend();
     
     var that = this;
@@ -98,33 +73,21 @@ GameScreen.prototype.draw = function () {
         Timer.subend();
 
         Timer.substart("sector rest");
-        drawPoly(viewport, that.ctx, sector.label, sector.poly, "#0000ff");
+        drawPoly(that.viewport, that.ctx, sector.label, sector.poly, "#0000ff");
         Timer.subend();
     });
     
-
-
     Timer.end();
 }
 
-/**
- * For testing only.
- */
-
-function cartesian2screenx(x, viewport) {
-    return x - viewport[0];
-}
-function cartesian2screeny(y, viewport) {
-    return viewport[3] + (-1 * y);
-}
 
 
-Rasterizer = function(outsideImageData, y, ray, poly, extreme_x1, extreme_x2, width, height, viewport) {
-    var ty = (y + viewport[1]) % this.height;
+Rasterizer = function(texture, outsideImageData, y, ray, poly, extreme_x1, extreme_x2, width, height, viewport) {
+    var ty = (y + viewport.y) % texture.height;
     var x1 = (poly.extremes.x1 + 0.5) << 0;
     var y1 = (poly.extremes.y1 + 0.5) << 0;
     var data = outsideImageData.data;
-    var thisdata = this.imageData.data;
+    var thisdata = texture.imageData.data;
     for (var i = 0; i < ray.neg.length; i++) {
         var seg = ray.neg[i];
         var rx1 = (0.5 + seg.origin.x) << 0;
@@ -132,10 +95,10 @@ Rasterizer = function(outsideImageData, y, ray, poly, extreme_x1, extreme_x2, wi
         rx1 = _.max([rx1, extreme_x1]);
         rx2 = _.min([rx2, extreme_x2]);
         for (var scanx = rx1; scanx < rx2; scanx++) {
-            var x = (scanx - viewport[0]);
-            var tx = scanx % this.width;
+            var x = (scanx - viewport.x);
+            var tx = scanx % texture.width;
             var index = (x + y * width) * 4;
-            var tindex = (tx + ty*this.width) * 4;
+            var tindex = (tx + ty*texture.width) * 4;
             data[index + 0] = thisdata[tindex + 0];
             data[index + 1] = thisdata[tindex + 1];
             data[index + 2] = thisdata[tindex + 2];
@@ -145,50 +108,97 @@ Rasterizer = function(outsideImageData, y, ray, poly, extreme_x1, extreme_x2, wi
 }
 
 
-function drawSector(viewport, sector, data) {
-
-    // TODO: handle at some pre-processing step.
-    if (sector.poly.width == 0 || sector.poly.height == 0) {
-        return;
-    }
-
+// TODO: should be done in GameScreen()
+Scanner = function(poly) {
+    // Partitioning
     var rays = [];
-    var x1 = sector.poly.extremes.x1;
-    var y1 = sector.poly.extremes.y1;
-    var width = sector.poly.width;
-    var height = sector.poly.height;
-    for (var y = 0; y < height; y++) {
-        rays.push(sector.poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1))))
+    var x1 = poly.extremes.x1;
+    var y1 = poly.extremes.y1;
+    var width = poly.width;
+    var height = poly.height;
+    
+    // All of the following partitions MUST be succesful - we are after all restricting
+    // our scanlines to the extreme bounds of the polygon.
+    
+    // bottom - handled seperately
+    rays.push(poly.partition($L($V(x1-1, y1), $V(x1+width+1, y1))).cosame)
+    
+    // middle part - iterate through "inner" part of polygon
+    for (var y = 1; y <= height-1; y++) {
+	rays.push(poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1))).neg);
     }
+    
+    //top - reverse it, because it is in the opposite direction than the scanline
+    var l = poly.partition($L($V(x1-1, y1+height), $V(x1+width+1, y1+height))).codiff;
+    if (l.length > 0) {
+	rays.push([$L(l[0].end, l[0].origin)]);
+    }
+    
+    return rays;
+}
 
-    y1 = _.max([y1, viewport[1]]);
-    y2 = _.min([y1 + height, viewport[3]]);
-    x1 = _.max([x1, viewport[0]]);
-    x2 = _.min([x1 + width, viewport[2]]);
-    width = viewport[2] - viewport[0];
-    height = viewport[3] - viewport[1];
-
-    var f = _.bind(Rasterizer, textureLoader.texture[sector.texture]);
-
-    for (var y = y1; y < y2; y++) {
-      //console.log(rays[y - sector.poly.extremes.y1] + " / " + y + " - " + sector.poly.extremes.y1);
-      f(data, y - viewport[1], rays[y - sector.poly.extremes.y1], sector.poly, x1, x2, width, height, viewport);
+Looper = function(sector, x1, y1, x2, y2) {
+    return function(data) {
+	for (var y = y1; y < y2; y++) {
+	    Rasterizer(textureLoader.texture[sector.texture], data, y - this.y1, partition[y - sector.poly.extremes.y1], sector.poly, x1, x2, sector.poly.width, sector.poly.height, this);
+	}
     }
 }
+
+SectorDraw = function(viewport, sector, partition) {
+    var x1 = _.max([sector.poly.extremes.x1, viewport.x1]);
+    var y1 = _.max([sector.poly.extremes.y1, viewport.y1]);
+    var y2 = _.min([sector.poly.extremes.y2, viewport.y2]);
+    var x2 = _.min([sector.poly.extremes.x2, viewport.x2]);
+    
+    return Looper(sector, x1, y1, x2, y2);
+}
+
+Viewport = function(quadtree,x1,y1,x2,y2) {
+    this.x1 = x1;
+    this.y1 = y1;
+    this.x2 = x2;
+    this.y2 = y2;
+    
+    this.sectors = []; var that=this;
+    quadtree.forEach(Square(x1, y1, x1, y1), function (sector) {
+        that.sectors.push(SectorDraw(that, sector, Scanner(sector)));
+    });
+}
+
+Viewport.prototype.cartesian2screenx = function(x) {
+    return x - this.x1;
+}
+Viewport.prototype.cartesian2screeny = function(y) {
+    return this.y2 + (-1 * y);
+}
+
+Viewport.prototype.singleBitmap = function () {
+    Timer.substart("create image buffer");
+    var data = ctx.createImageData(this.x2 - this.x1,this.y2 - this.y1);
+    Timer.subend();
+    
+    //for (var i = 0; i < this.sectors.length; i++) {
+    this.sectors[0](data);
+    //}
+    
+    return data;
+}
+
 
 function drawPoly(viewport, ctx, label, poly, colour) {
     ctx.strokeStyle = colour;
     ctx.beginPath();
-    poly.edges.forEach(function (edge) {
-        ctx.moveTo(cartesian2screenx(edge.origin.x, viewport), cartesian2screeny(edge.origin.y, viewport));
-        ctx.lineTo(cartesian2screenx(edge.end.x, viewport), cartesian2screeny(edge.end.y, viewport));
-    });
+    for (var i = 0; i < poly.edges.length; i++) {
+        ctx.moveTo(viewport.cartesian2screenx(poly.edges[i].origin.x), viewport.cartesian2screeny(poly.edges[i].origin.y));
+        ctx.lineTo(viewport.cartesian2screenx(poly.edges[i].end.x), viewport.cartesian2screeny(poly.edges[i].end.y));
+    }
     ctx.stroke();
 
     ctx.fillStyle = "rgba(220, 220, 220, 1)";
     ctx.font = "bold 12px sans-serif";
-    var x = cartesian2screenx(poly.extremes.x1,viewport);
-    var y = cartesian2screeny(poly.extremes.y1,viewport);
+    var x = viewport.cartesian2screenx(poly.extremes.x1);
+    var y = viewport.cartesian2screeny(poly.extremes.y1);
 
     ctx.fillText(label, x, y);
 

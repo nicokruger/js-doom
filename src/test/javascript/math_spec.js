@@ -106,6 +106,8 @@ describe('Using our simplistic 2D vector math',function(){
 
         // test coincident lines
         expect($L.intersects($L($V(0,0), $V(1,1)), $L($V(0.5,0.5), $V(3,3)))).toBe(Line.COINCIDENT);
+	
+	expect($L.intersects($L($V(0,0), $V(1,0)), $L($V(0,0), $V(1,0)))).toBe(Line.COINCIDENT);
 
     })
 
