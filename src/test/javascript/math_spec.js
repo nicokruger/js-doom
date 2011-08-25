@@ -111,6 +111,26 @@ describe('Using our simplistic 2D vector math',function(){
 
     })
 
+    it("should be handle the intersection edge cases of a 'line' having origin and end points the same", function() {
+	
+	// Check the intersection at the end point
+	expect($L.intersects($L($V(5,5), $V(10,5)), $L($V(10,5), $V(10,5)))).toBe(Line.COINCIDENT);
+	// Check the intersection at the origin point
+	expect($L.intersects($L($V(10,5), $V(5,5)), $L($V(5,5), $V(5,5)))).toBe(Line.COINCIDENT);
+	
+	// Check the intersection at the origin point
+	expect($L.intersects($L($V(5,5), $V(10,5)), $L($V(5,5), $V(5,5)))).toBe(Line.COINCIDENT);
+	// Check the intersection at the end point
+	expect($L.intersects($L($V(10,5), $V(5,5)), $L($V(5,5), $V(5,5)))).toBe(Line.COINCIDENT);
+	
+	expect($L.intersects($L($V(10,5), $V(10,5)), $L($V(5,5), $V(10,5)))).toBe(Line.COINCIDENT);
+	expect($L.intersects($L($V(5,5), $V(5,5)), $L($V(5,5), $V(10,5)))).toBe(Line.COINCIDENT);
+	
+	expect($L.intersects($L($V(10,5), $V(10,5)), $L($V(5,5), $V(10,5)))).toBe(Line.COINCIDENT);
+	expect($L.intersects($L($V(10,5), $V(10,5)), $L($V(5,5), $V(10,5)))).toBe(Line.COINCIDENT);
+    
+    });
+    
 	it("should be possible to get the right-hand normal", function() {
 		expect($V(1,1).rightNormal()).toEqual($V(-1,1));
 		expect($V(10,8).rightNormal()).toEqual($V(-8,10));
