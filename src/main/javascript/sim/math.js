@@ -156,6 +156,16 @@ Line.prototype.intersects = function(l) {
     if (d0 < 0 && d1 == 0) {
         return Line.INTERSECTS_FORWARD;
     }
+    if (d0 > 0 && d1 == 0) {
+        return Line.INTERSECTS_BACKWARD;
+    }
+/*    if (d1 < 0 && d0 == 0) {
+        return Line.INTERSECTS_FORWARD;
+    }
+    if (d1 > 0 && d0 == 0) {
+        return Line.INTERSECTS_BACKWARD;
+    }*/
+    
     if (d0 * d1 < 0) {
         if (d1 >= 0) {
             return Line.INTERSECTS_FORWARD;

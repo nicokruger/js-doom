@@ -45,14 +45,14 @@ describe("Basic polygon/BSP library", function() {
     });
     
     it("should partition both the top and bottom edges of a triangle (ending in a point at a vertical extreme)", function() {
-	var p = $P($V(0,0), $V(5,0), $V(5,5));
-	var r = p.partition($L($V(4,5), $V(5,5)));
-	// Problem: The first line in the BSP tree is (5,5) -> (0,0), with a coincident edge of the same line
-	// 		This is correct
-	//  The partitioning line (4,5) -> (5,5) is classified as RIGHT to this line
-	//  where it is actually intersecting it at (0,0). In fact, it should be classified as intersecting
-	//  in the same manner as the extended BSP line would have been reported to be intersecting.
-	expect(r.cosame.length).toBe(1);
+	    var p = $P($V(0,0), $V(5,0), $V(5,5));
+	    var r = p.partition($L($V(4,5), $V(5,5)));
+	    // Problem: The first line in the BSP tree is (5,5) -> (0,0), with a coincident edge of the same line
+	    // 		This is correct
+	    //  The partitioning line (4,5) -> (5,5) is classified as RIGHT to this line
+	    //  where it is actually intersecting it at (0,0). In fact, it should be classified as intersecting
+	    //  in the same manner as the extended BSP line would have been reported to be intersecting.
+	    expect(r.cosame.length).toBe(1);
     });
     
     it("should be able to partition a line into segments according to a BSP tree of a simple square", function() {

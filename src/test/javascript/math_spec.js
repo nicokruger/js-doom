@@ -94,6 +94,11 @@ describe('Using our simplistic 2D vector math',function(){
 	    
 	    expect(l1.intersects(l2)).toBe(Line.INTERSECTS_FORWARD); // INTERSECTS_FORWARD
 	
+	    var l1 = $L($V(5,5), $V(0,0));
+	    var l2 = $L($V(4,5), $V(5,5));
+        //var l2 = $L($V(1,1), $V(2,2));
+	    
+	    expect(l1.intersects(l2)).toBe(Line.INTERSECTS_BACKWARD); // INTERSECTS_FORWARD
     });
 
     it("should be possible to determine whether an edge (bounded line) is to the left, intersecting, or to the right of another (unbounced, infinite) line", function() {
