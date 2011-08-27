@@ -87,6 +87,14 @@ describe('Using our simplistic 2D vector math',function(){
         edge = $L($V(10000,99), $V(0,99));
         expect($L.intersection(ray,edge)).toEqual($V(98.49, 99))
     })
+    
+    it("AAAAAAAAA should correctly handle the case where one line intersects at the origin or end point of another line", function () {
+	    var l1 = $L($V(5,4), $V(5,5));
+	    var l2 = $L($V(4,5), $V(5,5));
+	    
+	    expect(l1.intersects(l2)).toBe(Line.INTERSECTS_FORWARD); // INTERSECTS_FORWARD
+	
+    });
 
     it("should be possible to determine whether an edge (bounded line) is to the left, intersecting, or to the right of another (unbounced, infinite) line", function() {
 
@@ -113,23 +121,24 @@ describe('Using our simplistic 2D vector math',function(){
 
     it("should be handle the intersection edge cases of a 'line' having origin and end points the same", function() {
 	
-	// Check the intersection at the end point
-	expect($L.intersects($L($V(5,5), $V(10,5)), $L($V(10,5), $V(10,5)))).toBe(Line.COINCIDENT);
-	// Check the intersection at the origin point
-	expect($L.intersects($L($V(10,5), $V(5,5)), $L($V(5,5), $V(5,5)))).toBe(Line.COINCIDENT);
-	
-	// Check the intersection at the origin point
-	expect($L.intersects($L($V(5,5), $V(10,5)), $L($V(5,5), $V(5,5)))).toBe(Line.COINCIDENT);
-	// Check the intersection at the end point
-	expect($L.intersects($L($V(10,5), $V(5,5)), $L($V(5,5), $V(5,5)))).toBe(Line.COINCIDENT);
-	
-	expect($L.intersects($L($V(10,5), $V(10,5)), $L($V(5,5), $V(10,5)))).toBe(Line.COINCIDENT);
-	expect($L.intersects($L($V(5,5), $V(5,5)), $L($V(5,5), $V(10,5)))).toBe(Line.COINCIDENT);
-	
-	expect($L.intersects($L($V(10,5), $V(10,5)), $L($V(5,5), $V(10,5)))).toBe(Line.COINCIDENT);
-	expect($L.intersects($L($V(10,5), $V(10,5)), $L($V(5,5), $V(10,5)))).toBe(Line.COINCIDENT);
+    // Check the intersection at the end point
+    expect($L.intersects($L($V(5,5), $V(10,5)), $L($V(10,5), $V(10,5)))).toBe(Line.COINCIDENT);
+    // Check the intersection at the origin point
+    expect($L.intersects($L($V(10,5), $V(5,5)), $L($V(5,5), $V(5,5)))).toBe(Line.COINCIDENT);
+
+    // Check the intersection at the origin point
+    expect($L.intersects($L($V(5,5), $V(10,5)), $L($V(5,5), $V(5,5)))).toBe(Line.COINCIDENT);
+    // Check the intersection at the end point
+    expect($L.intersects($L($V(10,5), $V(5,5)), $L($V(5,5), $V(5,5)))).toBe(Line.COINCIDENT);
+
+    expect($L.intersects($L($V(10,5), $V(10,5)), $L($V(5,5), $V(10,5)))).toBe(Line.COINCIDENT);
+    expect($L.intersects($L($V(5,5), $V(5,5)), $L($V(5,5), $V(10,5)))).toBe(Line.COINCIDENT);
+
+    expect($L.intersects($L($V(10,5), $V(10,5)), $L($V(5,5), $V(10,5)))).toBe(Line.COINCIDENT);
+    expect($L.intersects($L($V(10,5), $V(10,5)), $L($V(5,5), $V(10,5)))).toBe(Line.COINCIDENT);
     
     });
+    
     
 	it("should be possible to get the right-hand normal", function() {
 		expect($V(1,1).rightNormal()).toEqual($V(-1,1));

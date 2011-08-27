@@ -133,7 +133,7 @@ Line.COINCIDENT = 3
 function cc(t, d0, d1) {
     if (Math.abs(t) < 0.00001) t = 0;
     if (Math.abs(t - 1) < 0.00001) t = 1;
-    return (d0 * d1 < 0);
+    return (d0 * d1 <= 0);
 }
 /**
  * NOTE: this will be treated like an infinite line in space,
@@ -143,14 +143,20 @@ function cc(t, d0, d1) {
  * bounded line, or an "edge".
  */
 Line.prototype.intersects = function(l) {
-    var normal_l = this.canonical().leftNormal();
 
+    //if (this.end.equals(l.end)) {
+    //    return Line.INTERSECTS_FORWARD;
+    //}    
+    var normal_l = this.canonical().leftNormal();
     var d0 = normal_l.dot(l.origin.sub(this.origin))
     var d1 = normal_l.dot(l.end.sub(this.origin))
 
     var t = d0 / (d0 - d1);
 
-    if (cc(t, d0, d1)) {
+    if (d0 < 0 && d1 == 0) {
+        return Line.INTERSECTS_FORWARD;
+    }
+    if (d0 * d1 < 0) {
         if (d1 >= 0) {
             return Line.INTERSECTS_FORWARD;
         } else {

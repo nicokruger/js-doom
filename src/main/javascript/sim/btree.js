@@ -174,12 +174,20 @@ function classify(line, edge, bsp_node) {
 
     if (classification == Line.INTERSECTS_FORWARD) {
         var I = line.intersection(edge);
-        bsp_node.neg.push($L(edge.origin, I))
-        bsp_node.pos.push($L(I, edge.end));
+        if (!edge.origin.equals(I)) {
+            bsp_node.neg.push($L(edge.origin, I));
+        }
+        if (!I.equals(edge.end)) {
+            bsp_node.pos.push($L(I, edge.end));
+        }
     } else if (classification == Line.INTERSECTS_BACKWARD) {
         var I = line.intersection(edge);
-        bsp_node.pos.push($L(edge.origin, I))
-        bsp_node.neg.push($L(I, edge.end));
+        if (!edge.origin.equals(I)) {
+            bsp_node.pos.push($L(edge.origin, I));
+        }
+        if (!I.equals(edge.end)) {
+            bsp_node.neg.push($L(I, edge.end));
+        }
     } else if (classification == Line.RIGHT) {
         bsp_node.pos.push(edge);
     } else if (classification == Line.LEFT) {
@@ -215,19 +223,37 @@ function get_partition(T, edge, partition_node) {
 
     if (classification == Line.INTERSECTS_FORWARD) {
         var I = T.line.intersection(edge);
-        var first = $L(edge.origin, I)
-        var second = $L(I, edge.end);
+        
+        if (I == null) {
+            console.log("IT IS NULL: " + I.x + " / " + I.y);
+            console.log("            " + edge.origin.x + ":" + edge.origin.y + " - " + edge.end.x + "/" + edge.end.y)
+        }
 
-        pos_partition(T.positive, second, partition_node);
-        neg_partition(T.negative, first, partition_node);
+        if (!I.equals(edge.end)) {
+            var second = $L(I, edge.end);
+            pos_partition(T.positive, second, partition_node);
+        }
+        if (!edge.origin.equals(I)) {
+            var first = $L(edge.origin, I)
+            neg_partition(T.negative, first, partition_node);
+        }
 
     } else if (classification == Line.INTERSECTS_BACKWARD) {
         var I = T.line.intersection(edge);
-        var first = $L(edge.origin, I)
-        var second = $L(I, edge.end);
 
-        pos_partition(T.positive, first, partition_node);
-        neg_partition(T.negative, second, partition_node);
+        if (I == null) {
+            console.log("IT IS NULL: " + I.x + " / " + I.y);
+            console.log("            " + edge.origin.x + ":" + edge.origin.y + " - " + edge.end.x + "/" + edge.end.y)
+        }
+        
+        if (!edge.origin.equals(I)) {
+            var first = $L(edge.origin, I)
+            pos_partition(T.positive, first, partition_node);
+        }
+        if (!I.equals(edge.end)) {
+            var second = $L(I, edge.end);
+            neg_partition(T.negative, second, partition_node);
+        }
 
     } else if (classification == Line.RIGHT) {
         pos_partition(T.positive, edge, partition_node);
