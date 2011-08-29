@@ -121,7 +121,10 @@ Scanner = function(poly) {
     // our scanlines to the extreme bounds of the polygon.
     
     // bottom - handled seperately
-    rays.push(poly.partition($L($V(x1-1, y1), $V(x1+width+1, y1))).cosame)
+    var l = poly.partition($L($V(x1-1, y1), $V(x1+width+1, y1))).cosame;
+    if (l.length > 0) {
+        rays.push(l);
+    }
     
     // middle part - iterate through "inner" part of polygon
     for (var y = 1; y <= height-1; y++) {
@@ -129,7 +132,7 @@ Scanner = function(poly) {
     }
     
     //top - reverse it, because it is in the opposite direction than the scanline
-    var l = poly.partition($L($V(x1-1, y1+height), $V(x1+width+1, y1+height))).codiff;
+    l = poly.partition($L($V(x1-1, y1+height), $V(x1+width+1, y1+height))).codiff;
     if (l.length > 0) {
 	rays.push([$L(l[0].end, l[0].origin)]);
     }
