@@ -1,4 +1,5 @@
-describe("Basic polygon/BSP library", function() {
+
+describe("BSP trees", function() {
 
     it("should be possible to construct a polygon using varargs constructor", function () {
         expect($P($V(0,0), $V(1,0), $V(2,2)).vertices.length).toBe(3);
@@ -35,11 +36,11 @@ describe("Basic polygon/BSP library", function() {
     })
 
     it("should partition both the top and bottom edges of the polygon", function() {
-    var p = $P($V(4,4), $V(5,4), $V(5,5), $V(4,5));
-    var r = p.partition($L($V(4,4), $V(5,4)));
-    expect(r.cosame.length).toBe(1);
-    var r = p.partition($L($V(4,5), $V(5,5)));
-    expect(r.codiff.length).toBe(1);
+	    var p = $P($V(4,4), $V(5,4), $V(5,5), $V(4,5));
+	    var r = p.partition($L($V(4,4), $V(5,4)));
+	    expect(r.cosame.length).toBe(1);
+	    var r = p.partition($L($V(4,5), $V(5,5)));
+	    expect(r.codiff.length).toBe(1);
     });
     
     it("should partition both the top and bottom edges of a triangle (ending in a point at a vertical extreme)", function() {
@@ -78,39 +79,39 @@ describe("Basic polygon/BSP library", function() {
 
     it("should be able to create a BSP from a more complex (non-convex) polygon", function() {
 
-    bsptree = this.Pp.bsp;
+        bsptree = this.Pp.bsp;
 
-    // partition on the first edge
-    expect(bsptree.line).toEqual($L(this.v9, this.v0));
+        // partition on the first edge
+        expect(bsptree.line).toEqual($L(this.v9, this.v0));
 
-        expect(bsptree.positive).toEqual(null);
-        expect(bsptree.negative.line).toEqual($L(this.v0, this.v1))
-        expect(bsptree.negative.positive).toBe(null)
-        expect(bsptree.negative.negative.line).toEqual($L(this.v1,this.v2))
-            expect(bsptree.negative.negative.positive.line).toEqual($L($V(2,5), this.v5))
-            expect(bsptree.negative.negative.positive.positive.line).toEqual($L(this.v5, this.v6))
-                expect(bsptree.negative.negative.positive.positive.positive).toBe(null)
-                expect(bsptree.negative.negative.positive.positive.negative.line).toEqual($L(this.v6,this.v7))
-                expect(bsptree.negative.negative.positive.positive.negative.positive).toBe(null)
-                expect(bsptree.negative.negative.positive.positive.negative.negative.line).toEqual($L(this.v7, $V(7,5)))
-                    expect(bsptree.negative.negative.positive.positive.negative.negative.negative).toBe(null)
-                    expect(bsptree.negative.negative.positive.positive.negative.negative.positive).toBe(null)
-            expect(bsptree.negative.negative.positive.negative.line).toEqual($L($V(7,5), this.v8))
-                expect(bsptree.negative.negative.positive.negative.positive).toBe(null)
-                expect(bsptree.negative.negative.positive.negative.negative.line).toEqual($L(this.v8, $V(2,6)))
-                expect(bsptree.negative.negative.positive.negative.negative.positive).toBe(null)
-                expect(bsptree.negative.negative.positive.negative.negative.negative).toBe(null)
-            expect(bsptree.negative.negative.negative.line).toEqual($L(this.v2, this.v3))
-            expect(bsptree.negative.negative.negative.positive.line).toEqual($L(this.v3, this.v4))
-                expect(bsptree.negative.negative.negative.positive.positive.line).toEqual($L(this.v4, $V(2,5)))
-                expect(bsptree.negative.negative.negative.positive.positive.positive).toBe(null)
-                expect(bsptree.negative.negative.negative.positive.positive.negative.line).toEqual($L($V(2,6), $V(1,6)))
-                    expect(bsptree.negative.negative.negative.positive.positive.negative.positive).toBe(null)
-                    expect(bsptree.negative.negative.negative.positive.positive.negative.negative).toBe(null)
-                expect(bsptree.negative.negative.negative.positive.negative.line).toEqual($L($V(1,6), this.v9))
-                expect(bsptree.negative.negative.negative.positive.negative.positive).toBe(null);
-                expect(bsptree.negative.negative.negative.positive.negative.negative).toBe(null);
-            expect(bsptree.negative.negative.negative.negative).toBe(null)
+            expect(bsptree.positive).toEqual(null);
+            expect(bsptree.negative.line).toEqual($L(this.v0, this.v1))
+            expect(bsptree.negative.positive).toBe(null)
+            expect(bsptree.negative.negative.line).toEqual($L(this.v1,this.v2))
+                expect(bsptree.negative.negative.positive.line).toEqual($L($V(2,5), this.v5))
+                expect(bsptree.negative.negative.positive.positive.line).toEqual($L(this.v5, this.v6))
+                    expect(bsptree.negative.negative.positive.positive.positive).toBe(null)
+                    expect(bsptree.negative.negative.positive.positive.negative.line).toEqual($L(this.v6,this.v7))
+                    expect(bsptree.negative.negative.positive.positive.negative.positive).toBe(null)
+                    expect(bsptree.negative.negative.positive.positive.negative.negative.line).toEqual($L(this.v7, $V(7,5)))
+                        expect(bsptree.negative.negative.positive.positive.negative.negative.negative).toBe(null)
+                        expect(bsptree.negative.negative.positive.positive.negative.negative.positive).toBe(null)
+                expect(bsptree.negative.negative.positive.negative.line).toEqual($L($V(7,5), this.v8))
+                    expect(bsptree.negative.negative.positive.negative.positive).toBe(null)
+                    expect(bsptree.negative.negative.positive.negative.negative.line).toEqual($L(this.v8, $V(2,6)))
+                    expect(bsptree.negative.negative.positive.negative.negative.positive).toBe(null)
+                    expect(bsptree.negative.negative.positive.negative.negative.negative).toBe(null)
+                expect(bsptree.negative.negative.negative.line).toEqual($L(this.v2, this.v3))
+                expect(bsptree.negative.negative.negative.positive.line).toEqual($L(this.v3, this.v4))
+                    expect(bsptree.negative.negative.negative.positive.positive.line).toEqual($L(this.v4, $V(2,5)))
+                    expect(bsptree.negative.negative.negative.positive.positive.positive).toBe(null)
+                    expect(bsptree.negative.negative.negative.positive.positive.negative.line).toEqual($L($V(2,6), $V(1,6)))
+                        expect(bsptree.negative.negative.negative.positive.positive.negative.positive).toBe(null)
+                        expect(bsptree.negative.negative.negative.positive.positive.negative.negative).toBe(null)
+                    expect(bsptree.negative.negative.negative.positive.negative.line).toEqual($L($V(1,6), this.v9))
+                    expect(bsptree.negative.negative.negative.positive.negative.positive).toBe(null);
+                    expect(bsptree.negative.negative.negative.positive.negative.negative).toBe(null);
+                expect(bsptree.negative.negative.negative.negative).toBe(null)
 
 
     })
@@ -192,28 +193,9 @@ describe("Basic polygon/BSP library", function() {
         expect(pn.neg).toNotEqual([]);
         expect(Math.round(I1.area(),0)).toBe(9987);
 
-/*
-        P2 = circle_to_poly([100.0, 229.0], 120.0, 39);
-        I1 = P2.intersection(P1);
-        expect(Math.round(I1.area(),0)).toBe(9992);*/
-
     })
 
-    it("should be able to determine the intersection and area of the resulting intersection polygon correctly", function() {
-        expect($P($V(1,0), $V(2,0), $V(2,1), $V(1,1)).intersection(circle_to_poly([1.5, 0.5], 1.0, 16)).area()).toBe(1.0);
-
-        // WTF is going on here?
-        var P1 = $P($V(1.0, 2.0), $V(2.0, 2.0), $V(2.0, 3.0), $V(1.0, 3.0));
-        var P2 = circle_to_poly([1.5, 2.5], 1.5, 32);
-
-        var I1 = P1.intersection(P2);
-
-        var area1 = I1.area();
-        expect(area1).toBe(1.0);
-
-    })
-
-    it("should be able to order a set of vertices so that the resulting polygon is convex and non-intersecting", function() {
+    it("should be able to order a set of vertices so that the resulting polygon is counter-clockwise", function() {
         var e = order_edges([$L($V(0,0), $V(1,0)),
             $L($V(0,1), $V(0,0)),
             $L($V(1,1), $V(0,1)),

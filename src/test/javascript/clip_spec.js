@@ -1,4 +1,4 @@
-describe("Our very simple clipping library", function() {
+describe("Basic polygon intersection", function() {
     it("should be able to detect whether two (convex) polygons intersect", function() {
         var poly1 = $P($V(0,0), $V(1,0), $V(1,1), $V(0,1));
         var poly2 = $P($V(0.5,0), $V(1.5,0), $V(1.5,1), $V(0.5,1));
