@@ -1,7 +1,7 @@
 describe("The GameScreen software renderer", function() {
     
     describe("The scanner should be able to generate horizontal scanlines for a polygon", function() {
-	it("should be possible to generate horizontal scanlines for a polygon", function () {
+	it("should be possible to generate horizontal scanlines for a square", function () {
 	    var p = $P($V(5,5), $V(15,5), $V(15,10), $V(5,10));
 	    var rays = Scanner(p);
 	    

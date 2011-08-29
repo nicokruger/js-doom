@@ -128,13 +128,13 @@ Scanner = function(poly) {
     
     // middle part - iterate through "inner" part of polygon
     for (var y = 1; y <= height-1; y++) {
-	rays.push(poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1))).neg);
+    rays.push(poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1))).neg);
     }
     
     //top - reverse it, because it is in the opposite direction than the scanline
     l = poly.partition($L($V(x1-1, y1+height), $V(x1+width+1, y1+height))).codiff;
     if (l.length > 0) {
-	rays.push([$L(l[0].end, l[0].origin)]);
+    rays.push([$L(l[0].end, l[0].origin)]);
     }
     
     return rays;
@@ -142,9 +142,9 @@ Scanner = function(poly) {
 
 Looper = function(sector, x1, y1, x2, y2) {
     return function(data) {
-	for (var y = y1; y < y2; y++) {
-	    Rasterizer(textureLoader.texture[sector.texture], data, y - this.y1, partition[y - sector.poly.extremes.y1], sector.poly, x1, x2, sector.poly.width, sector.poly.height, this);
-	}
+    for (var y = y1; y < y2; y++) {
+        Rasterizer(textureLoader.texture[sector.texture], data, y - this.y1, partition[y - sector.poly.extremes.y1], sector.poly, x1, x2, sector.poly.width, sector.poly.height, this);
+    }
     }
 }
 

@@ -1,3 +1,4 @@
+
 Game = function(data) {
     this.screenStack = [];
     this.setCenter(data.player1[0], data.player1[1]);

@@ -1,9 +1,7 @@
 describe("Basic polygon/BSP library", function() {
-    it("should be possible to construct a poly using varargs constructor", function () {
+
+    it("should be possible to construct a polygon using varargs constructor", function () {
         expect($P($V(0,0), $V(1,0), $V(2,2)).vertices.length).toBe(3);
-
-        var edges = $P($V(0,0), $V(1,0), $V(2,2)).edges
-
         expect($P($V(0,0), $V(1,0), $V(2,2)).edges).toEqual([
             $L($V(2,2), $V(0,0)),
             $L($V(0,0), $V(1,0)),
@@ -37,72 +35,32 @@ describe("Basic polygon/BSP library", function() {
     })
 
     it("should partition both the top and bottom edges of the polygon", function() {
-	var p = $P($V(4,4), $V(5,4), $V(5,5), $V(4,5));
-	var r = p.partition($L($V(4,4), $V(5,4)));
-	expect(r.cosame.length).toBe(1);
-	var r = p.partition($L($V(4,5), $V(5,5)));
-	expect(r.codiff.length).toBe(1);
+    var p = $P($V(4,4), $V(5,4), $V(5,5), $V(4,5));
+    var r = p.partition($L($V(4,4), $V(5,4)));
+    expect(r.cosame.length).toBe(1);
+    var r = p.partition($L($V(4,5), $V(5,5)));
+    expect(r.codiff.length).toBe(1);
     });
     
     it("should partition both the top and bottom edges of a triangle (ending in a point at a vertical extreme)", function() {
-	    var p = $P($V(0,0), $V(5,0), $V(5,5));
-	    var r = p.partition($L($V(4,5), $V(5,5)));
-	    // Problem: The first line in the BSP tree is (5,5) -> (0,0), with a coincident edge of the same line
-	    // 		This is correct
-	    //  The partitioning line (4,5) -> (5,5) is classified as RIGHT to this line
-	    //  where it is actually intersecting it at (0,0). In fact, it should be classified as intersecting
-	    //  in the same manner as the extended BSP line would have been reported to be intersecting.
-	    //expect(r.cosame.length).toBe(1);
+        var p = $P($V(0,0), $V(5,0), $V(5,5));
+        var r = p.partition($L($V(4,5), $V(5,5)));
+        // Problem: The first line in the BSP tree is (5,5) -> (0,0), with a coincident edge of the same line
+        // 		This is correct
+        //  The partitioning line (4,5) -> (5,5) is classified as RIGHT to this line
+        //  where it is actually intersecting it at (0,0). In fact, it should be classified as intersecting
+        //  in the same manner as the extended BSP line would have been reported to be intersecting.
+        //expect(r.cosame.length).toBe(1);
     });
     
-    it("should be able to partition a line into segments according to a BSP tree of a simple square", function() {
-        var square = $P($V(0,0), $V(10,0), $V(10,10), $V(0,10));
-        var partitioned_line = square.partition($L($V(-55,5), $V(5,5)));
-
-        expect(partitioned_line.neg).toEqual([$L($V(0,5), $V(5,5))]);
-
-        partitioned_line = square.partition($L($V(-2,-2), $V(2,2)))
-        expect(partitioned_line.neg).toEqual([$L($V(0,0), $V(2,2))])
-
-        var C = circle_to_poly([0.0,0.0], 200, 16);
-        var L = C.partition($L($V(-60, 2), $V(60, 2)));
-        expect(L.neg.length).toBe(1);
-
-
-        var x = 12300.0;
-        var y = 45600.0;
-        var r = 16;
-        C = circle_to_poly([x, y], r, 5);
-
-        // inside the circle
-        L = C.partition($L($V(x-r/2, y), $V(x+r/2, y)));
-        expect(L.neg.length).toBe(1);
-
-        // check all rays
-        for (var i = 0; i < r*2-1; i++) {
-        //for (var i = 0; i < 1; i++) {
-            var Z = $L($V(x-r-20, y-r+1 + i), $V(x+r+20, y-r+1 + i))
-            L = C.partition(Z);
-            if (L.neg.length == 0) {
-                L = C.partition(Z);
-            }
-            if (L.neg.length != 1) {
-                console.info("0 at " + i);
-            }
-            expect(L.neg.length).toBe(1);
-        }
-
-    })
-
     it("should correctly partition a line that is co-incident to edges on the polygon (cosame)", function() {
         var square = $P($V(0,0), $V(10,0), $V(10,10), $V(0,10));
         var partitioned_line = square.partition($L($V(0,55), $V(0,-15)));
-
         expect(partitioned_line.cosame).toEqual([$L($V(0,10), $V(0,0))]);
     })
 
     it("should be able to correctly determine a bounding box for an arb. polygon", function () {
-        var P = $P($V(10,10), $V(15,15), $V(5,15), $V(5,-10))
+        var P = $P($V(10,10), $V(15,15), $V(5,15), $V(5,-10));
         expect(P.bounds.edges).toEqual([
             $L($V(5,15), $V(5,-10)),
             $L($V(5,-10), $V(15,-10)),
@@ -118,44 +76,44 @@ describe("Basic polygon/BSP library", function() {
         expect(partitioned_line.codiff).toEqual([$L($V(0,10), $V(0,0))]);
     })
 
-	it("should be able to create a BSP from a more complex (non-convex) polygon", function() {
+    it("should be able to create a BSP from a more complex (non-convex) polygon", function() {
 
-        bsptree = this.Pp.bsp;
+    bsptree = this.Pp.bsp;
 
-        // partition on the first edge
-        expect(bsptree.line).toEqual($L(this.v9, this.v0));
+    // partition on the first edge
+    expect(bsptree.line).toEqual($L(this.v9, this.v0));
 
-            expect(bsptree.positive).toEqual(null);
-            expect(bsptree.negative.line).toEqual($L(this.v0, this.v1))
-                expect(bsptree.negative.positive).toBe(null)
-                expect(bsptree.negative.negative.line).toEqual($L(this.v1,this.v2))
-                    expect(bsptree.negative.negative.positive.line).toEqual($L($V(2,5), this.v5))
-                        expect(bsptree.negative.negative.positive.positive.line).toEqual($L(this.v5, this.v6))
-                            expect(bsptree.negative.negative.positive.positive.positive).toBe(null)
-                            expect(bsptree.negative.negative.positive.positive.negative.line).toEqual($L(this.v6,this.v7))
-                                expect(bsptree.negative.negative.positive.positive.negative.positive).toBe(null)
-                                expect(bsptree.negative.negative.positive.positive.negative.negative.line).toEqual($L(this.v7, $V(7,5)))
-                                    expect(bsptree.negative.negative.positive.positive.negative.negative.negative).toBe(null)
-                                    expect(bsptree.negative.negative.positive.positive.negative.negative.positive).toBe(null)
-                        expect(bsptree.negative.negative.positive.negative.line).toEqual($L($V(7,5), this.v8))
-                            expect(bsptree.negative.negative.positive.negative.positive).toBe(null)
-                            expect(bsptree.negative.negative.positive.negative.negative.line).toEqual($L(this.v8, $V(2,6)))
-                                expect(bsptree.negative.negative.positive.negative.negative.positive).toBe(null)
-                                expect(bsptree.negative.negative.positive.negative.negative.negative).toBe(null)
-                    expect(bsptree.negative.negative.negative.line).toEqual($L(this.v2, this.v3))
-                        expect(bsptree.negative.negative.negative.positive.line).toEqual($L(this.v3, this.v4))
-                            expect(bsptree.negative.negative.negative.positive.positive.line).toEqual($L(this.v4, $V(2,5)))
-                                expect(bsptree.negative.negative.negative.positive.positive.positive).toBe(null)
-                                expect(bsptree.negative.negative.negative.positive.positive.negative.line).toEqual($L($V(2,6), $V(1,6)))
-                                    expect(bsptree.negative.negative.negative.positive.positive.negative.positive).toBe(null)
-                                    expect(bsptree.negative.negative.negative.positive.positive.negative.negative).toBe(null)
-                            expect(bsptree.negative.negative.negative.positive.negative.line).toEqual($L($V(1,6), this.v9))
-                                expect(bsptree.negative.negative.negative.positive.negative.positive).toBe(null);
-                                expect(bsptree.negative.negative.negative.positive.negative.negative).toBe(null);
-                        expect(bsptree.negative.negative.negative.negative).toBe(null)
+        expect(bsptree.positive).toEqual(null);
+        expect(bsptree.negative.line).toEqual($L(this.v0, this.v1))
+        expect(bsptree.negative.positive).toBe(null)
+        expect(bsptree.negative.negative.line).toEqual($L(this.v1,this.v2))
+            expect(bsptree.negative.negative.positive.line).toEqual($L($V(2,5), this.v5))
+            expect(bsptree.negative.negative.positive.positive.line).toEqual($L(this.v5, this.v6))
+                expect(bsptree.negative.negative.positive.positive.positive).toBe(null)
+                expect(bsptree.negative.negative.positive.positive.negative.line).toEqual($L(this.v6,this.v7))
+                expect(bsptree.negative.negative.positive.positive.negative.positive).toBe(null)
+                expect(bsptree.negative.negative.positive.positive.negative.negative.line).toEqual($L(this.v7, $V(7,5)))
+                    expect(bsptree.negative.negative.positive.positive.negative.negative.negative).toBe(null)
+                    expect(bsptree.negative.negative.positive.positive.negative.negative.positive).toBe(null)
+            expect(bsptree.negative.negative.positive.negative.line).toEqual($L($V(7,5), this.v8))
+                expect(bsptree.negative.negative.positive.negative.positive).toBe(null)
+                expect(bsptree.negative.negative.positive.negative.negative.line).toEqual($L(this.v8, $V(2,6)))
+                expect(bsptree.negative.negative.positive.negative.negative.positive).toBe(null)
+                expect(bsptree.negative.negative.positive.negative.negative.negative).toBe(null)
+            expect(bsptree.negative.negative.negative.line).toEqual($L(this.v2, this.v3))
+            expect(bsptree.negative.negative.negative.positive.line).toEqual($L(this.v3, this.v4))
+                expect(bsptree.negative.negative.negative.positive.positive.line).toEqual($L(this.v4, $V(2,5)))
+                expect(bsptree.negative.negative.negative.positive.positive.positive).toBe(null)
+                expect(bsptree.negative.negative.negative.positive.positive.negative.line).toEqual($L($V(2,6), $V(1,6)))
+                    expect(bsptree.negative.negative.negative.positive.positive.negative.positive).toBe(null)
+                    expect(bsptree.negative.negative.negative.positive.positive.negative.negative).toBe(null)
+                expect(bsptree.negative.negative.negative.positive.negative.line).toEqual($L($V(1,6), this.v9))
+                expect(bsptree.negative.negative.negative.positive.negative.positive).toBe(null);
+                expect(bsptree.negative.negative.negative.positive.negative.negative).toBe(null);
+            expect(bsptree.negative.negative.negative.negative).toBe(null)
 
 
-	})
+    })
 
 
     it("should be able to correctly partition a line over a more complex BSP tree from a more complex (non-convex) polygon", function() {
