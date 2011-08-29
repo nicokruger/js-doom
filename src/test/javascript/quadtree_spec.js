@@ -1,5 +1,5 @@
-describe("Quad tree optimisation", function () {
-    it("should be possible to place an object, represented by a point into the correct quad", function () {
+describe("Quad tree", function () {
+    it("can place an object, represented by a point into the correct quad", function () {
         var q = new Quad(50,50);
 
         q.add(PointPlacer($V(10,10)));
@@ -21,7 +21,7 @@ describe("Quad tree optimisation", function () {
         expect(q.br[1]).toEqual($V(50,50));
     });
 
-    it("should be possible to place an object, represented by a polygon into the correct quad", function () {
+    it("can place an object, represented by a polygon into the correct quad", function () {
         var q = new Quad(50,50);
         var p1 = $P($V(0,0), $V(49,0),$V(49,49),$V(0,49));
         var p2 = $P($V(51,0), $V(100,0),$V(100,49),$V(51,49));
@@ -48,7 +48,7 @@ describe("Quad tree optimisation", function () {
         expect(q.tr[1]).toBe(p5);
     });
 
-    it("should be possible to create a recursive quadtree by combining quads", function () {
+    it("can create a recursive quadtree by combining quads", function () {
         var tl = new Quad(25,75); var tr = new Quad(75,75);
         var bl = new Quad(25,25); var br = new Quad(75,25);
 
@@ -74,7 +74,7 @@ describe("Quad tree optimisation", function () {
 
     });
 
-    it("should be able to determine the relative positioning of a point to a square", function () {
+    it("can determine the relative positioning of a point to a square", function () {
         var a = Square(0,0,100,100);
         var p = $V(50,50);
         var f = jasmine.createSpy();
@@ -94,7 +94,7 @@ describe("Quad tree optimisation", function () {
         expect(f.callCount).toBe(1);
     });
 
-    it("should be possible to retrieve the objects in a quad for a given viewport", function() {
+    it("can retrieve the objects in a quad for a given viewport", function() {
         var a = Square(0,0,10,10);
         var p = $V(50,50);
 
@@ -111,7 +111,7 @@ describe("Quad tree optimisation", function () {
         expect(l.length).toBe(2);
     });
 
-    it("should be possible to retrieve the objects in a quadtree for a given viewport", function () {
+    it("can retrieve the objects in a quadtree for a given viewport", function () {
         var tl = new Quad(25,75); var tr = new Quad(75,75);
         var bl = new Quad(25,25); var br = new Quad(75,25);
 
@@ -130,7 +130,7 @@ describe("Quad tree optimisation", function () {
         expect(bl.forEach).toHaveBeenCalled();
     });
 
-    it("should not duplicate iterate through items which are in more than one quad", function () {
+    it("can iterate through items which are in more than one quad", function () {
         var q = new Quad(50,50);
         q.add(PointPlacer($V(50,50)));
 
@@ -142,7 +142,7 @@ describe("Quad tree optimisation", function () {
         expect(l.length).toBe(1);
     })
 
-    it("should not duplicate iterate through items which are in more than one quadtree", function () {
+    it("can iterate through items which are in more than one quad", function () {
         var tl = new Quad(25,75); var tr = new Quad(75,75);
         var bl = new Quad(25,25); var br = new Quad(75,25);
         var qt = new QuadTree(50, 50, bl, br, tr, tl);
@@ -155,15 +155,7 @@ describe("Quad tree optimisation", function () {
         expect(l.length).toBe(1);
     })
 
-    it("should be possible to create a quad tree for given dimensions with all quads smaller than a specified size", function() {
-        var qt = setupQuadTree(0,0,10,10,5,5);
-        expect(qt.bl.x).toBe(2.5); expect(qt.bl.y).toBe(2.5);
-        expect(qt.br.x).toBe(7.5); expect(qt.br.y).toBe(2.5);
-        expect(qt.tr.x).toBe(7.5); expect(qt.tr.y).toBe(7.5);
-        expect(qt.tl.x).toBe(2.5); expect(qt.tl.y).toBe(7.5);
-    })
-
-    it("should be possible to create a quad tree for given dimensions with all quads smaller than a specified size #2", function() {
+    it("can create a quad tree for given dimensions with all quads smaller than a specified size #2", function() {
         var qt = setupQuadTree(0,0,10,10,2.5,2.5);
         expect(qt.bl.x).toBe(2.5); expect(qt.bl.y).toBe(2.5);
         expect(qt.br.x).toBe(7.5); expect(qt.br.y).toBe(2.5);
