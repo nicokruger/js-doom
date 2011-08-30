@@ -81,34 +81,6 @@ GameScreen.prototype.draw = function () {
 }
 
 
-
-Rasterizer = function(texture, outsideImageData, y, ray, poly, extreme_x1, extreme_x2, width, height, viewport) {
-    var ty = (y + viewport.y) % texture.height;
-    var x1 = (poly.extremes.x1 + 0.5) << 0;
-    var y1 = (poly.extremes.y1 + 0.5) << 0;
-    var data = outsideImageData.data;
-    var thisdata = texture.imageData.data;
-    for (var i = 0; i < ray.neg.length; i++) {
-        var seg = ray.neg[i];
-        var rx1 = (0.5 + seg.origin.x) << 0;
-        var rx2 = (0.5 + seg.end.x) << 0;
-        rx1 = _.max([rx1, extreme_x1]);
-        rx2 = _.min([rx2, extreme_x2]);
-        for (var scanx = rx1; scanx < rx2; scanx++) {
-            var x = (scanx - viewport.x);
-            var tx = scanx % texture.width;
-            var index = (x + y * width) * 4;
-            var tindex = (tx + ty*texture.width) * 4;
-            data[index + 0] = thisdata[tindex + 0];
-            data[index + 1] = thisdata[tindex + 1];
-            data[index + 2] = thisdata[tindex + 2];
-            data[index + 3] = 255;
-        }
-    }
-}
-
-
-// TODO: should be done in GameScreen()
 Scanner = function(poly) {
     // Partitioning
     var rays = [];
@@ -128,31 +100,44 @@ Scanner = function(poly) {
     
     // middle part - iterate through "inner" part of polygon
     for (var y = 1; y <= height-1; y++) {
-    rays.push(poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1))).neg);
+        rays.push(poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1))).neg);
     }
     
     //top - reverse it, because it is in the opposite direction than the scanline
     l = poly.partition($L($V(x1-1, y1+height), $V(x1+width+1, y1+height))).codiff;
     if (l.length > 0) {
-    rays.push([$L(l[0].end, l[0].origin)]);
-    }
-    
+        rays.push([$L(l[0].end, l[0].origin)]);
+    }    
     return rays;
+ }
+
+
+Pixeler = function(viewport, data) {
+    return function(x1,x2,y) {
+        var si1 = (x1 - viewport.x1 + (y - viewport.y1) * data.width)  * 4;
+        var si2 = (x2 - viewport.x1 + (y - viewport.y1) * data.width)  * 4;
+        for (var x = si1; x  <= si2; x++) {
+                data.imageData[x] = 255;
+                data.imageData[x + 1] = 255;
+                data.imageData[x + 2] = 255;
+                data.imageData[x + 3] = 255;
+        }
+    }
 }
 
-Looper = function(sector, x1, y1, x2, y2) {
-    return function(data) {
-    for (var y = y1; y < y2; y++) {
-        Rasterizer(textureLoader.texture[sector.texture], data, y - this.y1, partition[y - sector.poly.extremes.y1], sector.poly, x1, x2, sector.poly.width, sector.poly.height, this);
-    }
+Bounder = function(viewport, poly, rays, f) {
+    
+    var y1 = _.max([poly.extremes.y1, viewport.y1]);
+    var y2 = _.min([poly.extremes.y2, viewport.y2]);
+    
+    for (var y = y1; y <= y2; y++) {
+        //Rasterizer(textureLoader.texture[sector.texture], data, y - this.y1, partition[y - sector.poly.extremes.y1], sector.poly, x1, x2, sector.poly.width, sector.poly.height, this);
+        //f(texture, data, 
+        f(_.max([rays[y][0].origin.x, viewport.x1]), _.min([rays[y][0].end.x, viewport.x2]), y);
     }
 }
 
-SectorDraw = function(viewport, sector, partition) {
-    var x1 = _.max([sector.poly.extremes.x1, viewport.x1]);
-    var y1 = _.max([sector.poly.extremes.y1, viewport.y1]);
-    var y2 = _.min([sector.poly.extremes.y2, viewport.y2]);
-    var x2 = _.min([sector.poly.extremes.x2, viewport.x2]);
+SectorDraw = function(viewport, poly, partition) {
     
     return Looper(sector, x1, y1, x2, y2);
 }
