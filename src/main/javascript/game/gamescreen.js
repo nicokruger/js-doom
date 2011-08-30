@@ -117,10 +117,10 @@ Pixeler = function(viewport, data) {
         var si1 = (x1 - viewport.x1 + (y - viewport.y1) * data.width)  * 4;
         var si2 = (x2 - viewport.x1 + (y - viewport.y1) * data.width)  * 4;
         for (var x = si1; x  <= si2; x++) {
-                data.imageData[x] = 255;
-                data.imageData[x + 1] = 255;
-                data.imageData[x + 2] = 255;
-                data.imageData[x + 3] = 255;
+                data.data[x] = 255;
+                data.data[x + 1] = 255;
+                data.data[x + 2] = 255;
+                data.data[x + 3] = 255;
         }
     }
 }
@@ -133,14 +133,10 @@ Bounder = function(viewport, poly, rays, f) {
     for (var y = y1; y <= y2; y++) {
         //Rasterizer(textureLoader.texture[sector.texture], data, y - this.y1, partition[y - sector.poly.extremes.y1], sector.poly, x1, x2, sector.poly.width, sector.poly.height, this);
         //f(texture, data, 
-        f(_.max([rays[y][0].origin.x, viewport.x1]), _.min([rays[y][0].end.x, viewport.x2]), y);
+        f(_.max([rays[y - y1][0].origin.x, viewport.x1]), _.min([rays[y - y1][0].end.x, viewport.x2]), y);
     }
 }
 
-SectorDraw = function(viewport, poly, partition) {
-    
-    return Looper(sector, x1, y1, x2, y2);
-}
 
 Viewport = function(quadtree,x1,y1,x2,y2) {
     this.x1 = x1;
@@ -150,7 +146,7 @@ Viewport = function(quadtree,x1,y1,x2,y2) {
     
     this.sectors = []; var that=this;
     quadtree.forEach(Square(x1, y1, x1, y1), function (sector) {
-        that.sectors.push(SectorDraw(that, sector, Scanner(sector)));
+        that.sectors.push(sector);
     });
 }
 
@@ -166,8 +162,13 @@ Viewport.prototype.singleBitmap = function () {
     var data = ctx.createImageData(this.x2 - this.x1,this.y2 - this.y1);
     Timer.subend();
     
-    //for (var i = 0; i < this.sectors.length; i++) {
-    this.sectors[0](data);
+    var pixeler = Pixeler(this, data);
+    
+    Bounder(this,  this.sectors[0].poly, Scanner(this.sectors[0].poly), pixeler);
+    
+        //for (var i = 0; i < this.sectors.length; i++) {
+    
+    //this.sectors[0](data);
     //}
     
     return data;

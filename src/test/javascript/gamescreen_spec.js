@@ -47,11 +47,11 @@ describe("The GameScreen software renderer", function() {
     describe("The pixeler", function() {
         it("should color in a pixel buffer", function () {
             var data = {
-                    width: 3,
-                    imageData: [ 
-                        0,0,0,0, 0,0,0,0, 0,0,0,0,
-                        0,0,0,0, 0,0,0,0, 0,0,0,0,
-                        0,0,0,0, 0,0,0,0, 0,0,0,0,
+                    width: 5,
+                    data: [ 
+                        0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+                        0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+                        0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
                     ]
             };
             var pixeler = Pixeler(new Viewport({ forEach : function(){}}, 3,  3, 10, 10), data);
@@ -60,16 +60,15 @@ describe("The GameScreen software renderer", function() {
             var rays = Scanner(p);
             
             Bounder(new Viewport({ forEach: function(){}}, 3, 3, 10 , 10),  p, rays, pixeler);
-            
-            expect(data.imageData).toEqual([
-                255,255,255,255,   255,255,255,255,   255,255,255,255,
-                255,255,255,255,   255,255,255,255,   255,255,255,255,
-                255,255,255,255,   255,255,255,255,   255,255,255,255,
+                
+            expect(data.data).toEqual([
+                255,255,255,255,   255,255,255,255,   255,255,255,255, 0,0,0,0, 0,0,0,0,
+                255,255,255,255,   255,255,255,255,   255,255,255,255, 0,0,0,0, 0,0,0,0,
+                255,255,255,255,   255,255,255,255,   255,255,255,255, 0,0,0,0, 0,0,0,0,
                 ]);
         });
     });
 });
-
 
 /**
  * This test is failing. We are missing the topmost scanline
