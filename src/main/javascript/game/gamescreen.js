@@ -69,8 +69,9 @@ GameScreen.prototype.draw = function () {
 
     Timer.start("Sectordraw");
 
+    var data = this.ctx.createImageData(this.viewport.width, this.viewport.height);
     Timer.substart("Put image buffer");
-    this.ctx.putImageData(this.viewport.singleBitmap(), 0, 0);
+    this.ctx.putImageData(this.viewport.singleBitmap(data), 0, 0);
     Timer.subend();
     
     var that = this;

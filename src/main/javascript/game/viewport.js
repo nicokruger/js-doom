@@ -6,7 +6,7 @@ Scanner = function(poly) {
     var y1 = poly.extremes.y1;
     var width = poly.width;
     var height = poly.height;
-    
+
     // All of the following partitions MUST be succesful - we are after all restricting
     // our scanlines to the extreme bounds of the polygon.
     
@@ -33,8 +33,10 @@ Scanner = function(poly) {
 
 Pixeler = function(viewport, data) {
     return function(x1,x2,y) {
+/*
         console.log("viewport: " + viewport.x1 + "/" + viewport.y1 + "  x   " + viewport.x2 + "/" + viewport.y2);
         console.log("y: " + y + " ---- " + (viewport.y2 - (y)));
+*/
         var si1 = (x1 - viewport.x1 + (viewport.y2 - (y)) * data.width)  * 4;
         var si2 = (x2 - viewport.x1 + (viewport.y2 - (y)) * data.width)  * 4;
         for (var x = si1; x  <= si2; x++) {
@@ -51,10 +53,8 @@ Bounder = function(viewport, poly, rays, f) {
     var y1 = _.max([poly.extremes.y1, viewport.y1]);
     var y2 = _.min([poly.extremes.y2, viewport.y2]);
 
-    console.log(rays.length + " - " + poly.extremes.y1 + " -> " + poly.extremes.y2);
     for (var y = y1; y <= y2; y++) {
-        //console.log(y - y1 + " " + rays[y-y1]);
-        if (rays[y-y1])
+        if (rays[y-y1]) // TODO: this is related to the "triangle bug"
             f(_.max([rays[y - y1][0].origin.x, viewport.x1]), _.min([rays[y - y1][0].end.x, viewport.x2]), y);
     }
 }
@@ -66,6 +66,9 @@ Viewport = function(sectors,x1,y1,x2,y2) {
     this.x2 = x2;
     this.y2 = y2;
     
+    this.width = x2 - x1;
+    this.height = y2 - y1;
+
     this.sectors = sectors;
 }
 
