@@ -33,8 +33,10 @@ Scanner = function(poly) {
 
 Pixeler = function(viewport, data) {
     return function(x1,x2,y) {
-        var si1 = (x1 - viewport.x1 + (y - viewport.y1) * data.width)  * 4;
-        var si2 = (x2 - viewport.x1 + (y - viewport.y1) * data.width)  * 4;
+        console.log("viewport: " + viewport.x1 + "/" + viewport.y1 + "  x   " + viewport.x2 + "/" + viewport.y2);
+        console.log("y: " + y + " ---- " + (viewport.y2 - (y)));
+        var si1 = (x1 - viewport.x1 + (viewport.y2 - (y)) * data.width)  * 4;
+        var si2 = (x2 - viewport.x1 + (viewport.y2 - (y)) * data.width)  * 4;
         for (var x = si1; x  <= si2; x++) {
                 data.data[x] = 255;
                 data.data[x + 1] = 255;
