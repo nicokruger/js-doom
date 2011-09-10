@@ -39,28 +39,105 @@ Pixeler = function(viewport, data) {
 */
         var si1 = (x1 - viewport.x1 + (viewport.y2 - (y)) * data.width)  * 4;
         var si2 = (x2 - viewport.x1 + (viewport.y2 - (y)) * data.width)  * 4;
-        for (var x = si1; x  <= si2; x++) {
+        for (var x = si1; x  <= si2 + 3; x++) {
                 data.data[x] = 255;
-                data.data[x + 1] = 255;
-                data.data[x + 2] = 255;
-                data.data[x + 3] = 255;
         }
     }
 }
 
-Bounder = function(viewport, poly, rays, f) {
+DrawScanlines = function(viewport, poly, rays) {
     
-    var y1 = _.max([poly.extremes.y1, viewport.y1]);
-    var y2 = _.min([poly.extremes.y2, viewport.y2]);
+    var y1 = _.max([poly.extremes.y1, viewport.y1]); // this doesn't change
+    var y2 = _.min([poly.extremes.y2, viewport.y2]); // this doesn't change
 
+    var scans = [];
+    
+    // Nothing here changes, F can change...
     for (var y = y1; y <= y2; y++) {
-        if (rays[y-y1]) // TODO: this is related to the "triangle bug"
-            f(_.max([rays[y - y1][0].origin.x, viewport.x1]), _.min([rays[y - y1][0].end.x, viewport.x2]), y);
+        var line = [];
+        if (rays[y-y1]) { // TODO: this is related to the "triangle bug"
+            //var x1 =  (_.max([rays[y - y1][0].origin.x, viewport.x1]) + 0.5) << 0;
+            //var x2 =  (_.min([rays[y - y1][0].end.x, viewport.x2]) + 0.5) << 0;
+            //var x1 =  _.max([rays[y - y1][0].origin.x, viewport.x1]);
+            //var x2 =  _.min([rays[y - y1][0].end.x, viewport.x2]);
+            var scanLines = rays[y - y1];
+            for (var i = 0; i < scanLines.length; i++) {
+                var x1 =  Math.round(_.max([rays[y - y1][i].origin.x, viewport.x1]), 0)
+                var x2 =  Math.round(_.min([rays[y - y1][i].end.x, viewport.x2]), 0);
+                
+                line.push([x1, x2]);
+            }
+        }
+        scans.push(line);
+    }
+    
+    return function (f) {
+        for (var y = y1; y <= y2; y++) {
+            var scan = scans[y-y1];
+            for (var i = 0; i< scan.length;i++) {
+                var x1 = scan[i][0]; var x2 = scan[i][1];
+                
+                f(x1, x2, y);
+            }
+        }
     }
 }
 
+T = function(viewport, poly, rays) {
+    var y1 = _.max([poly.extremes.y1, viewport.y1]); // this doesn't change
+    var y2 = _.min([poly.extremes.y2, viewport.y2]); // this doesn't change
+
+    this.viewport = viewport;
+    this.y1 = y1;
+    this.y2 = y2;
+    var scans = [];
+    
+    // Nothing here changes, F can change...
+    for (var y = y1; y <= y2; y++) {
+        var line = [];
+        if (rays[y-y1]) { // TODO: this is related to the "triangle bug"
+            //var x1 =  (_.max([rays[y - y1][0].origin.x, viewport.x1]) + 0.5) << 0;
+            //var x2 =  (_.min([rays[y - y1][0].end.x, viewport.x2]) + 0.5) << 0;
+            //var x1 =  _.max([rays[y - y1][0].origin.x, viewport.x1]);
+            //var x2 =  _.min([rays[y - y1][0].end.x, viewport.x2]);
+            var scanLines = rays[y - y1];
+            for (var i = 0; i < scanLines.length; i++) {
+                var x1 =  Math.round(_.max([rays[y - y1][i].origin.x, viewport.x1]), 0)
+                var x2 =  Math.round(_.min([rays[y - y1][i].end.x, viewport.x2]), 0);
+                
+                var si1 = (x1 - this.viewport.x1 + (this.viewport.y2 - (y)) * (this.viewport.width +1))  * 4;
+                var si2 = (x2 - this.viewport.x1 + (this.viewport.y2 - (y)) * (this.viewport.width +1))  * 4;
+                
+                line.push([si1, si2]);
+            }
+        }
+        scans.push(line);
+    }
+    
+    this.scans = scans;
+}
+
+T.prototype.draw = function(data) {
+    for (var y = this.y1; y <= this.y2; y++) {
+        var scan = this.scans[y-this.y1];
+        for (var i = 0; i< scan.length;i++) {
+            var x1 = scan[i][0]; var x2 = scan[i][1];
+            
+            /*for (var x = si1; x  <= si2; x++) {
+                //data.data[x] = 255;
+                //data.data[x + 1] = 255;
+                //data.data[x + 2] = 255;
+                //data.data[x + 3] = 255;
+            }  */
+            for (var a = x1; a <= x2  + 3; a++) {
+                data.data[a] = 255;
+            }
+        }
+    }
+}
 
 Viewport = function(sectors,x1,y1,x2,y2) {
+    console.log("new viewport");
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
@@ -70,6 +147,15 @@ Viewport = function(sectors,x1,y1,x2,y2) {
     this.height = y2 - y1;
 
     this.sectors = sectors;
+    this.drawers = [];
+    for (var s = 0; s < this.sectors.length; s++) {
+        //this.rays[s] = Scanner(this.sectors[s].poly);
+        var rays = Scanner(this.sectors[s].poly);
+        //this.drawers.push(DrawScanlines(this,  this.sectors[s].poly, rays));
+        this.drawers.push(new T(this,  this.sectors[s].poly, rays));
+
+    }
+    //this.rays = Scanner(this.sectors[0].poly);
 }
 
 Viewport.prototype.cartesian2screenx = function(x) {
@@ -84,13 +170,28 @@ Viewport.prototype.singleBitmap = function (data) {
     //var data = ctx.createImageData(this.x2 - this.x1,this.y2 - this.y1);
     //Timer.subend();
     
-    var pixeler = Pixeler(this, data);
-    var rays = Scanner(this.sectors[0].poly);
+    //Timer.substart("Pixeler");
+    //var pixeler = Pixeler(this, data);
+    //Timer.subend();
 
-    Bounder(this,  this.sectors[0].poly, rays, pixeler);
+    /*Timer.substart("sectors:" + this.sectors.length);
+    for (var s = 0; s < this.sectors.length; s++) {
+        Timer.substart("scanner");
+        var rays = this.rays[s];
+        Timer.subend();
+        
+        Timer.substart("drawscanlines");
+        DrawScanlines(this,  this.sectors[s].poly, rays, pixeler);
+        Timer.subend();
+    }
+    Timer.subend();*/
     
-    
-    return data;
+    Timer.substart("quicker? " + this.drawers.length);
+    for (var s = 0; s < this.drawers.length; s++) {
+        this.drawers[s].draw(data);
+    }
+    Timer.subend();
+
 }
 
 

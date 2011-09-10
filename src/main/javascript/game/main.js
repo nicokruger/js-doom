@@ -2,6 +2,7 @@ var canvas, ctx;
 var game;
 var previousTime, currentTime, deltaTime;
 var gamescreen;
+var draw= false;
 
 function init() {
     canvas = document.getElementById("canvas");
@@ -42,13 +43,19 @@ function down() {
     gamescreen.down();
 }
 
+function d() {
+    draw = !draw;
+    //requestAnimFrame(loop);
+}
+
 function set() {
     game.setCenter(parseInt($("#viewportx")), parseInt($("#viewporty")));
 }
 
 function loop() {
-  gamescreen.draw();
-  requestAnimFrame(loop);
+    if (draw) gamescreen.draw();
+    
+    requestAnimFrame(loop);
 }
 
 

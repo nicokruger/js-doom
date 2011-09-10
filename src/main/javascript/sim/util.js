@@ -54,6 +54,7 @@ Timer.end = function () {
 
 Timer.substart = function(label) {
     var t = _.last(this.timers);
+    if (t === undefined) return;
     var subtimers = t[2];
     var subtimerstotals = t[3];
     if (!_.contains(_.keys(subtimerstotals), label)) {
@@ -66,6 +67,7 @@ Timer.substart = function(label) {
 
 Timer.subend = function() {
     var t = _.last(this.timers);
+    if (t === undefined) return;
     var subtimer = t[2].pop();
     var subtimertotal = t[3][subtimer[0]];
     subtimertotal[0] += (Date.now() - subtimer[1]);
