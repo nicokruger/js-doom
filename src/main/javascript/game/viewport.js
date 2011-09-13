@@ -45,7 +45,7 @@ Pixeler = function(viewport, data) {
     }
 }
 
-DrawScanlines = function(viewport, poly, rays) {
+DrawScanlinesClosures = function(viewport, poly, rays) {
     
     var y1 = _.max([poly.extremes.y1, viewport.y1]); // this doesn't change
     var y2 = _.min([poly.extremes.y2, viewport.y2]); // this doesn't change
@@ -83,7 +83,7 @@ DrawScanlines = function(viewport, poly, rays) {
     }
 }
 
-T = function(viewport, poly, rays) {
+DrawScanlinesNoClosures = function(viewport, poly, rays) {
     var y1 = _.max([poly.extremes.y1, viewport.y1]); // this doesn't change
     var y2 = _.min([poly.extremes.y2, viewport.y2]); // this doesn't change
 
@@ -117,7 +117,7 @@ T = function(viewport, poly, rays) {
     this.scans = scans;
 }
 
-T.prototype.draw = function(data) {
+DrawScanlinesNoClosures.prototype.draw = function(data) {
     for (var y = this.y1; y <= this.y2; y++) {
         var scan = this.scans[y-this.y1];
         for (var i = 0; i< scan.length;i++) {
@@ -136,62 +136,64 @@ T.prototype.draw = function(data) {
     }
 }
 
-Viewport = function(sectors,x1,y1,x2,y2) {
-    console.log("new viewport");
-    this.x1 = x1;
-    this.y1 = y1;
-    this.x2 = x2;
-    this.y2 = y2;
-    
+ViewportNoClosures = function(sectors,x1,y1,x2,y2) {
+    this.x1 = x1; this.x2 = x2;
+    this.y1 = y1;  this.y2 = y2;
     this.width = x2 - x1;
     this.height = y2 - y1;
 
     this.sectors = sectors;
     this.drawers = [];
     for (var s = 0; s < this.sectors.length; s++) {
-        //this.rays[s] = Scanner(this.sectors[s].poly);
         var rays = Scanner(this.sectors[s].poly);
-        //this.drawers.push(DrawScanlines(this,  this.sectors[s].poly, rays));
-        this.drawers.push(new T(this,  this.sectors[s].poly, rays));
-
+        this.drawers.push(new DrawScanlinesNoClosures(this,  this.sectors[s].poly, rays));
     }
-    //this.rays = Scanner(this.sectors[0].poly);
 }
 
-Viewport.prototype.cartesian2screenx = function(x) {
+ViewportNoClosures.prototype.cartesian2screenx = function(x) {
     return x - this.x1;
 }
-Viewport.prototype.cartesian2screeny = function(y) {
+ViewportNoClosures.prototype.cartesian2screeny = function(y) {
     return this.y2 + (-1 * y);
 }
 
-Viewport.prototype.singleBitmap = function (data) {
-    //Timer.substart("create image buffer");
-    //var data = ctx.createImageData(this.x2 - this.x1,this.y2 - this.y1);
-    //Timer.subend();
-    
-    //Timer.substart("Pixeler");
-    //var pixeler = Pixeler(this, data);
-    //Timer.subend();
-
-    /*Timer.substart("sectors:" + this.sectors.length);
-    for (var s = 0; s < this.sectors.length; s++) {
-        Timer.substart("scanner");
-        var rays = this.rays[s];
-        Timer.subend();
-        
-        Timer.substart("drawscanlines");
-        DrawScanlines(this,  this.sectors[s].poly, rays, pixeler);
-        Timer.subend();
-    }
-    Timer.subend();*/
-    
-    Timer.substart("quicker? " + this.drawers.length);
+ViewportNoClosures.prototype.singleBitmap = function (data) {
+    Timer.substart("NoClosures [" + this.drawers.length + "]");
     for (var s = 0; s < this.drawers.length; s++) {
         this.drawers[s].draw(data);
     }
     Timer.subend();
+}
 
+ViewportClosures = function(sectors,x1,y1,x2,y2) {
+    this.x1 = x1; this.x2 = x2;
+    this.y1 = y1;  this.y2 = y2;
+    this.width = x2 - x1;
+    this.height = y2 - y1;
+
+    this.sectors = sectors;
+    this.drawers = [];
+    for (var s = 0; s < this.sectors.length; s++) {
+        var rays = Scanner(this.sectors[s].poly);
+        this.drawers.push(new DrawScanlinesClosures(this,  this.sectors[s].poly, rays));
+    }
+}
+
+ViewportClosures.prototype.cartesian2screenx = function(x) {
+    return x - this.x1;
+}
+ViewportClosures.prototype.cartesian2screeny = function(y) {
+    return this.y2 + (-1 * y);
+}
+
+ViewportClosures.prototype.singleBitmap = function (data) {
+    Timer.substart("Closures [" + this.drawers.length + "]");
+    
+    var pixeler = Pixeler(this, data);
+    for (var s = 0; s < this.drawers.length; s++) {
+        this.drawers[s](pixeler);
+    }
+    Timer.subend();
 }
 
 

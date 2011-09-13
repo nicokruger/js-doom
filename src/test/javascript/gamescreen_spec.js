@@ -39,7 +39,7 @@ describe("The GameScreen software renderer", function() {
             var data = { width: p.width, data : [] };
             for (var i = 0; i < data.width * 4; i++) data.data[i] = 0;
             
-            DrawScanlines(new Viewport([{poly:p}], p.extremes.x1, p.extremes.y1, p.extremes.x2, p.extremes.y2),  p, rays)(f);
+            DrawScanlinesClosures(new ViewportNoClosures([{poly:p}], p.extremes.x1, p.extremes.y1, p.extremes.x2, p.extremes.y2),  p, rays)(f);
             
             
             expect(f).toHaveBeenCalledWith(-4, -3, 13);
@@ -80,7 +80,7 @@ describe("The GameScreen software renderer", function() {
                 var p = $P($V(0,0), $V(5,0), $V(5,5), $V(0,5));
                 var rays = Scanner(p); 
             
-                DrawScanlines(new Viewport({ forEach: function(){}}, 3, 3, 10 , 10),  p, rays)(f);
+                DrawScanlinesClosures(new ViewportNoClosures({ forEach: function(){}}, 3, 3, 10 , 10),  p, rays)(f);
 
                 expect(f).toHaveBeenCalledWith(3, 5, 3);
                 expect(f).toHaveBeenCalledWith(3, 5, 4);
@@ -99,11 +99,11 @@ describe("The GameScreen software renderer", function() {
                     ]
             };
             
-            var pixeler = Pixeler(new Viewport({ forEach : function(){}}, 2, 2, 4, 4), data);
+            var pixeler = Pixeler(new ViewportNoClosures({ forEach : function(){}}, 2, 2, 4, 4), data);
             var p = $P($V(2,2), $V(3,2), $V(3,3), $V(2,3));
             var rays = Scanner(p);
             
-            DrawScanlines(new Viewport({ forEach: function(){}}, 2, 2, 4, 4),  p, rays)(pixeler);
+            DrawScanlinesClosures(new ViewportNoClosures({ forEach: function(){}}, 2, 2, 4, 4),  p, rays)(pixeler);
 
             /*       viewport.y2 - (y - viewport.y1)
                    f -> [2 - v.x1,3 - v.x1], 2 (3)     ---->      [0 - 1],

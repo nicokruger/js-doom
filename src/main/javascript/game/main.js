@@ -9,11 +9,11 @@ function init() {
     if (canvas && canvas.getContext) {
         ctx = canvas.getContext("2d");
 
-        loadMap();
+        loadmap();
     }
 }
 
-function loadMap() {
+function loadmap() {
     var map = $("#map").val();
     alert("Loading: " + map);
 
@@ -21,7 +21,7 @@ function loadMap() {
         $("#viewport").html("Level loaded");
         game = new Game(data);
 
-        gamescreen = new GameScreen(canvas.width, canvas.height, data, game);
+        gamescreen = new GameScreen(canvas.width, canvas.height, data, game, __useNoClosuresViewport);
 
         requestAnimFrame(loop);
     }).error(function(e) {
@@ -30,6 +30,24 @@ function loadMap() {
 
 }
 
+function __useNoClosuresViewport(sectors,x1,y1,x2,y2) {
+    return new ViewportNoClosures(sectors, x1, y1, x2, y2);
+}
+function __useClosuresViewport(sectors, x1, y1, x2, y2) {
+    return new ViewportClosures(sectors, x1, y1, x2, y2);
+}
+
+function changerenderer() {
+    var renderer = $("#renderer").val();
+    
+    if (renderer == "NoClosures") {
+        gamescreen.viewportCreator =  __useNoClosuresViewport;
+    } else {
+        gamescreen.viewportCreator =  __useClosuresViewport;
+    };
+    
+    gamescreen.setupViewport();
+}
 function left() {
     gamescreen.left();
 }

@@ -94,12 +94,16 @@
                 <option value="data/MAP29.json">MAP29</option>
                 <option value="data/MAP30.json">MAP30</option>
             </select>
+            Renderer: <select id="renderer" onchange="changerenderer()">
+                <option value="NoClosures">NoClosures</option>
+                <option value="Closures">Closures</option>
+            </select>
         </span>
         <div id="viewport" style="color: #ffffff">Viewport:</div>
     </div>
 </div>
 
-<canvas id='canvas' width="1024" height="1024"></canvas>
+<canvas id='canvas' width="800" height="600"></canvas>
 
 <!-- 3rd party -->
 <script language="javascript" src="vendor/underscore.js"></script>

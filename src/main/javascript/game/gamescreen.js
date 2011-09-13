@@ -1,11 +1,12 @@
 
-GameScreen = function(width,height,data,game) {
+GameScreen = function(width,height,data,game, viewportCreator) {
     var that = this;
 
     this.game = game;
     this.width = width;
     this.height = height;
-
+    this.viewportCreator = viewportCreator;
+    
     textureLoader = new TextureLoader();
     _.keys(data.texturedata).forEach(function (texturename) {
         textureLoader.add(texturename, data.texturedata[texturename]);
@@ -36,7 +37,8 @@ GameScreen.prototype.setupViewport = function() {
         sectors.push(sector);
     });
     
-    this.viewport = new Viewport(sectors, this.x, this.y, this.x + this.width,  this.y + this.height);
+    //this.viewport = new Viewport(sectors, this.x, this.y, this.x + this.width,  this.y + this.height);
+    this.viewport = this.viewportCreator(sectors, this.x, this.y, this.x + this.width, this.y + this.height);
     this.data = this.ctx.createImageData(this.viewport.width + 1, this.viewport.height);
 }
 
