@@ -94,7 +94,7 @@ DrawScanlinesNoClosures = function(viewport, poly, rays) {
     
     // Nothing here changes, F can change...
     for (var y = y1; y <= y2; y++) {
-        var line = [];
+        var lines = [];
         if (rays[y-y1]) { // TODO: this is related to the "triangle bug"
             //var x1 =  (_.max([rays[y - y1][0].origin.x, viewport.x1]) + 0.5) << 0;
             //var x2 =  (_.min([rays[y - y1][0].end.x, viewport.x2]) + 0.5) << 0;
@@ -108,29 +108,32 @@ DrawScanlinesNoClosures = function(viewport, poly, rays) {
                 var si1 = (x1 - this.viewport.x1 + (this.viewport.y2 - (y)) * (this.viewport.width +1))  * 4;
                 var si2 = (x2 - this.viewport.x1 + (this.viewport.y2 - (y)) * (this.viewport.width +1))  * 4;
                 
-                line.push([si1, si2]);
+                lines.push({screen: [si1, si2], world: [x1, x2] });
             }
         }
-        scans.push(line);
+        scans.push({lines: lines, y: Math.abs(this.viewport.y2 - y)});
     }
     
     this.scans = scans;
 }
 
-DrawScanlinesNoClosures.prototype.draw = function(data) {
+DrawScanlinesNoClosures.prototype.draw = function(texture, data) {
     for (var y = this.y1; y <= this.y2; y++) {
-        var scan = this.scans[y-this.y1];
-        for (var i = 0; i< scan.length;i++) {
-            var x1 = scan[i][0]; var x2 = scan[i][1];
+        var lines = this.scans[y-this.y1].lines;
+        var ty = this.scans[y-this.y1].y % texture.height;
+        
+        for (var i = 0; i< lines.length;i++) {
+            var x1 = lines[i].screen[0]; var x2 = lines[i].screen[1];
+            //console.log("TX: " + tx);
             
-            /*for (var x = si1; x  <= si2; x++) {
-                //data.data[x] = 255;
-                //data.data[x + 1] = 255;
-                //data.data[x + 2] = 255;
-                //data.data[x + 3] = 255;
-            }  */
             for (var a = x1; a <= x2  + 3; a++) {
-                data.data[a] = 255;
+                var tx = (Math.abs(lines[i].world[0] * 4)  + a) % (texture.width * 4);
+                //var ty = texture.height - this.scans[y-this.y1].y % texture.height  - 1;
+                var ty = this.scans[y-this.y1].y % texture.height ;
+                //console.log("ty: " + ty);
+                var t = ty*4*texture.width + tx;
+                console.log("t : " + t);
+                data.data[a] = texture.data[t];
             }
         }
     }
@@ -157,10 +160,10 @@ ViewportNoClosures.prototype.cartesian2screeny = function(y) {
     return this.y2 + (-1 * y);
 }
 
-ViewportNoClosures.prototype.singleBitmap = function (data) {
+ViewportNoClosures.prototype.singleBitmap = function (textures, data) {
     Timer.substart("NoClosures [" + this.drawers.length + "]");
     for (var s = 0; s < this.drawers.length; s++) {
-        this.drawers[s].draw(data);
+        this.drawers[s].draw(textures[s], data);
     }
     Timer.subend();
 }
