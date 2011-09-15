@@ -7,9 +7,9 @@ GameScreen = function(width,height,data,game, viewportCreator) {
     this.height = height;
     this.viewportCreator = viewportCreator;
     
-    textureLoader = new TextureLoader();
+    this.textureLoader = new TextureLoader();
     _.keys(data.texturedata).forEach(function (texturename) {
-        textureLoader.add(texturename, data.texturedata[texturename]);
+        that.textureLoader.add(texturename, data.texturedata[texturename]);
         $("#console").val($("#console").val() + "\nLoading texture " + texturename);
     });
 
@@ -36,8 +36,10 @@ GameScreen.prototype.setupViewport = function() {
     this.quadtree.forEach(Square(this.x, this.y, this.x + this.width, this.y + this.height), function (sector) {
         sectors.push(sector);
     });
+    this.sectors = sectors;
     
     //this.viewport = new Viewport(sectors, this.x, this.y, this.x + this.width,  this.y + this.height);
+    // TODO: sectors should not go into constructor, should be passed during draw
     this.viewport = this.viewportCreator(sectors, this.x, this.y, this.x + this.width, this.y + this.height);
     this.data = this.ctx.createImageData(this.viewport.width + 1, this.viewport.height);
 }
@@ -68,7 +70,7 @@ GameScreen.prototype.setCenter = function (x,y) {
 }
 
 GameScreen.prototype.draw = function () {
-    if (!textureLoader.ready()) {
+    if (!this.textureLoader.ready()) {
         console.log("Textureloader not ready... aborting draw");
         return;
     }
@@ -78,7 +80,9 @@ GameScreen.prototype.draw = function () {
     var data = this.data;
 
     Timer.substart("singlebitmap craziness");
-    this.viewport.singleBitmap(data);
+    var that = this;
+    var textures = _.map(this.sectors, function(sector) { return that.textureLoader.texture[sector.texture].imageData; });
+    this.viewport.singleBitmap(textures, data);
     Timer.subend();
 
     Timer.substart("Put image buffer");

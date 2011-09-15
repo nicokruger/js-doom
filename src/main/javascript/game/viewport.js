@@ -132,7 +132,6 @@ DrawScanlinesNoClosures.prototype.draw = function(texture, data) {
                 var ty = this.scans[y-this.y1].y % texture.height ;
                 //console.log("ty: " + ty);
                 var t = ty*4*texture.width + tx;
-                console.log("t : " + t);
                 data.data[a] = texture.data[t];
             }
         }
