@@ -8,15 +8,15 @@ TextureLoader.prototype.ready = function() {
     return this.unloaded == 0;
 }
 
-TextureLoader.prototype.add = function(name, data) {
+TextureLoader.prototype.fromData = function(name, data) {
     this.unloaded += 1;
 
     var img = new Image();
 
-    console.log("Loading texture " + name + " - " + img.width + " / " + img.height);
     var that = this;
 
     img.onload = function() {
+        console.log("Loading texture " + name + " - " + img.width + " / " + img.height);
         var ctx = document.createElement("canvas").getContext("2d");
         ctx.canvas.width = img.width;
         ctx.canvas.height = img.height;
@@ -30,10 +30,11 @@ TextureLoader.prototype.add = function(name, data) {
     img.src = data;
 
 }
-TextureLoader.prototype.load = function(name, image, width, height) {
+TextureLoader.prototype.fromUrl = function(name, image, width, height) {
     var im = new Image();
     var that = this;
     im.onload = function(ev) {
+        console.log("Loading texture " + name + " - " + width + " / " + height);
         var element = document.getElementById("canvas");
         var ctx = document.createElement("canvas").getContext("2d");
         ctx.canvas.width = width;
@@ -43,9 +44,7 @@ TextureLoader.prototype.load = function(name, image, width, height) {
 
         ctx.drawImage(im, 0, 0);
 
-        that.texture[name] = {
-            repeat: new TextureRepeat(ctx.getImageData(0,0,width,height), width, height)
-        }
+        that.texture[name] = new Texture(ctx.getImageData(0,0,width,height), width, height);
     }
     im.src = image;
 }

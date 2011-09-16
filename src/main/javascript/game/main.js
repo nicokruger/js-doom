@@ -15,13 +15,12 @@ function init() {
 
 function loadmap() {
     var map = $("#map").val();
-    alert("Loading: " + map);
 
     $.getJSON(map, function(data) {
         $("#viewport").html("Level loaded");
         game = new Game(data);
 
-        gamescreen = new GameScreen(canvas.width, canvas.height, data, game, __useNoClosuresViewport);
+        gamescreen = new GameScreen(256, 256, data, game, __useNoClosuresViewport);
 
         requestAnimFrame(loop);
     }).error(function(e) {

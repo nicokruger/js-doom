@@ -101,17 +101,44 @@ describe("The viewport", function() {
                               
     });
     
+    /*it("should work for a huge polygon", function () {
+        var W = 3;
+        var H = 3;
+        
+        var offsetX = 1;
+        var offsetY = 1;
+        var p1 = $P($V(0 - offsetX,0 - offsetY), $V(W-1 - offsetX, 0 - offsetY), 
+            $V(W-1 - offsetX,H-1 - offsetY), $V(0 - offsetX,H - 1 - offsetY));
+        
+        var viewport = new ViewportNoClosures([{poly:p1}], 0 - offsetX, 0 - offsetY, W-1 - offsetX, H-1 - offsetY);
+        var data = {
+                width: W,
+                height: H,
+                data: []
+        };
+        
+        var tex1 = { width: W, height : H, data: [] };
+        for (var i = 0; i < W * H * 4; i++) {
+            tex1.data[i] = i;
+        };
+        
+        viewport.singleBitmap([tex1], data);
+        
+        //console.log(JSON.stringify(data.data, null, 4));
+        expect(data.data).toEqual(tex1.data);
+        
+    });*/
     it("can draw more than one polygon", function() {
-    /*    var p1 = $P($V(0,0), $V(1,0), $V(1,1), $V(0,1));
+        var p1 = $P($V(0,0), $V(1,0), $V(1,1), $V(0,1));
         var p2 = $P($V(2,0), $V(3,0), $V(3,1), $V(2,1));
 
-        var viewport = new ViewportNoClosures([{poly:p1},{poly:p2}], 0, 0, 3, 1);
+        var viewport = new ViewportNoClosures([{poly:p1},{poly:p2}], 0, 0, 4, 1);
         
         var data = {
-                width: 4,
+                width: 5,
                 data: [
-                    0,0,0,0,  0,0,0,0,  0,0,0,0,  0,0,0,0,
-                    0,0,0,0,  0,0,0,0,  0,0,0,0,  0,0,0,0
+                    0,0,0,0,  0,0,0,0,  0,0,0,0,  0,0,0,0, 0,0,0,0,
+                    0,0,0,0,  0,0,0,0,  0,0,0,0,  0,0,0,0, 0,0,0,0,
                 ]
         };
         
@@ -125,8 +152,9 @@ describe("The viewport", function() {
         viewport.singleBitmap([tex1, tex2], data);
         
         expect(data.data).toEqual([
-            255,255,255,255,  128,128,128,128,  200,200,200,200,     100,100,100,100,
-            255,255,255,255,  128,128,128,128,  200,200,200,200,     100,100,100,100,
-        ]);*/
+            255,255,255,255,  128,128,128,128,  200,200,200,200,     100,100,100,100, 0,0,0,0,
+            255,255,255,255,  128,128,128,128,  200,200,200,200,     100,100,100,100, 0,0,0,0
+            //0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
+        ]);
     });
 });

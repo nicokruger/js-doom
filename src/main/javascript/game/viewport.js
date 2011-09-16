@@ -150,6 +150,7 @@ ViewportNoClosures = function(sectors,x1,y1,x2,y2) {
         var rays = Scanner(this.sectors[s].poly);
         this.drawers.push(new DrawScanlinesNoClosures(this,  this.sectors[s].poly, rays));
     }
+    
 }
 
 ViewportNoClosures.prototype.cartesian2screenx = function(x) {
@@ -160,7 +161,9 @@ ViewportNoClosures.prototype.cartesian2screeny = function(y) {
 }
 
 ViewportNoClosures.prototype.singleBitmap = function (textures, data) {
-    Timer.substart("NoClosures [" + this.drawers.length + "]");
+    var v = "V: [" + this.x1 + "," + this.y1 + "] x [" + this.x2 + "," + this.y2 + "]";
+
+    Timer.substart("NoClosures [" + v+ "]");
     for (var s = 0; s < this.drawers.length; s++) {
         this.drawers[s].draw(textures[s], data);
     }

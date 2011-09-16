@@ -8,8 +8,10 @@ GameScreen = function(width,height,data,game, viewportCreator) {
     this.viewportCreator = viewportCreator;
     
     this.textureLoader = new TextureLoader();
+    this.textureLoader.fromUrl("doomlogo2", "data/doomlogo.png", 256, 256); 
+    this.textureLoader.fromUrl("test", "data/test.png", 256, 256); 
     _.keys(data.texturedata).forEach(function (texturename) {
-        that.textureLoader.add(texturename, data.texturedata[texturename]);
+        that.textureLoader.fromData(texturename, data.texturedata[texturename]);
         $("#console").val($("#console").val() + "\nLoading texture " + texturename);
     });
 
@@ -27,7 +29,7 @@ GameScreen = function(width,height,data,game, viewportCreator) {
         alert("cannot find canvas");
     }
     
-    this.setCenter(game.x, game.y);
+    this.setCenter(0, 0);
 
 }
 
@@ -41,7 +43,7 @@ GameScreen.prototype.setupViewport = function() {
     //this.viewport = new Viewport(sectors, this.x, this.y, this.x + this.width,  this.y + this.height);
     // TODO: sectors should not go into constructor, should be passed during draw
     this.viewport = this.viewportCreator(sectors, this.x, this.y, this.x + this.width, this.y + this.height);
-    this.data = this.ctx.createImageData(this.viewport.width + 1, this.viewport.height);
+    this.data = this.ctx.createImageData(this.viewport.width, this.viewport.height);
 }
 
 GameScreen.prototype.left = function () {
@@ -81,7 +83,12 @@ GameScreen.prototype.draw = function () {
 
     Timer.substart("singlebitmap craziness");
     var that = this;
-    var textures = _.map(this.sectors, function(sector) { return that.textureLoader.texture[sector.texture].imageData; });
+    var textures = _.map(this.sectors, function(sector) { return {
+        width: that.textureLoader.texture[sector.texture].width,
+        height: that.textureLoader.texture[sector.texture].height,
+        data: that.textureLoader.texture[sector.texture].imageData.data
+    }        
+    });
     this.viewport.singleBitmap(textures, data);
     Timer.subend();
 
