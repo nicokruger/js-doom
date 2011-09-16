@@ -126,13 +126,15 @@ DrawScanlinesNoClosures.prototype.draw = function(texture, data) {
             var x1 = lines[i].screen[0]; var x2 = lines[i].screen[1];
             //console.log("TX: " + tx);
             
+            var z = 0;
             for (var a = x1; a <= x2  + 3; a++) {
-                var tx = (Math.abs(lines[i].world[0] * 4)  + a) % (texture.width * 4);
+                var tx = (Math.abs(lines[i].world[0]) *4 + z) % (texture.width * 4);
                 //var ty = texture.height - this.scans[y-this.y1].y % texture.height  - 1;
                 var ty = this.scans[y-this.y1].y % texture.height ;
-                //console.log("ty: " + ty);
                 var t = ty*4*texture.width + tx;
+                //console.log("t: " + t + " tx: " + tx + " ty: " + ty + "      a: " + a + " world: " + lines[i].world[0] + " text: " + texture.width);
                 data.data[a] = texture.data[t];
+                z++;
             }
         }
     }

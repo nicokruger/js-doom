@@ -2,15 +2,15 @@ describe("The viewport", function() {
     it("can draw a polygon", function () {
         var p = $P($V(0,0), $V(1,0), $V(1,1), $V(0,1));
 
-        var viewport = new ViewportNoClosures([{poly:p}], -2, -2, 1, 1);
+        var viewport = new ViewportNoClosures([{poly:p}], -2, -2, 2, 1);
         
         var data = {
-                width: 4,
+                width: 5,
                 data: [
-                    0,0,0,0,  0,0,0,0,  0,0,0,0,  0,0,0,0,
-                    0,0,0,0,  0,0,0,0,  0,0,0,0,  0,0,0,0,
-                    0,0,0,0,  0,0,0,0,  0,0,0,0,  0,0,0,0,
-                    0,0,0,0,  0,0,0,0,  0,0,0,0,  0,0,0,0
+                    0,0,0,0,  0,0,0,0,  0,0,0,0,  0,0,0,0, 0,0,0,0,
+                    0,0,0,0,  0,0,0,0,  0,0,0,0,  0,0,0,0, 0,0,0,0,
+                    0,0,0,0,  0,0,0,0,  0,0,0,0,  0,0,0,0, 0,0,0,0,
+                    0,0,0,0,  0,0,0,0,  0,0,0,0,  0,0,0,0, 0,0,0,0,
                 ]
         };
         
@@ -18,16 +18,19 @@ describe("The viewport", function() {
                             data: [ 255,255,255,255,     128,128,128,128,
                               255,255,255,255,     128,128,128.,128] };
         
+        var expected = [
+            0,0,0,0,  0,0,0,0,  255,255,255,255,  128,128,128,128, 0,0,0,0,
+            0,0,0,0,  0,0,0,0,  255,255,255,255,  128,128,128,128, 0,0,0,0,
+            0,0,0,0,  0,0,0,0,  0,0,0,0, 0,0,0,0, 0,0,0,0, 
+            0,0,0,0,  0,0,0,0,  0,0,0,0, 0,0,0,0, 0,0,0,0
+        ];
+                              
         viewport.singleBitmap([tex1],data);
         
-        expect(data.data).toEqual([
-            0,0,0,0,  0,0,0,0,  255,255,255,255,  128,128,128,128,
-            0,0,0,0,  0,0,0,0,  255,255,255,255,  128,128,128,128,
-            0,0,0,0,  0,0,0,0,  0,0,0,0, 0,0,0,0,
-            0,0,0,0,  0,0,0,0,  0,0,0,0, 0,0,0,0,
-        ]);
+        console.log(JSON.stringify(data.data, null, 4));
+        console.log(JSON.stringify(expected, null, 4));
+        expect(data.data).toEqual(expected);
     });
-    
     it("should texture a polygon", function() {
         var p1 = $P($V(0,0), $V(1,0), $V(1,1), $V(0,1));
         var viewport = new ViewportNoClosures([{poly:p1}], 0, 0, 1, 1);
@@ -72,7 +75,6 @@ describe("The viewport", function() {
             9,10,11,12,  13,14,15,16,  9,10,11,12,  13,14,15,16]);
                               
     });
-    
     it("should repeat the texture (vertically) in the polygon, with all textures aligned to (0,0) in the world", function () {
         var p1 = $P($V(0,0), $V(1,0), $V(1,3), $V(0,3));
         var viewport = new ViewportNoClosures([{poly:p1}], 0, 0, 1, 3);
@@ -100,13 +102,12 @@ describe("The viewport", function() {
         ]);
                               
     });
-    
-    /*it("should work for a huge polygon", function () {
-        var W = 3;
-        var H = 3;
+    it("should work for a huge polygon", function () {
+        var W = 256;
+        var H = 256;
         
-        var offsetX = 1;
-        var offsetY = 1;
+        var offsetX = 0;
+        var offsetY = 0;
         var p1 = $P($V(0 - offsetX,0 - offsetY), $V(W-1 - offsetX, 0 - offsetY), 
             $V(W-1 - offsetX,H-1 - offsetY), $V(0 - offsetX,H - 1 - offsetY));
         
@@ -127,8 +128,8 @@ describe("The viewport", function() {
         //console.log(JSON.stringify(data.data, null, 4));
         expect(data.data).toEqual(tex1.data);
         
-    });*/
-    it("can draw more than one polygon", function() {
+    });
+    /*it("can draw more than one polygon", function() {
         var p1 = $P($V(0,0), $V(1,0), $V(1,1), $V(0,1));
         var p2 = $P($V(2,0), $V(3,0), $V(3,1), $V(2,1));
 
@@ -156,5 +157,5 @@ describe("The viewport", function() {
             255,255,255,255,  128,128,128,128,  200,200,200,200,     100,100,100,100, 0,0,0,0
             //0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
         ]);
-    });
+    });*/
 });

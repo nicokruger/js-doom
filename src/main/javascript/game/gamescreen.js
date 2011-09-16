@@ -42,7 +42,10 @@ GameScreen.prototype.setupViewport = function() {
     
     //this.viewport = new Viewport(sectors, this.x, this.y, this.x + this.width,  this.y + this.height);
     // TODO: sectors should not go into constructor, should be passed during draw
-    this.viewport = this.viewportCreator(sectors, this.x, this.y, this.x + this.width, this.y + this.height);
+    //this.viewport = this.viewportCreator(sectors, this.x, this.y, this.x + this.width, this.y + this.height);
+    var f1 = 0;
+    var f2 = 0;
+    this.viewport = this.viewportCreator(sectors, f1, f1, this.width + f1, this.height + f1);
     this.data = this.ctx.createImageData(this.viewport.width, this.viewport.height);
 }
 
@@ -67,6 +70,7 @@ GameScreen.prototype.down = function () {
 GameScreen.prototype.setCenter = function (x,y) {
     this.x = x - this.width / 2;
     this.y = y - this.height / 2;
+    
     this.setupViewport();
     
 }
