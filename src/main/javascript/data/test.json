@@ -8,8 +8,15 @@
 
     "player1" : [5,5],
     "sectors": [
-    {"points" : [[0,0],[40,0],[40,40],[0,40]],"texture" : "test","label" : "TEST"},
-    {"points" : [[0,200],[40,200],[40,240],[0,240]],"texture" : "test","label" : "TEST2"}
+    {"points" : [[0,0],[255,0],[255,255],[0,255]],"texture" : "doomlogo2","label" : "TEST1"},
+    {"points" : [[255,255],[512,255],[512,512],[255,512]],"texture":"doomlogo2" ,"label" : "TEST2"},
+    {"points" : [[-255,0],[0,0],[0,255],[-255,255]],"texture" : "doomlogo2","label" : "TEST3"},
+    {"points" : [[-127,-127],[0,-127],[0,0],[-127,0]],"texture" : "test","label" : "TEST4"},
+    {"points" : [[-300,-128],[-172,-128],[-172,0],[-300,0]],"texture" : "test","label" : "TEST5"},
+    {"points" : [[-1000,-1000],[-100,-1000],[-100,-300],[-1000,-300]],"texture" : "test","label" : "TEST10"},
+    {"points" : [[0,-63],[63,-63],[63,0],[0,0]],"texture" : "doomlogo2","label" : "TEST6"},
+    {"points" : [[0,-200], [0,-300], [400,-300], [400,100], [300,100], [300, -200]], "texture":"test", "label":"WTF"}
 
+                
     ]
 }

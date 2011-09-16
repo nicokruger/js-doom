@@ -42,11 +42,11 @@ GameScreen.prototype.setupViewport = function() {
     
     //this.viewport = new Viewport(sectors, this.x, this.y, this.x + this.width,  this.y + this.height);
     // TODO: sectors should not go into constructor, should be passed during draw
-    //this.viewport = this.viewportCreator(sectors, this.x, this.y, this.x + this.width, this.y + this.height);
-    var f1 = 0;
+    this.viewport = this.viewportCreator(sectors, this.x, this.y, this.x + this.width, this.y + this.height);
+    /*var f1 = 0;
     var f2 = 0;
-    this.viewport = this.viewportCreator(sectors, f1, f1, this.width + f1, this.height + f1);
-    this.data = this.ctx.createImageData(this.viewport.width, this.viewport.height);
+    this.viewport = this.viewportCreator(sectors, f1, f1, this.width + f1, this.height + f1);*/
+    this.data = this.ctx.createImageData(this.viewport.width + 1, this.viewport.height+1);
 }
 
 GameScreen.prototype.left = function () {
@@ -93,6 +93,16 @@ GameScreen.prototype.draw = function () {
         data: that.textureLoader.texture[sector.texture].imageData.data
     }        
     });
+    ctx.fillStyle   = '#ff00ff'; // blue
+    ctx.fillRect  (0,   0, ctx.canvas.width, ctx.canvas.height);
+    for (var y = 0; y < this.height; y++) 
+        for (var x = 0; x < this.width; x++)  {
+            data.data[((y*this.width) + x)*4 + 0] = 0;
+            data.data[((y*this.width) + x)*4 + 1] = 255;
+            data.data[((y*this.width) + x)*4 + 2] = 0;
+            data.data[((y*this.width) + x)*4 + 3] = 127;
+        }
+    
     this.viewport.singleBitmap(textures, data);
     Timer.subend();
 
@@ -110,7 +120,9 @@ GameScreen.prototype.draw = function () {
     });*/
 
 
-    drawPoly(this.viewport, this.ctx, this.sectors[0].label, this.sectors[0].poly, "#0000ff");
+    for (var i = 0; i < this.sectors.length; i++) {
+        drawPoly(this.viewport, this.ctx, this.sectors[i].label, this.sectors[i].poly, "#0000ff");
+    }
     Timer.end();
 }
 

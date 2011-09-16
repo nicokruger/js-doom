@@ -95,19 +95,26 @@ DrawScanlinesNoClosures = function(viewport, poly, rays) {
     // Nothing here changes, F can change...
     for (var y = y1; y <= y2; y++) {
         var lines = [];
-        if (rays[y-y1]) { // TODO: this is related to the "triangle bug"
+        var ray = y - poly.extremes.y1;
+        
+        console.log("y: " + y + " y1: " + y1 + " poly " + poly.extremes.y1 + " ray: " + ray);
+        if (ray >= 0 && ray<rays.length) {
+            console.log("adding ray: " + ray);
+            
+        //if (rays[y-poly.extremes.y1]) { // TODO: this is related to the "triangle bug"
             //var x1 =  (_.max([rays[y - y1][0].origin.x, viewport.x1]) + 0.5) << 0;
             //var x2 =  (_.min([rays[y - y1][0].end.x, viewport.x2]) + 0.5) << 0;
             //var x1 =  _.max([rays[y - y1][0].origin.x, viewport.x1]);
             //var x2 =  _.min([rays[y - y1][0].end.x, viewport.x2]);
-            var scanLines = rays[y - y1];
+            var scanLines = rays[ray];
             for (var i = 0; i < scanLines.length; i++) {
-                var x1 =  Math.round(_.max([rays[y - y1][i].origin.x, viewport.x1]), 0)
-                var x2 =  Math.round(_.min([rays[y - y1][i].end.x, viewport.x2]), 0);
+                var x1 =  Math.round(_.max([rays[ray][i].origin.x, viewport.x1]), 0)
+                var x2 =  Math.round(_.min([rays[ray][i].end.x, viewport.x2]), 0);
                 
                 var si1 = (x1 - this.viewport.x1 + (this.viewport.y2 - (y)) * (this.viewport.width +1))  * 4;
                 var si2 = (x2 - this.viewport.x1 + (this.viewport.y2 - (y)) * (this.viewport.width +1))  * 4;
                 
+                console.log("adding ray from " + x1 + " to " + x2 + " on " + y);
                 lines.push({screen: [si1, si2], world: [x1, x2] });
             }
         }
@@ -115,26 +122,43 @@ DrawScanlinesNoClosures = function(viewport, poly, rays) {
     }
     
     this.scans = scans;
+    
+    this.colr = 255;
+    this.colb = 255;
+    this.colg = 255;
+    
 }
 
 DrawScanlinesNoClosures.prototype.draw = function(texture, data) {
+    //console.log("draw: " + this.y1 + " - " + this.y2);
     for (var y = this.y1; y <= this.y2; y++) {
+        //console.log("y: " + y);
         var lines = this.scans[y-this.y1].lines;
-        var ty = this.scans[y-this.y1].y % texture.height;
         
         for (var i = 0; i< lines.length;i++) {
-            var x1 = lines[i].screen[0]; var x2 = lines[i].screen[1];
-            //console.log("TX: " + tx);
-            
-            var z = 0;
-            for (var a = x1; a <= x2  + 3; a++) {
+            /*for (var a = x1; a <= x2  + 3; a++) {
                 var tx = (Math.abs(lines[i].world[0]) *4 + z) % (texture.width * 4);
-                //var ty = texture.height - this.scans[y-this.y1].y % texture.height  - 1;
-                var ty = this.scans[y-this.y1].y % texture.height ;
-                var t = ty*4*texture.width + tx;
-                //console.log("t: " + t + " tx: " + tx + " ty: " + ty + "      a: " + a + " world: " + lines[i].world[0] + " text: " + texture.width);
+                var ty = this.scans[y-this.y1].y;
+                var t = (texture.height-ty)*4*texture.width + tx;
                 data.data[a] = texture.data[t];
+                console.log("t: " + t + " tx: " + tx + " ty: " + ty + "      a: " + a + " world: " + lines[i].world[0] + " text: " + texture.width);
+                
+                //data.data[a] = 255;
                 z++;
+            }*/
+            
+            for (var x = lines[i].world[0]; x <= lines[i].world[1]; x++) {
+                
+                var screenx = x - this.viewport.x1;
+                var screeny = this.viewport.y2 + (-1 * y);
+                if (screenx >= 0 && screenx <= this.viewport.x2 && screeny >= 0 && screeny <= this.viewport.y2) {
+                    var a = (screeny * (this.viewport.width + 1))*4  + screenx * 4;
+                    //console.log("X: " + x + " y: " + y + " ---- " + a);
+                    data.data[a + 0] = this.colr;
+                    data.data[a + 1] = this.colg;
+                    data.data[a + 2] = this.colb;
+                    data.data[a + 3] = 255;
+                }
             }
         }
     }
@@ -181,8 +205,8 @@ ViewportClosures = function(sectors,x1,y1,x2,y2) {
     this.sectors = sectors;
     this.drawers = [];
     for (var s = 0; s < this.sectors.length; s++) {
-        var rays = Scanner(this.sectors[s].poly);
-        this.drawers.push(new DrawScanlinesClosures(this,  this.sectors[s].poly, rays));
+        //var rays = Scanner(this.sectors[s].poly);
+        this.drawers.push(new DrawScanlinesClosures(this,  this.sectors[s].poly, this.sectors[s].rays));
     }
 }
 
@@ -193,7 +217,7 @@ ViewportClosures.prototype.cartesian2screeny = function(y) {
     return this.y2 + (-1 * y);
 }
 
-ViewportClosures.prototype.singleBitmap = function (data) {
+ViewportClosures.prototype.singleBitmap = function (textures, data) {
     Timer.substart("Closures [" + this.drawers.length + "]");
     
     var pixeler = Pixeler(this, data);

@@ -20,7 +20,7 @@ function loadmap() {
         $("#viewport").html("Level loaded");
         game = new Game(data);
 
-        gamescreen = new GameScreen(256, 256, data, game, __useNoClosuresViewport);
+        gamescreen = new GameScreen(500, 500, data, game, __useNoClosuresViewport);
 
         requestAnimFrame(loop);
     }).error(function(e) {

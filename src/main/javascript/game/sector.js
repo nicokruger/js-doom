@@ -3,6 +3,7 @@ Sector = function (poly, label, texture) {
     this.texture = texture;
     this.poly = poly;
     this.label = label;
+    this.rays = Scanner(this.poly);
 
     this.width = poly.width;
     this.height = poly.height;
