@@ -33,10 +33,6 @@ Scanner = function(poly) {
 
 Pixeler = function(viewport, data) {
     return function(x1,x2,y) {
-/*
-        console.log("viewport: " + viewport.x1 + "/" + viewport.y1 + "  x   " + viewport.x2 + "/" + viewport.y2);
-        console.log("y: " + y + " ---- " + (viewport.y2 - (y)));
-*/
         var si1 = (x1 - viewport.x1 + (viewport.y2 - (y)) * data.width)  * 4;
         var si2 = (x2 - viewport.x1 + (viewport.y2 - (y)) * data.width)  * 4;
         for (var x = si1; x  <= si2 + 3; x++) {
@@ -52,7 +48,6 @@ DrawScanlinesClosures = function(viewport, poly, rays) {
 
     var scans = [];
     
-    // Nothing here changes, F can change...
     for (var y = y1; y <= y2; y++) {
         var line = [];
         if (rays[y-y1]) { // TODO: this is related to the "triangle bug"
@@ -116,23 +111,10 @@ DrawScanlinesNoClosures = function(viewport, poly, rays) {
 }
 
 DrawScanlinesNoClosures.prototype.draw = function(texture, data) {
-    //console.log("draw: " + this.y1 + " - " + this.y2);
     for (var y = this.y1; y <= this.y2; y++) {
-        //console.log("y: " + y);
         var lines = this.scans[y-this.y1].lines;
         
         for (var i = 0; i< lines.length;i++) {
-            /*for (var a = x1; a <= x2  + 3; a++) {
-                var tx = (Math.abs(lines[i].world[0]) *4 + z) % (texture.width * 4);
-                var ty = this.scans[y-this.y1].y;
-                var t = (texture.height-ty)*4*texture.width + tx;
-                data.data[a] = texture.data[t];
-                console.log("t: " + t + " tx: " + tx + " ty: " + ty + "      a: " + a + " world: " + lines[i].world[0] + " text: " + texture.width);
-                
-                //data.data[a] = 255;
-                z++;
-            }*/
-            
             // x,y - coordinates on polygon
             // screenx,screeny - coordinates on screen buffer (the 0,0,width,height rect form view viewport)
             // tx,ty - texture coordinates for this pixel
@@ -145,13 +127,9 @@ DrawScanlinesNoClosures.prototype.draw = function(texture, data) {
                 var ty = texture.height - (Math.abs(y) % texture.height) - 1;
                 var t = (ty * texture.width + tx) *4;
                 
-                //console.log("pixel at " + screenx + " " + screeny + " " + this.viewport.x2);
                 if (screenx >= 0 && screenx <= this.viewport.width && screeny >= 0 && screeny <= this.viewport.height) {
-                    //console.log("DRAWING");
                     var a = (screeny * (this.viewport.width + 1))*4  + screenx * 4;
-                    //console.log("X: " + x + " y: " + y + " ---- " + a);
                     
-                    //var r = texture.data
                     data.data[a + 0] = texture.data[t + 0];
                     data.data[a + 1] = texture.data[t + 1];
                     data.data[a + 2] = texture.data[t + 2];

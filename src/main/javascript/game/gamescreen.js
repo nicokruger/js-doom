@@ -29,7 +29,7 @@ GameScreen = function(width,height,data,game, viewportCreator) {
         alert("cannot find canvas");
     }
     
-    this.setCenter(0, 0);
+    this.setCenter(game.x, game.y);
 
 }
 
@@ -43,10 +43,8 @@ GameScreen.prototype.setupViewport = function() {
     //this.viewport = new Viewport(sectors, this.x, this.y, this.x + this.width,  this.y + this.height);
     // TODO: sectors should not go into constructor, should be passed during draw
     this.viewport = this.viewportCreator(sectors, this.x, this.y, this.x + this.width, this.y + this.height);
-    /*var f1 = 0;
-    var f2 = 0;
-    this.viewport = this.viewportCreator(sectors, f1, f1, this.width + f1, this.height + f1);*/
     this.data = this.ctx.createImageData(this.viewport.width + 1, this.viewport.height+1);
+
 }
 
 GameScreen.prototype.left = function () {
@@ -81,45 +79,28 @@ GameScreen.prototype.draw = function () {
         return;
     }
 
-    Timer.start("Sectordraw");
-
-    var data = this.data;
-
-    Timer.substart("singlebitmap craziness");
+    // TODO: Move this to constructor
     var that = this;
-    var textures = _.map(this.sectors, function(sector) { return {
+    this.textures = _.map(this.sectors, function(sector) { return {
         width: that.textureLoader.texture[sector.texture].width,
         height: that.textureLoader.texture[sector.texture].height,
         data: that.textureLoader.texture[sector.texture].imageData.data
-    }        
-    });
-    ctx.fillStyle   = '#ff00ff'; // blue
-    ctx.fillRect  (0,   0, ctx.canvas.width, ctx.canvas.height);
-    for (var y = 0; y < this.height; y++) 
-        for (var x = 0; x < this.width; x++)  {
-            data.data[((y*this.width) + x)*4 + 0] = 0;
-            data.data[((y*this.width) + x)*4 + 1] = 255;
-            data.data[((y*this.width) + x)*4 + 2] = 0;
-            data.data[((y*this.width) + x)*4 + 3] = 127;
-        }
+    }});
     
-    this.viewport.singleBitmap(textures, data);
+    var data = this.data;
+
+    Timer.start("Sectordraw");
+    Timer.substart("clean");
+    ctx.fillStyle   = '#000000'; 
+    ctx.fillRect  (0,   0, ctx.canvas.width, ctx.canvas.height);
     Timer.subend();
+        
+    this.viewport.singleBitmap(this.textures, data);
 
     Timer.substart("Put image buffer");
     this.ctx.putImageData(data, 0, 0);
     Timer.subend();
     
-    /*
-    var that = this;
-    $("#viewport").html("Viewport: [" + that.x + "," + that.y + " x " + (that.x+that.width) + "," + (that.y+that.height));*/
-    /*this.quadtree.forEach(Square(that.x,that.y,that.x + that.width, that.y + that.height), function (sector) {
-        Timer.substart("sector rest");
-        drawPoly(that.viewport, that.ctx, sector.label, sector.poly, "#0000ff");
-        Timer.subend();
-    });*/
-
-
     for (var i = 0; i < this.sectors.length; i++) {
         drawPoly(this.viewport, this.ctx, this.sectors[i].label, this.sectors[i].poly, "#0000ff");
     }
