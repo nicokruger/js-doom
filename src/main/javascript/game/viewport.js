@@ -92,14 +92,13 @@ DrawScanlinesNoClosures = function(viewport, poly, rays) {
     this.y2 = y2;
     var scans = [];
     
-    // Nothing here changes, F can change...
     for (var y = y1; y <= y2; y++) {
         var lines = [];
         var ray = y - poly.extremes.y1;
         
-        console.log("y: " + y + " y1: " + y1 + " poly " + poly.extremes.y1 + " ray: " + ray);
+        //console.log("y: " + y + " y1: " + y1 + " poly " + poly.extremes.y1 + " ray: " + ray);
         if (ray >= 0 && ray<rays.length) {
-            console.log("adding ray: " + ray);
+            //console.log("adding ray: " + ray);
             
         //if (rays[y-poly.extremes.y1]) { // TODO: this is related to the "triangle bug"
             //var x1 =  (_.max([rays[y - y1][0].origin.x, viewport.x1]) + 0.5) << 0;
@@ -114,7 +113,7 @@ DrawScanlinesNoClosures = function(viewport, poly, rays) {
                 var si1 = (x1 - this.viewport.x1 + (this.viewport.y2 - (y)) * (this.viewport.width +1))  * 4;
                 var si2 = (x2 - this.viewport.x1 + (this.viewport.y2 - (y)) * (this.viewport.width +1))  * 4;
                 
-                console.log("adding ray from " + x1 + " to " + x2 + " on " + y);
+                //console.log("adding ray from " + x1 + " to " + x2 + " on " + y);
                 lines.push({screen: [si1, si2], world: [x1, x2] });
             }
         }
@@ -123,9 +122,9 @@ DrawScanlinesNoClosures = function(viewport, poly, rays) {
     
     this.scans = scans;
     
-    this.colr = 255;
-    this.colb = 255;
-    this.colg = 255;
+    this.colr = Math.random() * 255;
+    this.colb = Math.random() * 255;
+    this.colg = Math.random() * 255;
     
 }
 
@@ -151,7 +150,10 @@ DrawScanlinesNoClosures.prototype.draw = function(texture, data) {
                 
                 var screenx = x - this.viewport.x1;
                 var screeny = this.viewport.y2 + (-1 * y);
-                if (screenx >= 0 && screenx <= this.viewport.x2 && screeny >= 0 && screeny <= this.viewport.y2) {
+                
+                //console.log("pixel at " + screenx + " " + screeny + " " + this.viewport.x2);
+                if (screenx >= 0 && screenx <= this.viewport.width && screeny >= 0 && screeny <= this.viewport.height) {
+                    //console.log("DRAWING");
                     var a = (screeny * (this.viewport.width + 1))*4  + screenx * 4;
                     //console.log("X: " + x + " y: " + y + " ---- " + a);
                     data.data[a + 0] = this.colr;
