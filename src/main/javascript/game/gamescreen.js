@@ -83,7 +83,8 @@ GameScreen.prototype.draw = function () {
     this.textures = _.map(this.sectors, function(sector) { return {
         width: that.textureLoader.texture[sector.texture].width,
         height: that.textureLoader.texture[sector.texture].height,
-        imageData: that.textureLoader.texture[sector.texture].imageData
+        imageData: that.textureLoader.texture[sector.texture].imageData,
+        img: that.textureLoader.texture[sector.texture].img
     }});
     
         

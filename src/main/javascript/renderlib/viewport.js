@@ -14,7 +14,6 @@ Viewport = function(sectors,x1,y1,x2,y2,data,ctx) {
         this.drawers.push(new DrawScanlines(this,  this.sectors[s].poly, rays));
     }
 
-    
 }
 
 Viewport.prototype.cartesian2screenx = function(x) {

@@ -22,7 +22,8 @@ TextureLoader.prototype.fromData = function(name, data) {
         ctx.canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
 
-        that.texture[name] = new Texture(ctx.getImageData(0,0, img.width, img.height), img.width, img.height);
+        that.texture[name] = new Texture(ctx.getImageData(0,0, img.width, img.height), img.width, img.height, ctx);
+        that.texture[name].img = img; // TODO: hack!!! (we need this for the canvas Pattern object from the ViewportCanvas
 
         that.unloaded -= 1;
     };
@@ -31,6 +32,7 @@ TextureLoader.prototype.fromData = function(name, data) {
 
 }
 TextureLoader.prototype.fromUrl = function(name, image, width, height) {
+    this.unloaded += 1;
     var im = new Image();
     var that = this;
     im.onload = function(ev) {
@@ -44,16 +46,19 @@ TextureLoader.prototype.fromUrl = function(name, image, width, height) {
 
         ctx.drawImage(im, 0, 0);
 
-        that.texture[name] = new Texture(ctx.getImageData(0,0,width,height), width, height);
+        that.texture[name] = new Texture(ctx.getImageData(0,0,width,height), width, height,ctx);
+        that.texture[name].img = im; // TODO: hack!!! (we need this for the canvas Pattern object from the ViewportCanvas
+        that.unloaded -= 1;
     }
     im.src = image;
 }
 
 
-Texture = function(imageData, width, height) {
+Texture = function(imageData, width, height,img) {
     this.imageData = imageData;
     this.width = width;
     this.height = height;
+    this.img = img;
 }
 
 

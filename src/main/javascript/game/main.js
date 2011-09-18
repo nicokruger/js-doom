@@ -58,6 +58,20 @@ RendererGL = function(width,height) {
         
 };
 
+RendererCanvas = function(width,height) {
+    $("#gamescreenarea").append("<canvas id=\"canvas\" width=\"" + width + "\" height=\"" + height + "\" />");
+    
+    return {
+        cleanup: function() {
+            $("#canvas").remove();
+        },
+        
+        create: function(sectors, x1, y1, x2, y2) {
+            return new ViewportCanvas(sectors, x1, y1, x2, y2, document.getElementById("canvas").getContext("2d"));
+        }
+    }
+};
+
 function loadmap() {
     var map = $("#map").val();
 
