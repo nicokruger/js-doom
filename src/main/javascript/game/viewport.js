@@ -56,10 +56,6 @@ DrawScanlinesClosures = function(viewport, poly, rays) {
     for (var y = y1; y <= y2; y++) {
         var line = [];
         if (rays[y-y1]) { // TODO: this is related to the "triangle bug"
-            //var x1 =  (_.max([rays[y - y1][0].origin.x, viewport.x1]) + 0.5) << 0;
-            //var x2 =  (_.min([rays[y - y1][0].end.x, viewport.x2]) + 0.5) << 0;
-            //var x1 =  _.max([rays[y - y1][0].origin.x, viewport.x1]);
-            //var x2 =  _.min([rays[y - y1][0].end.x, viewport.x2]);
             var scanLines = rays[y - y1];
             for (var i = 0; i < scanLines.length; i++) {
                 var x1 =  Math.round(_.max([rays[y - y1][i].origin.x, viewport.x1]), 0)
@@ -100,11 +96,6 @@ DrawScanlinesNoClosures = function(viewport, poly, rays) {
         if (ray >= 0 && ray<rays.length) {
             //console.log("adding ray: " + ray);
             
-        //if (rays[y-poly.extremes.y1]) { // TODO: this is related to the "triangle bug"
-            //var x1 =  (_.max([rays[y - y1][0].origin.x, viewport.x1]) + 0.5) << 0;
-            //var x2 =  (_.min([rays[y - y1][0].end.x, viewport.x2]) + 0.5) << 0;
-            //var x1 =  _.max([rays[y - y1][0].origin.x, viewport.x1]);
-            //var x2 =  _.min([rays[y - y1][0].end.x, viewport.x2]);
             var scanLines = rays[ray];
             for (var i = 0; i < scanLines.length; i++) {
                 var x1 =  Math.round(_.max([rays[ray][i].origin.x, viewport.x1]), 0)
@@ -121,10 +112,6 @@ DrawScanlinesNoClosures = function(viewport, poly, rays) {
     }
     
     this.scans = scans;
-    
-    this.colr = Math.random() * 255;
-    this.colb = Math.random() * 255;
-    this.colg = Math.random() * 255;
     
 }
 
@@ -146,20 +133,29 @@ DrawScanlinesNoClosures.prototype.draw = function(texture, data) {
                 z++;
             }*/
             
+            // x,y - coordinates on polygon
+            // screenx,screeny - coordinates on screen buffer (the 0,0,width,height rect form view viewport)
+            // tx,ty - texture coordinates for this pixel
             for (var x = lines[i].world[0]; x <= lines[i].world[1]; x++) {
                 
                 var screenx = x - this.viewport.x1;
                 var screeny = this.viewport.y2 + (-1 * y);
+                
+                var tx = Math.abs(x) % texture.width;
+                var ty = texture.height - (Math.abs(y) % texture.height) - 1;
+                var t = (ty * texture.width + tx) *4;
                 
                 //console.log("pixel at " + screenx + " " + screeny + " " + this.viewport.x2);
                 if (screenx >= 0 && screenx <= this.viewport.width && screeny >= 0 && screeny <= this.viewport.height) {
                     //console.log("DRAWING");
                     var a = (screeny * (this.viewport.width + 1))*4  + screenx * 4;
                     //console.log("X: " + x + " y: " + y + " ---- " + a);
-                    data.data[a + 0] = this.colr;
-                    data.data[a + 1] = this.colg;
-                    data.data[a + 2] = this.colb;
-                    data.data[a + 3] = 255;
+                    
+                    //var r = texture.data
+                    data.data[a + 0] = texture.data[t + 0];
+                    data.data[a + 1] = texture.data[t + 1];
+                    data.data[a + 2] = texture.data[t + 2];
+                    data.data[a + 3] = texture.data[t + 3];
                 }
             }
         }
