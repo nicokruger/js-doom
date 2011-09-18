@@ -44,7 +44,7 @@ GameScreen.prototype.setupViewport = function() {
     // TODO: sectors should not go into constructor, should be passed during draw
     this.viewport = this.viewportCreator(sectors, this.x, this.y, this.x + this.width, this.y + this.height);
 
-}
+}                                                                                   
 
 GameScreen.prototype.left = function () {
     this.x -= 32;
@@ -83,14 +83,11 @@ GameScreen.prototype.draw = function () {
     this.textures = _.map(this.sectors, function(sector) { return {
         width: that.textureLoader.texture[sector.texture].width,
         height: that.textureLoader.texture[sector.texture].height,
-        data: that.textureLoader.texture[sector.texture].imageData.data
+        imageData: that.textureLoader.texture[sector.texture].imageData
     }});
     
         
     this.viewport.draw(this.textures);
 
-    for (var i = 0; i < this.sectors.length; i++) {
-        drawPoly(this.viewport, this.ctx, this.sectors[i].label, this.sectors[i].poly, "#0000ff");
-    }
 }
 

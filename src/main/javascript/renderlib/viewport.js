@@ -1,21 +1,20 @@
 
-Viewport = function(sectors,x1,y1,x2,y2,data) {
+Viewport = function(sectors,x1,y1,x2,y2,data,ctx) {
     this.x1 = x1; this.x2 = x2;
     this.y1 = y1;  this.y2 = y2;
     this.width = x2 - x1;
     this.height = y2 - y1;
     this.data = data;
-
+    this.ctx = ctx;
+    
     this.sectors = sectors;
     this.drawers = [];
     for (var s = 0; s < this.sectors.length; s++) {
         var rays = Scanner(this.sectors[s].poly);
         this.drawers.push(new DrawScanlines(this,  this.sectors[s].poly, rays));
     }
+
     
-    if (document.getElementById("canvas")) {
-        this.ctx = document.getElementById("canvas").getContext("2d");
-    }
 }
 
 Viewport.prototype.cartesian2screenx = function(x) {
@@ -38,9 +37,10 @@ Viewport.prototype.singleBitmap = function (textures, data) {
 Viewport.prototype.draw = function(textures) {
     
     Timer.start("Sectordraw");
+    
     Timer.substart("clean");
-    ctx.fillStyle   = '#000000'; 
-    ctx.fillRect  (0,   0, ctx.canvas.width, ctx.canvas.height);
+    this.ctx.fillStyle   = '#000000'; 
+    this.ctx.fillRect  (0,   0, ctx.canvas.width, ctx.canvas.height);
     Timer.subend();
     
     this.singleBitmap(textures, this.data);
@@ -50,6 +50,11 @@ Viewport.prototype.draw = function(textures) {
     Timer.subend();
     
     Timer.end();
+    
+    for (var i = 0; i < this.sectors.length; i++) {
+        drawPoly(this, this.ctx, this.sectors[i].label, this.sectors[i].poly, "#0000ff");
+    }
+    
 }
 
 Scanner = function(poly) {
@@ -146,10 +151,10 @@ DrawScanlines.prototype.draw = function(texture, data) {
                     // index into screen buffer
                     var a = (screeny * (this.viewport.width + 1))*4  + screenx * 4;
                     //console.log("A: " + a + " T: " + t + " ty:" + ty + " y: " + Math.abs(y));
-                    data.data[a + 0] = texture.data[t + 0];
-                    data.data[a + 1] = texture.data[t + 1];
-                    data.data[a + 2] = texture.data[t + 2];
-                    data.data[a + 3] = texture.data[t + 3];
+                    data.data[a + 0] = texture.imageData.data[t + 0];
+                    data.data[a + 1] = texture.imageData.data[t + 1];
+                    data.data[a + 2] = texture.imageData.data[t + 2];
+                    data.data[a + 3] = texture.imageData.data[t + 3];
                 }
             }
         }

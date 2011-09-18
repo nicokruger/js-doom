@@ -21,7 +21,7 @@ function init() {
     }
 }
 
-Viewport2D = function(width,height) {
+Renderer2D = function(width,height) {
     $("#gamescreenarea").append("<canvas id=\"canvas\" width=\"" + width + "\" height=\"" + height + "\" />");
     var ctx = document.getElementById("canvas").getContext("2d");
     var data = ctx.createImageData(width + 1, height + 1);
@@ -32,12 +32,32 @@ Viewport2D = function(width,height) {
         },
         
         create: function(sectors, x1, y1, x2, y2) {
-            return new Viewport(sectors, x1, y1, x2, y2, data);
+            return new Viewport(sectors, x1, y1, x2, y2, data,document.getElementById("canvas").getContext("2d"));
         }
     }
         
 };
     
+RendererGL = function(width,height) {
+    $("#gamescreenarea").append("<canvas id=\"canvas\" width=\"" + width + "\" height=\"" + height + "\" />");
+
+    var  tmpctx = document.createElement("canvas").getContext("2d");
+    tmpctx.canvas.width = this.width;
+    tmpctx.canvas.height = this.height;    
+    var data = ctx.createImageData(width + 1, height + 1);
+    
+    return {
+        cleanup: function() {
+            $("#canvas").remove();
+        },
+        
+        create: function(sectors, x1, y1, x2, y2) {
+            return new ViewportGL(sectors, x1, y1, x2, y2, data);
+        }
+    }
+        
+};
+
 function loadmap() {
     var map = $("#map").val();
 
@@ -45,7 +65,7 @@ function loadmap() {
         $("#viewport").html("Level loaded");
         game = new Game(data);
 
-        renderer = Viewport2D(SCREEN_WIDTH,SCREEN_HEIGHT);
+        renderer = Renderer2D(SCREEN_WIDTH,SCREEN_HEIGHT);
         
         gamescreen = new GameScreen(SCREEN_WIDTH, SCREEN_HEIGHT, data, game, renderer.create);
         

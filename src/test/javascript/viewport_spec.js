@@ -16,8 +16,8 @@ describe("The viewport", function() {
         };
         
         var tex1= { width: 2, height: 2,
-                            data: [ 1,2,3,4,     5,6,7,8,
-                              9,10,11,12,     13,14,15.,16] };
+                            imageData: { data: [ 1,2,3,4,     5,6,7,8,
+                              9,10,11,12,     13,14,15.,16] } };
         
         var expected = [
             0,0,0,0,  0,0,0,0,  0,0,0,0,  0,0,0,0, 0,0,0,0,
@@ -46,8 +46,8 @@ describe("The viewport", function() {
         }
         
         var tex1 = { width: 2, height: 2,
-                data: [ 1,2,3,4, 5,6,7,8,
-                    9,10,11,12, 13,14,15,16]
+                imageData: {data: [ 1,2,3,4, 5,6,7,8,
+                    9,10,11,12, 13,14,15,16 ]}
         }
         
         viewport.singleBitmap([tex1], data);
@@ -97,8 +97,8 @@ describe("The viewport", function() {
                ]
        };
        var tex1 = { width: 2, height: 2,
-                           data: [ 1,2,3,4,     5,6,7,8,
-                             9,10,11,12,     13,14,15.,16] };
+                           imageData: { data: [ 1,2,3,4,     5,6,7,8,
+                             9,10,11,12,     13,14,15.,16] } };
        
        viewport.singleBitmap([tex1], data);
        
@@ -119,8 +119,8 @@ describe("The viewport", function() {
                   ]
           };
           var tex1 = { width: 2, height: 2,
-                              data: [ 1,2,3,4,     5,6,7,8,
-                                9,10,11,12,     13,14,15.,16] };
+                              imageData: { data: [ 1,2,3,4,     5,6,7,8,
+                                9,10,11,12,     13,14,15.,16] }};
           
           viewport.singleBitmap([tex1], data);
           
@@ -143,8 +143,8 @@ describe("The viewport", function() {
                   ]
           };
           var tex1 = { width: 2, height: 2,
-                              data: [ 1,2,3,4,     5,6,7,8,
-                                9,10,11,12,     13,14,15.,16] };
+                              imageData: { data: [ 1,2,3,4,     5,6,7,8,
+                                9,10,11,12,     13,14,15.,16] }};
           
           viewport.singleBitmap([tex1], data);
           
@@ -174,11 +174,11 @@ describe("The viewport", function() {
         };
         
         var tex1 = { width: 2, height: 2,
-                            data: [ 255,255,255,255,     128,128,128,128,
-                              255,255,255,255,     128,128,128.,128] };
+                            imageData: { data: [ 255,255,255,255,     128,128,128,128,
+                              255,255,255,255,     128,128,128.,128] } };
         var tex2 = { width: 2, height: 2,
-                            data: [ 200,200,200,200,     100,100,100,100,
-                              200,200,200,200,     100,100,100.,100] };
+                            imageData: { data: [ 200,200,200,200,     100,100,100,100,
+                              200,200,200,200,     100,100,100.,100] } };
                               
         viewport.singleBitmap([tex1, tex2], data);
         
