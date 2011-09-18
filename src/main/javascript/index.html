@@ -96,14 +96,15 @@
                 <option value="data/MAP30.json">MAP30</option>
             </select>
             Renderer: <select id="renderer" onchange="changerenderer()">
-                <option value="NoClosures">NoClosures</option>
-                <option value="Closures">Closures</option>
+                <option value="Viewport2D">Viewport2D</option>
+                <option value="ViewportGL">ViewportGL</option>
             </select>
         </span>
         <div id="viewport" style="color: #000000">Viewport:</div>
     </div>
 </div>
 
+<div id="gamescreenarea" width="1024" height="1024" />
 <canvas id='canvas' width="1024" height="1024"></canvas>
 
 <!-- 3rd party -->

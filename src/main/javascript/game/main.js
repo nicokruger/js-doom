@@ -1,8 +1,16 @@
+
+
+var SCREEN_WIDTH = 1024;
+var SCREEN_HEIGHT = 1024;
+
 var canvas, ctx;
 var game;
 var previousTime, currentTime, deltaTime;
 var gamescreen;
 var draw= false;
+var old_renderer = null;
+
+var renderer = null;
 
 function init() {
     canvas = document.getElementById("canvas");
@@ -13,6 +21,23 @@ function init() {
     }
 }
 
+Viewport2D = function(width,height) {
+    $("#gamescreenarea").append("<canvas id=\"canvas\" width=\"" + width + "\" height=\"" + height + "\" />");
+    var ctx = document.getElementById("canvas").getContext("2d");
+    var data = ctx.createImageData(width + 1, height + 1);
+    
+    return {
+        cleanup: function() {
+            $("#canvas").remove();
+        },
+        
+        create: function(sectors, x1, y1, x2, y2) {
+            return new Viewport(sectors, x1, y1, x2, y2, data);
+        }
+    }
+        
+};
+    
 function loadmap() {
     var map = $("#map").val();
 
@@ -20,7 +45,10 @@ function loadmap() {
         $("#viewport").html("Level loaded");
         game = new Game(data);
 
-        gamescreen = new GameScreen(1024, 1024, data, game, __useNoClosuresViewport);
+        renderer = Viewport2D(SCREEN_WIDTH,SCREEN_HEIGHT);
+        
+        gamescreen = new GameScreen(SCREEN_WIDTH, SCREEN_HEIGHT, data, game, renderer.create);
+        
 
         requestAnimFrame(loop);
     }).error(function(e) {
@@ -29,24 +57,20 @@ function loadmap() {
 
 }
 
-function __useNoClosuresViewport(sectors,x1,y1,x2,y2) {
-    return new ViewportNoClosures(sectors, x1, y1, x2, y2);
-}
-function __useClosuresViewport(sectors, x1, y1, x2, y2) {
-    return new ViewportClosures(sectors, x1, y1, x2, y2);
-}
-
 function changerenderer() {
-    var renderer = $("#renderer").val();
     
-    if (renderer == "NoClosures") {
-        gamescreen.viewportCreator =  __useNoClosuresViewport;
-    } else {
-        gamescreen.viewportCreator =  __useClosuresViewport;
+    var r = $("#renderer").val();
+
+    if (renderer != null) {
+        renderer.cleanup();
     };
     
+    eval("renderer = " + r + "(" + SCREEN_WIDTH + ", " + SCREEN_HEIGHT + ");");
+    gamescreen.viewportCreator = renderer.create;
     gamescreen.setupViewport();
 }
+
+
 function left() {
     gamescreen.left();
 }

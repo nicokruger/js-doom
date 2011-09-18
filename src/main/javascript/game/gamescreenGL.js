@@ -1,44 +1,34 @@
 
-GameScreenGL = function(width,height,data) {
-    // Load textures
-    var tkeys = [];
-    _.keys(data.texturedata).forEach(function (texturename) {
-        tkeys.push(texturename);
-    });
+GameScreenGL = function(width,height,data, game) {
+  var that = this;
 
-    for (var i = 0; i < tkeys.length; i++) {
-        textureLoader.add(tkeys[i], data.texturedata[tkeys[i]]);
-        $("#console").val($("#console").val() + "\nLoading texture " + tkeys[i]);
-    }
-
-    // QuadTree setup
-    this.quadtree = setupQuadTree(0,0,4000,4000, 250, 250);
-
-    $("#viewport").html("Hello?");
-
+    this.game = game;
     this.width = width;
     this.height = height;
-    this.x = data.player1[0] - width/2;
-    this.y = data.player1[1] - height/2;
-    if (this.x < 0) this.x = 0;
-    if (this.y < 0) this.y = 0;
-
-    // Load textures
-    var tkeys = [];
+    
+    this.textureLoader = new TextureLoader();
+    this.textureLoader.fromUrl("doomlogo2", "data/doomlogo.png", 256, 256); 
+    this.textureLoader.fromUrl("test", "data/test.png", 256, 256); 
     _.keys(data.texturedata).forEach(function (texturename) {
-        tkeys.push(texturename);
+        that.textureLoader.fromData(texturename, data.texturedata[texturename]);
+        $("#console").val($("#console").val() + "\nLoading texture " + texturename);
     });
-    for (var i = 0; i < tkeys.length; i++) {
-        textureLoader.add(tkeys[i], data.texturedata[tkeys[i]]);
-        $("#console").val($("#console").val() + "\nLoading texture " + tkeys[i]);
-    }
 
-    // Load level
-    var that=this;
-    this.sectors = get_sectors(data);
-    this.sectors.forEach(function (sector) {
+    this.sectors = game.sectors;
+    // QuadTree setup
+    this.quadtree = setupQuadTree(0,0,4000,4000, 250, 250);
+    game.sectors.forEach(function (sector) {
         that.quadtree.add(SectorPlacer(sector));
     });
+
+    this.canvas = document.getElementById("canvas");
+    if (this.canvas && this.canvas.getContext) {
+        this.ctx = canvas.getContext("2d");
+    } else {
+        alert("cannot find canvas");
+    }
+    
+    this.setCenter(game.x, game.y);
 
     this.tmpctx = document.createElement("canvas").getContext("2d");
     this.tmpctx.canvas.width = this.width;
@@ -49,24 +39,48 @@ GameScreenGL = function(width,height,data) {
     this.isMouseDown = false;
 }
 
+GameScreenGL.prototype.setupViewport = function() {
+    var sectors = [];
+    this.quadtree.forEach(Square(this.x, this.y, this.x + this.width, this.y + this.height), function (sector) {
+        sectors.push(sector);
+    });
+    this.sectors = sectors;
+    
+    //this.viewport = new Viewport(sectors, this.x, this.y, this.x + this.width,  this.y + this.height);
+    // TODO: sectors should not go into constructor, should be passed during draw
+    this.viewport = new ViewportNoClosures(sectors, this.x, this.y, this.x + this.width, this.y + this.height);
+    this.data = this.ctx.createImageData(this.viewport.width + 1, this.viewport.height+1);
+
+}
+
 GameScreenGL.prototype.left = function () {
     this.x -= 32;
-    if (this.x < 0) this.x = 0;
+    this.setupViewport();
 }
 
 GameScreenGL.prototype.right = function () {
     this.x += 32;
+    this.setupViewport();
 }
 GameScreenGL.prototype.up = function () {
-    this.y -= 32;
-    if (this.y < 0) this.y = 0;
+    this.y += 32;
+    this.setupViewport();
 }
 GameScreenGL.prototype.down = function () {
-    this.y += 32;
+    this.y -= 32;
+    this.setupViewport();
+}
+
+GameScreenGL.prototype.setCenter = function (x,y) {
+    this.x = x - this.width / 2;
+    this.y = y - this.height / 2;
+    
+    this.setupViewport();
+    
 }
 
 GameScreenGL.prototype.draw = function (ctx) {
-    /*if (!textureLoader.ready()) {
+    if (!textureLoader.ready()) {
         console.log("Textureloader not ready... aborting draw");
         return;
     }
@@ -87,12 +101,12 @@ GameScreenGL.prototype.draw = function (ctx) {
     Timer.substart("Loading texture");
     handleLoadedTexture(neheTexture, this.data);
     Timer.subend();
-      k
-    Timer.substart("Draw scene");*/
+    
+    Timer.substart("Draw scene");
     drawScene();
-    /*Timer.subend();
+    Timer.subend();
 
-    Timer.end();*/
+    Timer.end();
 }
 
 //

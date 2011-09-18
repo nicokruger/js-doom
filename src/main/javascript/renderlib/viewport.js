@@ -1,4 +1,57 @@
 
+Viewport = function(sectors,x1,y1,x2,y2,data) {
+    this.x1 = x1; this.x2 = x2;
+    this.y1 = y1;  this.y2 = y2;
+    this.width = x2 - x1;
+    this.height = y2 - y1;
+    this.data = data;
+
+    this.sectors = sectors;
+    this.drawers = [];
+    for (var s = 0; s < this.sectors.length; s++) {
+        var rays = Scanner(this.sectors[s].poly);
+        this.drawers.push(new DrawScanlines(this,  this.sectors[s].poly, rays));
+    }
+    
+    if (document.getElementById("canvas")) {
+        this.ctx = document.getElementById("canvas").getContext("2d");
+    }
+}
+
+Viewport.prototype.cartesian2screenx = function(x) {
+    return x - this.x1;
+}
+Viewport.prototype.cartesian2screeny = function(y) {
+    return this.y2 + (-1 * y);
+}
+
+Viewport.prototype.singleBitmap = function (textures, data) {
+    var v = "V: [" + this.x1 + "," + this.y1 + "] x [" + this.x2 + "," + this.y2 + "]";
+
+    Timer.substart("NoClosures [" + v+ "]");
+    for (var s = 0; s < this.drawers.length; s++) {
+        this.drawers[s].draw(textures[s], data);
+    }
+    Timer.subend();
+}
+
+Viewport.prototype.draw = function(textures) {
+    
+    Timer.start("Sectordraw");
+    Timer.substart("clean");
+    ctx.fillStyle   = '#000000'; 
+    ctx.fillRect  (0,   0, ctx.canvas.width, ctx.canvas.height);
+    Timer.subend();
+    
+    this.singleBitmap(textures, this.data);
+    
+    Timer.substart("Put image buffer");
+    this.ctx.putImageData(this.data, 0, 0);
+    Timer.subend();
+    
+    Timer.end();
+}
+
 Scanner = function(poly) {
     // Partitioning
     var rays = [];
@@ -30,51 +83,7 @@ Scanner = function(poly) {
  }
 
 
-
-Pixeler = function(viewport, data) {
-    return function(x1,x2,y) {
-        var si1 = (x1 - viewport.x1 + (viewport.y2 - (y)) * data.width)  * 4;
-        var si2 = (x2 - viewport.x1 + (viewport.y2 - (y)) * data.width)  * 4;
-        for (var x = si1; x  <= si2 + 3; x++) {
-                data.data[x] = 255;
-        }
-    }
-}
-
-DrawScanlinesClosures = function(viewport, poly, rays) {
-    
-    var y1 = _.max([poly.extremes.y1, viewport.y1]); // this doesn't change
-    var y2 = _.min([poly.extremes.y2, viewport.y2]); // this doesn't change
-
-    var scans = [];
-    
-    for (var y = y1; y <= y2; y++) {
-        var line = [];
-        if (rays[y-y1]) { // TODO: this is related to the "triangle bug"
-            var scanLines = rays[y - y1];
-            for (var i = 0; i < scanLines.length; i++) {
-                var x1 =  Math.round(_.max([rays[y - y1][i].origin.x, viewport.x1]), 0)
-                var x2 =  Math.round(_.min([rays[y - y1][i].end.x, viewport.x2]), 0);
-                
-                line.push([x1, x2]);
-            }
-        }
-        scans.push(line);
-    }
-    
-    return function (f) {
-        for (var y = y1; y <= y2; y++) {
-            var scan = scans[y-y1];
-            for (var i = 0; i< scan.length;i++) {
-                var x1 = scan[i][0]; var x2 = scan[i][1];
-                
-                f(x1, x2, y);
-            }
-        }
-    }
-}
-
-DrawScanlinesNoClosures = function(viewport, poly, rays) {
+DrawScanlines = function(viewport, poly, rays) {
     var y1 = _.max([poly.extremes.y1, viewport.y1]); // this doesn't change
     var y2 = _.min([poly.extremes.y2, viewport.y2]); // this doesn't change
 
@@ -110,7 +119,7 @@ DrawScanlinesNoClosures = function(viewport, poly, rays) {
     
 }
 
-DrawScanlinesNoClosures.prototype.draw = function(texture, data) {
+DrawScanlines.prototype.draw = function(texture, data) {
     for (var y = this.y1; y <= this.y2; y++) {
         var lines = this.scans[y-this.y1].lines;
         
@@ -147,68 +156,7 @@ DrawScanlinesNoClosures.prototype.draw = function(texture, data) {
     }
 }
 
-ViewportNoClosures = function(sectors,x1,y1,x2,y2) {
-    this.x1 = x1; this.x2 = x2;
-    this.y1 = y1;  this.y2 = y2;
-    this.width = x2 - x1;
-    this.height = y2 - y1;
 
-    this.sectors = sectors;
-    this.drawers = [];
-    for (var s = 0; s < this.sectors.length; s++) {
-        var rays = Scanner(this.sectors[s].poly);
-        this.drawers.push(new DrawScanlinesNoClosures(this,  this.sectors[s].poly, rays));
-    }
-    
-}
-
-ViewportNoClosures.prototype.cartesian2screenx = function(x) {
-    return x - this.x1;
-}
-ViewportNoClosures.prototype.cartesian2screeny = function(y) {
-    return this.y2 + (-1 * y);
-}
-
-ViewportNoClosures.prototype.singleBitmap = function (textures, data) {
-    var v = "V: [" + this.x1 + "," + this.y1 + "] x [" + this.x2 + "," + this.y2 + "]";
-
-    Timer.substart("NoClosures [" + v+ "]");
-    for (var s = 0; s < this.drawers.length; s++) {
-        this.drawers[s].draw(textures[s], data);
-    }
-    Timer.subend();
-}
-
-ViewportClosures = function(sectors,x1,y1,x2,y2) {
-    this.x1 = x1; this.x2 = x2;
-    this.y1 = y1;  this.y2 = y2;
-    this.width = x2 - x1;
-    this.height = y2 - y1;
-
-    this.sectors = sectors;
-    this.drawers = [];
-    for (var s = 0; s < this.sectors.length; s++) {
-        //var rays = Scanner(this.sectors[s].poly);
-        this.drawers.push(new DrawScanlinesClosures(this,  this.sectors[s].poly, this.sectors[s].rays));
-    }
-}
-
-ViewportClosures.prototype.cartesian2screenx = function(x) {
-    return x - this.x1;
-}
-ViewportClosures.prototype.cartesian2screeny = function(y) {
-    return this.y2 + (-1 * y);
-}
-
-ViewportClosures.prototype.singleBitmap = function (textures, data) {
-    Timer.substart("Closures [" + this.drawers.length + "]");
-    
-    var pixeler = Pixeler(this, data);
-    for (var s = 0; s < this.drawers.length; s++) {
-        this.drawers[s](pixeler);
-    }
-    Timer.subend();
-}
 
 
 function drawPoly(viewport, ctx, label, poly, colour) {
