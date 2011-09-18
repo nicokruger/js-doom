@@ -4,6 +4,7 @@ Topdown Doom
 Basically, a polygon library (2d vectors, lines, polygons, and a BSP-tree implementation which gives partitioning and polygon intersecting). A Quad Tree implementation in JavaScript is also included.
 
 Three rendering methods:
+
 * Rendering polygons using HTML 5 2D canvas, using the canvas fills to fill the polygons.
 
 * Rendering polygons using a custom built 2D rasterizer. This was fun, but frustrtating to do. It works, but I doubt we'll be using it much in the future - it's just too slow.
