@@ -9,7 +9,7 @@ Three rendering methods:
 
 * Rendering polygons using a custom built 2D rasterizer. This was fun, but frustrtating to do. It works, but I doubt we'll be using it much in the future - it's just too slow.
 
-* A webGL renderer, which uses the renderer in #2 to fill a texture, then creates a single orthographically-projected quad using the generated texture. Again, was a nice experiment but I doubt it'll have much longevity.
+* A webGL renderer, which uses the renderer in #2 to fill a texture, then creates a single orthographically-projected quad using the generated texture. Again, was a nice experiment but I doubt it'll have much longevity. Also, BROKEN at the moment.
 
 Included are the 30 maps from Doom II, generated using a python script which converted the MAP files in the original doom2.wad into the JSON objects. The JSON objects are completely self-sustained - the textures are base64 encoded inside the map files themselves. Thus, there is a lot of duplication.
 
