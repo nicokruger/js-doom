@@ -123,13 +123,20 @@ DrawScanlinesNoClosures.prototype.draw = function(texture, data) {
                 var screenx = x - this.viewport.x1;
                 var screeny = this.viewport.y2 + (-1 * y);
                 
-                var tx = Math.abs(x) % texture.width;
-                var ty = texture.height - (Math.abs(y) % texture.height) - 1;
-                var t = (ty * texture.width + tx) *4;
-                
                 if (screenx >= 0 && screenx <= this.viewport.width && screeny >= 0 && screeny <= this.viewport.height) {
-                    var a = (screeny * (this.viewport.width + 1))*4  + screenx * 4;
+                    //console.log("putting pixel " + screenx + " / " + screeny);
+                    // get the texture coordinates
                     
+                    // TODO: 4096 magic number
+                    // I do this because when the polygons are in the negative x or y space
+                    // the texture gets rendered inversely. So here I simply add 4096
+                    // to the world coordinate to get everything into the first quadrant.
+                    var tx = (x + 4096) % texture.width;   
+                    var ty = texture.height - ((y + 4096) % texture.height) - 1;
+                    var t = (ty * texture.width + tx) *4;
+                    // index into screen buffer
+                    var a = (screeny * (this.viewport.width + 1))*4  + screenx * 4;
+                    //console.log("A: " + a + " T: " + t + " ty:" + ty + " y: " + Math.abs(y));
                     data.data[a + 0] = texture.data[t + 0];
                     data.data[a + 1] = texture.data[t + 1];
                     data.data[a + 2] = texture.data[t + 2];
