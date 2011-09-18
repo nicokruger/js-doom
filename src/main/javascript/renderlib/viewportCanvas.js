@@ -26,8 +26,8 @@ ViewportCanvas.prototype.draw = function(textures) {
     Timer.start("Sectordraw");
     
     Timer.substart("clean");
-    this.ctx.fillStyle   = '#000000'; 
-    this.ctx.fillRect  (0,   0, ctx.canvas.width, ctx.canvas.height);
+    this.ctx.fillStyle  = '#000000'; 
+    this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     Timer.subend();
     
     Timer.substart("patternPoly");

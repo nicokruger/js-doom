@@ -38,8 +38,12 @@ Viewport.prototype.draw = function(textures) {
     Timer.start("Sectordraw");
     
     Timer.substart("clean");
-    this.ctx.fillStyle   = '#000000'; 
-    this.ctx.fillRect  (0,   0, ctx.canvas.width, ctx.canvas.height);
+    var length = this.ctx.canvas.width * this.ctx.canvas.height * 4, i = 0;
+    for (; i < length; i++) {
+        this.data.data[i] = 0;
+    }
+    //this.ctx.fillStyle  = '#000000'; 
+    //this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     Timer.subend();
     
     this.singleBitmap(textures, this.data);
