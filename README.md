@@ -4,11 +4,11 @@ Topdown Doom
 Basically, a polygon library (2d vectors, lines, polygons, and a BSP-tree implementation which gives partitioning and polygon intersecting). A Quad Tree implementation in JavaScript is also included.
 
 Three rendering methods:
-1) Rendering polygons using HTML 5 2D canvas, using the canvas fills to fill the polygons.
+* Rendering polygons using HTML 5 2D canvas, using the canvas fills to fill the polygons.
 
-2) Rendering polygons using a custom built 2D rasterizer. This was fun, but frustrtating to do. It works, but I doubt we'll be using it much in the future - it's just too slow.
+* Rendering polygons using a custom built 2D rasterizer. This was fun, but frustrtating to do. It works, but I doubt we'll be using it much in the future - it's just too slow.
 
-3) A webGL renderer, which uses the renderer in #2 to fill a texture, then creates a single orthographically-projected quad using the generated texture. Again, was a nice experiment but I doubt it'll have much longevity.
+* A webGL renderer, which uses the renderer in #2 to fill a texture, then creates a single orthographically-projected quad using the generated texture. Again, was a nice experiment but I doubt it'll have much longevity.
 
 Included are the 30 maps from Doom II, generated using a python script which converted the MAP files in the original doom2.wad into the JSON objects. The JSON objects are completely self-sustained - the textures are base64 encoded inside the map files themselves. Thus, there is a lot of duplication.
 
