@@ -1,6 +1,9 @@
-Sector = function (poly, label, texture) {
+Sector = function (poly, label, textures) {
 
-    this.texture = texture;
+    this.textures = textures;
+    this.texture_index = 0;
+    this.texture = this.textures[this.texture_index];
+    
     this.poly = poly;
     this.label = label;
     this.rays = Scanner(this.poly);
@@ -13,7 +16,12 @@ Sector = function (poly, label, texture) {
 
 }
 
-Sector.prototype.updateComponents = function(x) {
+Sector.prototype.tick = function(x) {
+    this.texture_index++;
+    if (this.texture_index >= this.textures.length) {
+        this.texture_index = 0;
+    }
+    this.texture = this.textures[this.texture_index];
 }
 
 Sector.prototype.draw = function(viewport, data) {
