@@ -96,8 +96,8 @@
                 <option value="data/MAP30.json">MAP30</option>
             </select>
             Renderer: <select id="renderer" onchange="changerenderer()">
-                <option value="Renderer2D">Renderer2D</option>
                 <option value="RendererCanvas">RendererCanvas</option>
+                <option value="Renderer2D">Renderer2D</option>
                 <option value="RendererGL">RendererGL</option>
             </select>
         </span>
@@ -107,6 +107,7 @@
 
 <div id="gamescreenarea" width="1024" height="1024" />
 <canvas id='canvas' width="1024" height="1024"></canvas>
+<canvas id='canvas_hidden' width="4192" height="4192" style="display:none"></canvas>
 
 <!-- 3rd party -->
 <script language="javascript" src="vendor/underscore.js"></script>

@@ -10,25 +10,28 @@ var gamescreen;
 var draw= false;
 var old_renderer = null;
 
-var renderer = null;
+var renderer;
+        
 
 function init() {
     canvas = document.getElementById("canvas");
     if (canvas && canvas.getContext) {
         ctx = canvas.getContext("2d");
 
+        renderer = RendererCanvas(SCREEN_WIDTH,SCREEN_HEIGHT);
         loadmap();
     }
+    
 }
 
 Renderer2D = function(width,height) {
-    $("#gamescreenarea").append("<canvas id=\"canvas\" width=\"" + width + "\" height=\"" + height + "\" />");
+    //$("#gamescreenarea").append("<canvas id=\"canvas\" width=\"" + width + "\" height=\"" + height + "\" />");
     var ctx = document.getElementById("canvas").getContext("2d");
     var data = ctx.createImageData(width + 1, height + 1);
     
     return {
         cleanup: function() {
-            $("#canvas").remove();
+            //$("#canvas").remove();
         },
         
         create: function(sectors, x1, y1, x2, y2) {
@@ -39,7 +42,7 @@ Renderer2D = function(width,height) {
 };
     
 RendererGL = function(width,height) {
-    $("#gamescreenarea").append("<canvas id=\"canvas\" width=\"" + width + "\" height=\"" + height + "\" />");
+    //$("#gamescreenarea").append("<canvas id=\"canvas\" width=\"" + width + "\" height=\"" + height + "\" />");
 
     var  tmpctx = document.createElement("canvas").getContext("2d");
     tmpctx.canvas.width = this.width;
@@ -48,7 +51,7 @@ RendererGL = function(width,height) {
     
     return {
         cleanup: function() {
-            $("#canvas").remove();
+            //$("#canvas").remove();
         },
         
         create: function(sectors, x1, y1, x2, y2) {
@@ -59,15 +62,17 @@ RendererGL = function(width,height) {
 };
 
 RendererCanvas = function(width,height) {
-    $("#gamescreenarea").append("<canvas id=\"canvas\" width=\"" + width + "\" height=\"" + height + "\" />");
+    //$("#gamescreenarea").append("<canvas id=\"canvas\" width=\"" + width + "\" height=\"" + height + "\" />");
     
     return {
         cleanup: function() {
-            $("#canvas").remove();
+            //$("#canvas").remove();
         },
         
         create: function(sectors, x1, y1, x2, y2) {
-            return new ViewportCanvas(sectors, x1, y1, x2, y2, document.getElementById("canvas").getContext("2d"));
+            return new ViewportCanvas(sectors, x1, y1, x2, y2, 
+                document.getElementById("canvas").getContext("2d"),
+                document.getElementById("canvas_hidden").getContext("2d"));
         }
     }
 };
@@ -79,8 +84,6 @@ function loadmap() {
         $("#viewport").html("Level loaded");
         game = new Game(data);
 
-        renderer = Renderer2D(SCREEN_WIDTH,SCREEN_HEIGHT);
-        
         gamescreen = new GameScreen(SCREEN_WIDTH, SCREEN_HEIGHT, data, game, renderer.create);
         
 

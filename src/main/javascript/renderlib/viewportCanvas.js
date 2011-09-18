@@ -1,18 +1,12 @@
 
-ViewportCanvas = function(sectors,x1,y1,x2,y2,ctx) {
+ViewportCanvas = function(sectors,x1,y1,x2,y2,ctx_front, ctx_back) {
     this.x1 = x1; this.x2 = x2;
     this.y1 = y1;  this.y2 = y2;
     this.width = x2 - x1;
     this.height = y2 - y1;
-    this.ctx = ctx;
-    
+    this.ctx_front = ctx_front;
+    this.ctx_back = ctx_back;
     this.sectors = sectors;
-    this.drawers = [];
-    for (var s = 0; s < this.sectors.length; s++) {
-        var rays = Scanner(this.sectors[s].poly);
-        this.drawers.push(new DrawScanlines(this,  this.sectors[s].poly, rays));
-    }
-  
 }
 
 ViewportCanvas.prototype.cartesian2screenx = function(x) {
@@ -23,17 +17,40 @@ ViewportCanvas.prototype.cartesian2screeny = function(y) {
 }
 
 ViewportCanvas.prototype.draw = function(textures) {
-    Timer.start("Sectordraw");
+    var v = new Viewport([], -2048, -2048, 2048, 2048, null, null);
     
-    Timer.substart("clean");
-    this.ctx.fillStyle  = '#000000'; 
-    this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    Timer.start("Sectordraw");
+
+    Timer.substart("clean back");
+    this.ctx_back.fillStyle  = '#000000'; 
+    this.ctx_back.fillRect(
+        v.cartesian2screenx(this.x1), 
+        v.cartesian2screeny(this.y1),
+        v.cartesian2screenx(this.x2) - v.cartesian2screenx(this.x1), 
+        v.cartesian2screeny(this.y2) - v.cartesian2screeny(this.y1));
     Timer.subend();
     
-    Timer.substart("patternPoly");
+    Timer.substart("draw-all");
+    // 2048
     for (var s = 0; s < this.sectors.length; s++) {
-        this.drawPoly(this, this.ctx, this.sectors[s].label, this.sectors[s].poly, "#0000ff", textures[s]);
+        this.drawPoly(v, this.ctx_back, this.sectors[s].label, this.sectors[s].poly, "#0000ff", textures[s]);
+        //this.drawPoly(this, this.ctx_front, this.sectors[s].label, this.sectors[s].poly, "#0000ff", textures[0]);
     };
+    Timer.subend();
+    
+/*    Timer.substart("clean");
+    this.ctx.fillStyle  = '#000000'; 
+    this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    Timer.subend();*/
+    
+    Timer.substart("copy to front");
+    this.ctx_front.drawImage(this.ctx_back.canvas, 
+        v.cartesian2screenx(this.x1), 
+        v.cartesian2screeny(this.y1),
+        v.cartesian2screenx(this.x2) - v.cartesian2screenx(this.x1), 
+        v.cartesian2screeny(this.y2) - v.cartesian2screeny(this.y1),
+        0, 0, 
+        this.width, this.height);
     Timer.subend();
     
     Timer.end();
