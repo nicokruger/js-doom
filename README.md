@@ -43,11 +43,14 @@ Using maven:
 
 This runs a server, exposing the unit tests on port 8234. For unit tests, go to http://localhost:8234 . The actual game is available at http://localhost:8234/src/main/javascript .
 
+**Press the "D" button to get everything to start drawing.**
+
 Using rake:
 
     rake jasmine:headless
 
 This runs the unit tests (very quickly), on the command line. Very handy when developing. You may need the jasmine RubyGem and a Jasmine rake plugin. Should be available on Google.
+
 
 
 Why
