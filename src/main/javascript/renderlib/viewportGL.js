@@ -1,6 +1,6 @@
 var gl;
 
-ViewportGL = function(sectors,x1,y1,x2,y2,data) {
+ViewportGL = function(sectors,x1,y1,x2,y2,data, canvas) {
     
     this.bitmapViewport = new Viewport(sectors, x1, y1, x2, y2, data);
     
@@ -12,7 +12,7 @@ ViewportGL = function(sectors,x1,y1,x2,y2,data) {
 
     this.sectors = sectors;
 
-    webGLStart(document.getElementById("canvas"));
+    webGLStart(canvas);
 
 }
 

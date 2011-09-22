@@ -22,13 +22,6 @@ GameScreen = function(width,height,data,game, viewportCreator) {
         that.quadtree.add(SectorPlacer(sector));
     });
 
-    this.canvas = document.getElementById("canvas");
-    if (this.canvas && this.canvas.getContext) {
-        this.ctx = canvas.getContext("2d");
-    } else {
-        alert("cannot find canvas");
-    }
-    
     this.setCenter(game.x, game.y);
 
 }
