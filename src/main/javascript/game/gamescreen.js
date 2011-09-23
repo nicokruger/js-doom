@@ -73,7 +73,7 @@ GameScreen.prototype.draw = function () {
 
     // TODO: Move this to constructor
     var that = this;
-    this.textures = _.map(this.sectors, function(sector) { return {
+    this.textures = _.map(this.sectors, function(sector) { console.log("tex: " + sector.texture); return {
         width: that.textureLoader.texture[sector.texture].width,
         height: that.textureLoader.texture[sector.texture].height,
         imageData: that.textureLoader.texture[sector.texture].imageData,

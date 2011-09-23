@@ -14,15 +14,14 @@ var renderer;
         
 
 function init() {
-    renderer = Renderer2D(SCREEN_WIDTH,SCREEN_HEIGHT);
+    renderer = Renderer2D(game, SCREEN_WIDTH,SCREEN_HEIGHT);
     loadmap();
 }
 
-Renderer2D = function(width,height) {
+Renderer2D = function(game,width,height) {
     $("#gamescreenarea").append("<canvas id=\"canvas2d\" width=\"" + width + "\" height=\"" + height + "\" />");
     var ctx = $("#canvas2d")[0].getContext("2d");
     var data = ctx.createImageData(width + 1, height + 1);
-    alert("GSA2D: " + $("#gamescreenarea") + $("#canvas2d") + document.getElementById("canvas"));
     
     return {
         cleanup: function() {
@@ -36,7 +35,7 @@ Renderer2D = function(width,height) {
         
 };
     
-RendererGL = function(width,height) {
+RendererGL = function(game,width,height) {
     $("#gamescreenarea").append("<canvas id=\"canvasgl\" width=\"" + width + "\" height=\"" + height + "\" />");
 
     var canvas = $("#canvasgl")[0];
@@ -58,8 +57,8 @@ RendererGL = function(width,height) {
         
 };
 
-RendererCanvas = function(width,height) {
-    $("#gamescreenarea").append("<canvas id=\"canvas\" width=\"" + width + "\" height=\"" + height + "\" />");
+RendererCanvas = function(game,width,height) {
+    $("#gamescreenarea").append("<div id=\"viewport\" width=\"" + width + "\" height=\"" + height + "\" ><canvas id=\"canvas\" width=\"" + (game.extents.x2 - game.extents.x1)+ "\" height=\"" + (game.extents.y2 - game.extents.y1) + "\"></canvas></div>");
     
     return {
         cleanup: function() {
@@ -67,7 +66,11 @@ RendererCanvas = function(width,height) {
         },
         
         create: function(sectors, x1, y1, x2, y2) {
-            return new ViewportCanvas(sectors, x1, y1, x2, y2, 
+            var width = game.extents.x2 - game.extents.x1;
+            var height = game.extents.y2 - game.extents.y1;
+            $("#viewport").scrollTop(y1);
+            $("#viewport").scrollLeft(x1);
+            return new ViewportCanvas(sectors, game.extents.x1, game.extents.x2, game.extents.y1, game.extents.y2, 
                 $("#canvas")[0].getContext("2d"));
         }
     }
@@ -98,7 +101,8 @@ function changerenderer() {
         renderer.cleanup();
     };
     
-    eval("renderer = " + r + "(" + SCREEN_WIDTH + ", " + SCREEN_HEIGHT + ");");
+    // this builds up a string which calls a renderer creation function
+    eval("renderer = " + r + "(game, " + SCREEN_WIDTH + ", " + SCREEN_HEIGHT + ");");
     gamescreen.viewportCreator = renderer.create;
     gamescreen.setupViewport();
 }
@@ -119,7 +123,6 @@ function down() {
 
 function d() {
     draw = !draw;
-    //requestAnimFrame(loop);
 }
 
 function set() {
