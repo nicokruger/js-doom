@@ -1,3 +1,20 @@
+Cartesian2Screen = function(x1, y1, x2, y2) {
+    
+    return {
+        cartesian2screenx: function(x) {
+            return x - x1;
+        },
+        cartesian2screeny: function(y) {
+            return y2 + (-1 * y);
+        },
+        width: function() {
+            return x2 - x1;
+        },
+        height: function() {
+            return y2 - y1;
+        }
+    }
+}
 
 
 zip = function(l1, l2, f) {

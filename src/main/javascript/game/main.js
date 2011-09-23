@@ -77,7 +77,7 @@ RendererFullCanvas = function(game,width,height) {
         },
         
         create: function(sectors, x1, y1, x2, y2) {
-            var viewport = new Viewport2D(sectors, game.extents.x1, game.extents.y1, game.extents.x2, game.extents.y2, null, null);
+            var viewport = new Cartesian2Screen(game.extents.x1, game.extents.y1, game.extents.x2, game.extents.y2);
             return new ViewportFullCanvas(sectors, viewport, x1, y1, x2, y2,  $("#canvas")[0].getContext("2d"));
         }
     }
@@ -85,7 +85,7 @@ RendererFullCanvas = function(game,width,height) {
             
 RendererBackingCanvas = function(game,width,height) {
     $("#gamescreenarea").append("<canvas id=\"canvas\" width=\"" + width + "\" height=\"" + height + "\" />");
-    $("#gamescreenarea").append("<canvas id=\"canvas_hidden\" width=\"4096\" height=\"4096\" />");
+    $("#gamescreenarea").append("<canvas id=\"canvas_hidden\" width=\"4096\" height=\"4096\" style=\"display: none\"/>");
     
     return {
         cleanup: function() {
