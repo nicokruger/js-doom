@@ -1,5 +1,6 @@
 
 Viewport2D = function(sectors,x1,y1,x2,y2,data,ctx) {
+    this.c2s = new Cartesian2Screen(x1,y1,x2,y2);
     this.x1 = x1; this.x2 = x2;
     this.y1 = y1;  this.y2 = y2;
     this.width = x2 - x1;
@@ -14,13 +15,6 @@ Viewport2D = function(sectors,x1,y1,x2,y2,data,ctx) {
         this.drawers.push(new DrawScanlines(this,  this.sectors[s].poly, rays));
     }
 
-}
-
-Viewport2D.prototype.cartesian2screenx = function(x) {
-    return x - this.x1;
-}
-Viewport2D.prototype.cartesian2screeny = function(y) {
-    return this.y2 + (-1 * y);
 }
 
 Viewport2D.prototype.singleBitmap = function (textures, data) {
@@ -55,7 +49,7 @@ Viewport2D.prototype.draw = function(textures) {
     Timer.end();
     
     for (var i = 0; i < this.sectors.length; i++) {
-        drawPoly(this, this.ctx, this.sectors[i].label, this.sectors[i].poly, "#0000ff");
+        drawPoly(this.c2s, this.ctx, this.sectors[i].label, this.sectors[i].poly, "#0000ff");
     }
     
 }
@@ -167,19 +161,19 @@ DrawScanlines.prototype.draw = function(texture, data) {
 
 
 
-function drawPoly(viewport, ctx, label, poly, colour) {
+function drawPoly(c2s, ctx, label, poly, colour) {
     ctx.strokeStyle = colour;
     ctx.beginPath();
     for (var i = 0; i < poly.edges.length; i++) {
-        ctx.moveTo(viewport.cartesian2screenx(poly.edges[i].origin.x), viewport.cartesian2screeny(poly.edges[i].origin.y));
-        ctx.lineTo(viewport.cartesian2screenx(poly.edges[i].end.x), viewport.cartesian2screeny(poly.edges[i].end.y));
+        ctx.moveTo(c2s.cartesian2screenx(poly.edges[i].origin.x), c2s.cartesian2screeny(poly.edges[i].origin.y));
+        ctx.lineTo(c2s.cartesian2screenx(poly.edges[i].end.x), c2s.cartesian2screeny(poly.edges[i].end.y));
     }
     ctx.stroke();
 
     ctx.fillStyle = "rgba(220, 220, 220, 1)";
     ctx.font = "bold 12px sans-serif";
-    var x = viewport.cartesian2screenx(poly.extremes.x1);
-    var y = viewport.cartesian2screeny(poly.extremes.y1);
+    var x = c2s.cartesian2screenx(poly.extremes.x1);
+    var y = c2s.cartesian2screeny(poly.extremes.y1);
 
     ctx.fillText(label, x, y);
 

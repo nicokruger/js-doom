@@ -77,8 +77,8 @@ RendererFullCanvas = function(game,width,height) {
         },
         
         create: function(sectors, x1, y1, x2, y2) {
-            var viewport = new Cartesian2Screen(game.extents.x1, game.extents.y1, game.extents.x2, game.extents.y2);
-            return new ViewportFullCanvas(sectors, viewport, x1, y1, x2, y2,  $("#canvas")[0].getContext("2d"));
+            var c2s = new Cartesian2Screen(game.extents.x1, game.extents.y1, game.extents.x2, game.extents.y2);
+            return new ViewportFullCanvas(sectors, c2s, x1,y2, $("#canvas")[0].getContext("2d"));
         }
     }
 };
@@ -94,7 +94,7 @@ RendererBackingCanvas = function(game,width,height) {
         },
         
         create: function(sectors, x1, y1, x2, y2) {
-            return new ViewportBackingCanvas(sectors, x1, y1, x2, y2, 
+            return new ViewportBackingCanvas(sectors, x1,y1, x2, y2,
                 document.getElementById("canvas").getContext("2d"),
                 document.getElementById("canvas_hidden").getContext("2d"));
         }

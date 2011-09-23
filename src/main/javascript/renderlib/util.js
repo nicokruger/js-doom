@@ -119,3 +119,32 @@ function SectorPlacer(sector) {
         }
     }
 }
+
+CanvasDrawPoly = function(c2s, ctx, label, poly, colour, texture) {
+    ctx.strokeStyle = colour;
+    
+    var pattern = ctx.createPattern(texture.img, "repeat");
+    ctx.fillStyle = pattern;
+    
+    var first = true;
+    ctx.beginPath();
+    for (var i = 0; i < poly.edges.length; i++) {
+        if (first) {
+            ctx.moveTo(c2s.cartesian2screenx(poly.edges[i].origin.x), c2s.cartesian2screeny(poly.edges[i].origin.y));
+            first = false;
+        } else {
+            ctx.lineTo(c2s.cartesian2screenx(poly.edges[i].origin.x), c2s.cartesian2screeny(poly.edges[i].origin.y));
+        };
+        ctx.lineTo(c2s.cartesian2screenx(poly.edges[i].end.x), c2s.cartesian2screeny(poly.edges[i].end.y));
+    }
+    ctx.stroke();
+    ctx.fill();
+    
+    ctx.fillStyle = "rgba(220, 220, 220, 1)";
+    ctx.font = "bold 12px sans-serif";
+    var x = c2s.cartesian2screenx(poly.extremes.x1);
+    var y = c2s.cartesian2screeny(poly.extremes.y1);
+
+    ctx.fillText(label, x, y);
+
+}
