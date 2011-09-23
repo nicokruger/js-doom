@@ -2,7 +2,7 @@ var gl;
 
 ViewportGL = function(sectors,x1,y1,x2,y2,data, canvas) {
     
-    this.bitmapViewport = new Viewport(sectors, x1, y1, x2, y2, data);
+    this.bitmapViewport = new Viewport2D(sectors, x1, y1, x2, y2, data);
     
     this.x1 = x1; this.x2 = x2;
     this.y1 = y1;  this.y2 = y2;
@@ -135,10 +135,12 @@ function handleLoadedTexture(texture, data) {
     gl.bindTexture(gl.TEXTURE_2D, null);
 }
 
+try {
 var mvMatrix = mat4.create();
 var pMatrix = mat4.create();
 var mvMatrixStack = [];
-
+} catch (e){
+}
 function mvPushMatrix() {
     var copy = mat4.create();
     mat4.set(mvMatrix, copy);

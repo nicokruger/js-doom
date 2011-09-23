@@ -1,5 +1,5 @@
 
-Viewport = function(sectors,x1,y1,x2,y2,data,ctx) {
+Viewport2D = function(sectors,x1,y1,x2,y2,data,ctx) {
     this.x1 = x1; this.x2 = x2;
     this.y1 = y1;  this.y2 = y2;
     this.width = x2 - x1;
@@ -16,14 +16,14 @@ Viewport = function(sectors,x1,y1,x2,y2,data,ctx) {
 
 }
 
-Viewport.prototype.cartesian2screenx = function(x) {
+Viewport2D.prototype.cartesian2screenx = function(x) {
     return x - this.x1;
 }
-Viewport.prototype.cartesian2screeny = function(y) {
+Viewport2D.prototype.cartesian2screeny = function(y) {
     return this.y2 + (-1 * y);
 }
 
-Viewport.prototype.singleBitmap = function (textures, data) {
+Viewport2D.prototype.singleBitmap = function (textures, data) {
     var v = "V: [" + this.x1 + "," + this.y1 + "] x [" + this.x2 + "," + this.y2 + "]";
 
     Timer.substart("NoClosures [" + v+ "]");
@@ -33,7 +33,7 @@ Viewport.prototype.singleBitmap = function (textures, data) {
     Timer.subend();
 }
 
-Viewport.prototype.draw = function(textures) {
+Viewport2D.prototype.draw = function(textures) {
     
     Timer.start("Sectordraw");
     

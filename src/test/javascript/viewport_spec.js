@@ -2,7 +2,7 @@ describe("The viewport", function() {
     it("can draw a polygon", function () {
         var p = $P($V(0,0), $V(1,0), $V(1,1), $V(0,1));
 
-        var viewport = new Viewport([{poly:p}], -2, -2, 2, 2);
+        var viewport = new Viewport2D([{poly:p}], -2, -2, 2, 2);
         
         var data = {
                 width: 5,
@@ -35,7 +35,7 @@ describe("The viewport", function() {
     });
     it("can draw a polygon2", function() {
         var p = $P($V(-5,0), $V(5,0), $V(5,5), $V(4,5), $V(4,2), $V(-5,2));
-        var viewport = new Viewport([{poly:p}], 0, 1, 2, 3);
+        var viewport = new Viewport2D([{poly:p}], 0, 1, 2, 3);
         var data = {
             width: 3,
             data: [
@@ -87,7 +87,7 @@ describe("The viewport", function() {
     });*/
     it("should texture a polygon", function() {
        var p1 = $P($V(0,0), $V(1,0), $V(1,1), $V(0,1));
-       var viewport = new Viewport([{poly:p1}], 0, 0, 1, 1);
+       var viewport = new Viewport2D([{poly:p1}], 0, 0, 1, 1);
        
        var data = {
                width: 2,
@@ -109,7 +109,7 @@ describe("The viewport", function() {
        
       it("should repeat the (horizontally) texture in the polygon, with all textures aligned to (0,0) in the world", function () {
           var p1 = $P($V(-2,0), $V(1,0), $V(1,1), $V(-2,1));
-          var viewport = new Viewport([{poly:p1}], -2, 0, 1, 1);
+          var viewport = new Viewport2D([{poly:p1}], -2, 0, 1, 1);
           
           var data = {
                   width: 4,
@@ -131,7 +131,7 @@ describe("The viewport", function() {
       });
       it("should repeat the texture (vertically) in the polygon, with all textures aligned to (0,0) in the world", function () {
           var p1 = $P($V(0,0), $V(1,0), $V(1,3), $V(0,3));
-          var viewport = new Viewport([{poly:p1}], 0, 0, 1, 3);
+          var viewport = new Viewport2D([{poly:p1}], 0, 0, 1, 3);
           
           var data = {
                   width: 2,
@@ -163,7 +163,7 @@ describe("The viewport", function() {
         var p1 = $P($V(0,0), $V(1,0), $V(1,1), $V(0,1));
         var p2 = $P($V(2,0), $V(3,0), $V(3,1), $V(2,1));
 
-        var viewport = new Viewport([{poly:p1},{poly:p2}], 0, 0, 4, 1);
+        var viewport = new Viewport2D([{poly:p1},{poly:p2}], 0, 0, 4, 1);
         
         var data = {
                 width: 5,

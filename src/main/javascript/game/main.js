@@ -26,7 +26,7 @@ Renderer2D = function(game,width,height) {
         },
         
         create: function(sectors, x1, y1, x2, y2) {
-            return new Viewport(sectors, x1, y1, x2, y2, data,ctx);
+            return new Viewport2D(sectors, x1, y1, x2, y2, data,ctx);
         }
     }
         
@@ -77,7 +77,7 @@ RendererFullCanvas = function(game,width,height) {
         },
         
         create: function(sectors, x1, y1, x2, y2) {
-            var viewport = new Viewport(sectors, game.extents.x1, game.extents.y1, game.extents.x2, game.extents.y2, null, null);
+            var viewport = new Viewport2D(sectors, game.extents.x1, game.extents.y1, game.extents.x2, game.extents.y2, null, null);
             return new ViewportFullCanvas(sectors, viewport, x1, y1, x2, y2,  $("#canvas")[0].getContext("2d"));
         }
     }

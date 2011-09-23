@@ -17,7 +17,7 @@ ViewportBackingCanvas.prototype.cartesian2screeny = function(y) {
 }
 
 ViewportBackingCanvas.prototype.draw = function(textures) {
-    var v = new Viewport([], -2048, -2048, 2048, 2048, null, null);
+    var v = new Viewport2D([], -2048, -2048, 2048, 2048, null, null);
     
     Timer.start("Sectordraw");
 
