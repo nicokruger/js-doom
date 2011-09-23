@@ -26,6 +26,32 @@ GameScreen = function(width,height,data,game, viewportCreator) {
 
 }
 
+GameScreen.prototype.draw = function () {
+    if (!this.textureLoader.ready()) {
+        console.log("Textureloader not ready... aborting draw");
+        return;
+    }
+
+    // TODO: Move this to constructor
+    var that = this;
+    this.textures = _.map(this.sectors, function(sector) { return {
+        width: that.textureLoader.texture[sector.texture].width,
+        height: that.textureLoader.texture[sector.texture].height,
+        imageData: that.textureLoader.texture[sector.texture].imageData,
+        img: that.textureLoader.texture[sector.texture].img
+    }});
+    
+        
+    this.viewport.draw(this.textures);
+
+}
+
+GameScreen.prototype.tick = function(delta) {
+    this.sectors.forEach(function(sector) {
+        sector.tick(delta);
+    });
+}
+
 GameScreen.prototype.setupViewport = function() {
     var sectors = [];
     this.quadtree.forEach(Square(this.x, this.y, this.x + this.width, this.y + this.height), function (sector) {

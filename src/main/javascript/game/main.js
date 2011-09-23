@@ -85,7 +85,6 @@ function loadmap() {
 
         gamescreen = new GameScreen(SCREEN_WIDTH, SCREEN_HEIGHT, data, game, renderer.create);
         
-
         requestAnimFrame(loop);
     }).error(function(e) {
         $("#viewport").html("Error loading level: " + e.statusText);
@@ -129,8 +128,17 @@ function set() {
     game.setCenter(parseInt($("#viewportx")), parseInt($("#viewporty")));
 }
 
+var prevTime = (new Date()).getTime(); 
 function loop() {
-    if (draw) gamescreen.draw();
+    
+    if (draw) {
+        var elapsedTime = (new Date()).getTime() - prevTime;
+        if (elapsedTime > 100) { // 10 FPS
+            gamescreen.tick();
+            prevTime = (new Date()).getTime();
+        }
+        gamescreen.draw();
+    }
     
     requestAnimFrame(loop);
 }
