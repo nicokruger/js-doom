@@ -10,11 +10,10 @@ var gamescreen;
 var draw= false;
 var old_renderer = null;
 
-var renderer;
+var renderer = null;
         
 
 function init() {
-    renderer = Renderer2D(game, SCREEN_WIDTH,SCREEN_HEIGHT);
     loadmap();
 }
 
@@ -85,7 +84,8 @@ function loadmap() {
     $.getJSON(map, function(data) {
         $("#viewport").html("Level loaded");
         game = new Game(data);
-
+        
+        createrenderer();
         gamescreen = new GameScreen(SCREEN_WIDTH, SCREEN_HEIGHT, data, game, renderer.create);
         
 
@@ -96,8 +96,7 @@ function loadmap() {
 
 }
 
-function changerenderer() {
-    
+function createrenderer() {
     var r = $("#renderer").val();
 
     if (renderer != null) {
@@ -106,6 +105,10 @@ function changerenderer() {
     
     // this builds up a string which calls a renderer creation function
     eval("renderer = " + r + "(game, " + SCREEN_WIDTH + ", " + SCREEN_HEIGHT + ");");
+}
+
+function changerenderer() {
+    createrenderer();
     gamescreen.viewportCreator = renderer.create;
     gamescreen.setupViewport();
 }
@@ -147,3 +150,5 @@ function loop() {
 }
 
 
+
+$(init());
