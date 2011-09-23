@@ -1,17 +1,18 @@
 
-ViewportCanvas = function(sectors,x1,y1,x2,y2,ctx) {
+ViewportCanvas = function(sectors,viewport,x1,y1,x2,y2,ctx) {
+    this.viewport = viewport;
     this.x1 = x1; this.x2 = x2;
     this.y1 = y1;  this.y2 = y2;
     this.width = x2 - x1;
     this.height = y2 - y1;
     this.ctx = ctx;
     
+    var scrollx = viewport.cartesian2screenx(x1);
+    var scrolly = viewport.cartesian2screeny(y2);
+    console.log("scrolling to " + scrollx + " - " + scrolly);
+    $("#gamescreenarea").scrollTop(scrolly);
+    $("#gamescreenarea").scrollLeft(scrollx);
     this.sectors = sectors;
-    this.drawers = [];
-    for (var s = 0; s < this.sectors.length; s++) {
-        var rays = Scanner(this.sectors[s].poly);
-        this.drawers.push(new DrawScanlines(this,  this.sectors[s].poly, rays));
-    }
   
 }
 
@@ -32,7 +33,7 @@ ViewportCanvas.prototype.draw = function(textures) {
     
     Timer.substart("patternPoly");
     for (var s = 0; s < this.sectors.length; s++) {
-        this.drawPoly(this, this.ctx, this.sectors[s].label, this.sectors[s].poly, "#0000ff", textures[s]);
+        this.drawPoly(this.viewport, this.ctx, this.sectors[s].label, this.sectors[s].poly, "#0000ff", textures[s]);
     };
     Timer.subend();
     

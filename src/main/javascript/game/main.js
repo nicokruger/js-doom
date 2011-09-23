@@ -58,7 +58,14 @@ RendererGL = function(game,width,height) {
 };
 
 RendererCanvas = function(game,width,height) {
-    $("#gamescreenarea").append("<div id=\"viewport\" width=\"" + width + "\" height=\"" + height + "\" ><canvas id=\"canvas\" width=\"" + (game.extents.x2 - game.extents.x1)+ "\" height=\"" + (game.extents.y2 - game.extents.y1) + "\"></canvas></div>");
+    var game_width = game.extents.x2 - game.extents.x1;
+    var game_height = game.extents.y2 - game.extents.y1;
+    
+    $("#gamescreenarea").css("overflow", "scroll");
+    $("#gamescreenarea").width(width);
+    $("#gamescreenarea").height(height);
+    
+    $("#gamescreenarea").append("<canvas id=\"canvas\" width=\"" + game_width + "\" height=\"" + game_height + "\"></canvas></div>");
     
     return {
         cleanup: function() {
@@ -66,12 +73,8 @@ RendererCanvas = function(game,width,height) {
         },
         
         create: function(sectors, x1, y1, x2, y2) {
-            var width = game.extents.x2 - game.extents.x1;
-            var height = game.extents.y2 - game.extents.y1;
-            $("#viewport").scrollTop(y1);
-            $("#viewport").scrollLeft(x1);
-            return new ViewportCanvas(sectors, game.extents.x1, game.extents.x2, game.extents.y1, game.extents.y2, 
-                $("#canvas")[0].getContext("2d"));
+            var viewport = new Viewport(sectors, game.extents.x1, game.extents.y1, game.extents.x2, game.extents.y2, null, null);
+            return new ViewportCanvas(sectors, viewport, x1, y1, x2, y2,  $("#canvas")[0].getContext("2d"));
         }
     }
 };
@@ -85,6 +88,7 @@ function loadmap() {
 
         gamescreen = new GameScreen(SCREEN_WIDTH, SCREEN_HEIGHT, data, game, renderer.create);
         
+
         requestAnimFrame(loop);
     }).error(function(e) {
         $("#viewport").html("Error loading level: " + e.statusText);
@@ -128,9 +132,8 @@ function set() {
     game.setCenter(parseInt($("#viewportx")), parseInt($("#viewporty")));
 }
 
-var prevTime = (new Date()).getTime(); 
+var prevTime = (new Date()).getTime();
 function loop() {
-    
     if (draw) {
         var elapsedTime = (new Date()).getTime() - prevTime;
         if (elapsedTime > 100) { // 10 FPS
@@ -138,7 +141,7 @@ function loop() {
             prevTime = (new Date()).getTime();
         }
         gamescreen.draw();
-    }
+   }
     
     requestAnimFrame(loop);
 }
