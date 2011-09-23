@@ -96,8 +96,9 @@
                 <option value="data/MAP30.json">MAP30</option>
             </select>
             Renderer: <select id="renderer" onchange="changerenderer()">
+                <option value="RendererFullCanvas">RendererFullCanvas</option>
+                <option value="RendererBackingCanvas">RendererBackingCanvas</option>
                 <option value="Renderer2D">Renderer2D</option>
-                <option value="RendererCanvas">RendererCanvas</option>
                 <option value="RendererGL">RendererGL</option>
             </select>
         </span>
@@ -123,7 +124,8 @@
 <script language="javascript" src="renderlib/btree.js"></script>
 <script language="javascript" src="renderlib/texture.js"></script>
 <script language="javascript" src="renderlib/viewport.js"></script>
-<script language="javascript" src="renderlib/viewportCanvas.js"></script>
+<script language="javascript" src="renderlib/viewportFullCanvas.js"></script>
+<script language="javascript" src="renderlib/viewportBackingCanvas.js"></script>
 <script language="javascript" src="renderlib/viewportGL.js"></script>
 
 <!-- Game scripts -->
