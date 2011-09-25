@@ -16,29 +16,6 @@ function init() {
 }
 
     
-RendererGL = function(game,width,height) {
-    $("#gamescreenarea").append("<canvas id=\"canvasgl\" width=\"" + width + "\" height=\"" + height + "\" />");
-
-    var canvas = $("#canvasgl")[0];
-    
-    var  tmpctx = document.createElement("canvas").getContext("2d");
-    tmpctx.canvas.width = width + 1;
-    tmpctx.canvas.height = height + 1;    
-    var data = tmpctx.createImageData(width + 1, height + 1);
-    
-    return {
-        cleanup: function() {
-            $("#canvasgl").remove();
-        },
-        
-        create: function(sectors, x1, y1, x2, y2) {
-            return new ViewportGL(sectors, x1, y1, x2, y2, data, canvas);
-        }
-    }
-        
-};
-            
-
 function loadmap() {
     var map = $("#map").val();
 

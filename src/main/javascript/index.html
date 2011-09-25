@@ -98,8 +98,8 @@
             Renderer: <select id="renderer" onchange="changerenderer()">
                 <option value="screens.fullCanvas">fullCanvas</option>
                 <option value="screens.backingCanvas">backingCanvas</option>
-                <option value="screens.blit">renderer2D</option>
-                <option value="RendererGL">RendererGL</option>
+                <option value="screens.blit">blit</option>
+                <option value="screens.gl">gl</option>
             </select>
         </span>
         <div id="viewport" style="color: #000000">Viewport:</div>
@@ -126,8 +126,9 @@
 <script language="javascript" src="renderlib/screens/fullCanvas.js"></script>
 <script language="javascript" src="renderlib/screens/backingCanvas.js"></script>
 <script language="javascript" src="renderlib/screens/blit.js"></script>
+<script language="javascript" src="renderlib/screens/gl.js"></script>
 <script language="javascript" src="renderlib/renderutil.js"></script>
-<script language="javascript" src="renderlib/viewportGL.js"></script>
+<script language="javascript" src="renderlib/renderutil_gl.js"></script>
 
 <!-- Game scripts -->
 <script language="javascript" src="game/level.js"></script>
