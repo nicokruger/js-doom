@@ -4,7 +4,7 @@ describe("The GameScreen software renderer", function() {
         
         it("should be possible to generate horizontal scanlines for a square", function () {
             var p = $P($V(5,5), $V(15,5), $V(15,10), $V(5,10));
-            var rays = Viewport2D.Scanner(p);
+            var rays = viewport2d.scanPoly(p);
             
             expect(rays.length).toBe(6);
             

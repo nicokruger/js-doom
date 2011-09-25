@@ -22,7 +22,7 @@ describe("The viewport", function() {
             0,0,0,0,  0,0,0,0,  0,0,0,0, 0,0,0,0, 0,0,0,0
         ];
                               
-        Viewport2D.SingleBitmap(Viewport2D.ScanSectors([{poly:p}], -2, -2, 2, 2), [tex1], data);
+        viewport2d.fillBuffer(viewport2d.scanPolys([p], -2, -2, 2, 2), [tex1], data);
         
         expect(data.data).toEqual(expected);
     });
@@ -42,7 +42,7 @@ describe("The viewport", function() {
                     9,10,11,12, 13,14,15,16 ]}
         }
         
-        Viewport2D.SingleBitmap(Viewport2D.ScanSectors([{poly:p}], 0, 1, 2, 3), [tex1], data);
+        viewport2d.fillBuffer(viewport2d.scanPolys([p], 0, 1, 2, 3), [tex1], data);
         
         expect(data.data).toEqual([
                 0,0,0,0, 0,0,0,0, 0,0,0,0,
@@ -73,7 +73,7 @@ describe("The viewport", function() {
             9,10,11,12,  13,14,15.,16
         ];
                               
-        viewport.singleBitmap([tex1],data);
+        viewport.fillBuffer([tex1],data);
         
         expect(data.data).toEqual(expected);
     });*/
@@ -90,7 +90,7 @@ describe("The viewport", function() {
                            imageData: { data: [ 1,2,3,4,     5,6,7,8,
                              9,10,11,12,     13,14,15.,16] } };
        
-       Viewport2D.SingleBitmap(Viewport2D.ScanSectors([{poly:p1}], 0, 0, 1, 1), [tex1], data);
+       viewport2d.fillBuffer(viewport2d.scanPolys([p1], 0, 0, 1, 1), [tex1], data);
        
        expect(data.data).toEqual([
            1,2,3,4,  5,6,7,8,  
@@ -110,7 +110,7 @@ describe("The viewport", function() {
                               imageData: { data: [ 1,2,3,4,     5,6,7,8,
                                 9,10,11,12,     13,14,15.,16] }};
           
-          Viewport2D.SingleBitmap(Viewport2D.ScanSectors([{poly:p1}], -2, 0, 1, 1), [tex1], data);
+          viewport2d.fillBuffer(viewport2d.scanPolys([p1], -2, 0, 1, 1), [tex1], data);
           
           expect(data.data).toEqual([
               1,2,3,4,  5,6,7,8,  1,2,3,4,     5,6,7,8,
@@ -132,7 +132,7 @@ describe("The viewport", function() {
                               imageData: { data: [ 1,2,3,4,     5,6,7,8,
                                 9,10,11,12,     13,14,15.,16] }};
           
-          Viewport2D.SingleBitmap(Viewport2D.ScanSectors([{poly:p1}], 0, 0, 1, 3), [tex1], data);
+          viewport2d.fillBuffer(viewport2d.scanPolys([p1], 0, 0, 1, 3), [tex1], data);
           
           expect(data.data).toEqual([
                       1,2,3,4,     5,6,7,8,
@@ -164,7 +164,7 @@ describe("The viewport", function() {
                             imageData: { data: [ 200,200,200,200,     100,100,100,100,
                               200,200,200,200,     100,100,100.,100] } };
                               
-        Viewport2D.SingleBitmap(Viewport2D.ScanSectors([{poly:p1},{poly:p2}], 0, 0, 4, 1), [tex1, tex2], data);
+        viewport2d.fillBuffer(viewport2d.scanPolys([p1,p2], 0, 0, 4, 1), [tex1, tex2], data);
         
         expect(data.data).toEqual([
             255,255,255,255,  128,128,128,128,  200,200,200,200,     100,100,100,100, 0,0,0,0,

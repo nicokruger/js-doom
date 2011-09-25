@@ -1,5 +1,5 @@
-var Viewport2D = {
-        Renderer2D: function(game,width,height) {
+var viewport2d = {
+        renderer2d: function(game,width,height) {
             $("#gamescreenarea").append("<canvas id=\"canvas2d\" width=\"" + width + "\" height=\"" + height + "\" />");
             var ctx = $("#canvas2d")[0].getContext("2d");
             var data = ctx.createImageData(width + 1, height + 1);
@@ -10,24 +10,14 @@ var Viewport2D = {
                 },
                 
                 create: function(sectors, x1, y1, x2, y2) {
-                    return Viewport2D.Viewport2D(sectors, x1, y1, x2, y2, data,ctx);
+                    return viewport2d.viewport2D(sectors, x1, y1, x2, y2, data,ctx);
                 }
             }
         },
-        ScanSectors: function(sectors,x1,y1,x2,y2) {
-            var width = x2 - x1;
-            var height = y2 - y1;
-            var drawers = [];
-            for (var s = 0; s < sectors.length; s++) {
-                var rays = Viewport2D.Scanner(sectors[s].poly);
-                drawers.push(new DrawScanlines({x1:x1,y1:y1,x2:x2,y2:y2,width:width,height:height},  sectors[s].poly, rays));
-            }
-            return drawers;
-        },
-        Viewport2D: function(sectors,x1,y1,x2,y2,data,ctx) {
+        viewport2D: function(sectors,x1,y1,x2,y2,data,ctx) {
             var c2s = new Cartesian2Screen(x1,y1,x2,y2);
             
-            var drawers = Viewport2D.ScanSectors(sectors,x1,y1,x2,y2);
+            var drawers = viewport2d.scanPolys(_.map(sectors, function(s) { return s.poly }), x1,y1,x2,y2);
             
             return {
                 draw: function(textures) {
@@ -40,7 +30,7 @@ var Viewport2D = {
                     }
                     Timer.subend();
                     
-                    Viewport2D.SingleBitmap(drawers, textures, data);
+                    viewport2d.fillBuffer(drawers, textures, data);
                     
                     Timer.substart("Put image buffer");
                     ctx.putImageData(data, 0, 0);
@@ -49,12 +39,24 @@ var Viewport2D = {
                     Timer.end();
                     
                     for (var i = 0; i < sectors.length; i++) {
-                        Viewport2D.DrawPoly(c2s, ctx, sectors[i].label, sectors[i].poly, "#0000ff");
+                        viewport2d.drawPoly(c2s, ctx, sectors[i].label, sectors[i].poly, "#0000ff");
                     }
                 }
             }
         },
-        SingleBitmap: function(drawers, textures, data) {
+        
+        scanPolys: function(polys,x1,y1,x2,y2) {
+            var width = x2 - x1;
+            var height = y2 - y1;
+            var drawers = [];
+            for (var s = 0; s < polys.length; s++) {
+                var rays = viewport2d.scanPoly(polys[s]);
+                drawers.push(new DrawScanlines({x1:x1,y1:y1,x2:x2,y2:y2,width:width,height:height},  polys[s], rays));
+            }
+            return drawers;
+        },
+        
+        fillBuffer: function(drawers, textures, data) {
             Timer.substart("singleBitmap");
             for (var s = 0; s < drawers.length; s++) {
                 drawers[s].draw(textures[s], data);
@@ -62,7 +64,7 @@ var Viewport2D = {
             Timer.subend();
         },
         
-        Scanner: function(poly) {
+        scanPoly: function(poly) {
             // Partitioning
             var rays = [];
             var x1 = poly.extremes.x1;
@@ -92,7 +94,7 @@ var Viewport2D = {
             return rays;
         },
         
-        DrawPoly:   function drawPoly(c2s, ctx, label, poly, colour) {
+        drawPoly:   function drawPoly(c2s, ctx, label, poly, colour) {
             
             ctx.strokeStyle = colour;
             ctx.beginPath();
