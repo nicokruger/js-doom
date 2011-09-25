@@ -17,7 +17,7 @@ GameScreen = function(width,height,data,game, viewportCreator) {
 
     this.sectors = game.sectors;
     // QuadTree setup
-    this.quadtree = setupQuadTree(0,0,4000,4000, 250, 250);
+    this.quadtree = setupQuadTree(game.extents.x1,game.extents.y1,game.extents.x2,game.extents.y2, 250, 250);
     game.sectors.forEach(function (sector) {
         that.quadtree.add(SectorPlacer(sector));
     });
@@ -89,25 +89,5 @@ GameScreen.prototype.setCenter = function (x,y) {
     
     this.setupViewport();
     
-}
-
-GameScreen.prototype.draw = function () {
-    if (!this.textureLoader.ready()) {
-        console.log("Textureloader not ready... aborting draw");
-        return;
-    }
-
-    // TODO: Move this to constructor
-    var that = this;
-    this.textures = _.map(this.sectors, function(sector) { return {
-        width: that.textureLoader.texture[sector.texture].width,
-        height: that.textureLoader.texture[sector.texture].height,
-        imageData: that.textureLoader.texture[sector.texture].imageData,
-        img: that.textureLoader.texture[sector.texture].img
-    }});
-    
-        
-    this.viewport.draw(this.textures);
-
 }
 
