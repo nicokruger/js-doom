@@ -54,32 +54,6 @@ RendererGL = function(game,width,height) {
         
 };
             
-RendererBackingCanvas = function(game,width,height) {
-    var extents_width = game.extents.x2 - game.extents.x1 + width;
-    var extents_height = game.extents.y2 - game.extents.y1 + height;
-    $("#gamescreenarea").append("<canvas id=\"canvas\" width=\"" + width + "\" height=\"" + height + "\" />");
-    $("#gamescreenarea").append("<canvas id=\"canvas_hidden\" width=\"" + extents_width +"\" height=\"" + extents_height + "\" style=\"display: none\"/>");
-    
-    return {
-        cleanup: function() {
-            $("#canvas").remove();
-            $("#canvas_hidden").remove();
-        },
-        
-        create: function(sectors, x1, y1, x2, y2) {
-            var half_viewportwidth = Math.round(width/2, 0);
-            var half_viewportheight = Math.round(height/2, 0);
-            var c2s = new Cartesian2Screen(game.extents.x1 - half_viewportwidth, 
-                game.extents.y1 - half_viewportheight, 
-                game.extents.x2 + half_viewportwidth, 
-                game.extents.y2 + half_viewportheight);
-            return new ViewportBackingCanvas(sectors, x1,y1, x2, y2,
-                c2s,
-                document.getElementById("canvas").getContext("2d"),
-                document.getElementById("canvas_hidden").getContext("2d"));
-        }
-    }
-};
 
 function loadmap() {
     var map = $("#map").val();
