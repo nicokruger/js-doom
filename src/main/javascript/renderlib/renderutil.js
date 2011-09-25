@@ -1,56 +1,11 @@
-var viewport2d = {
-        renderer2d: function(game,width,height) {
-            $("#gamescreenarea").append("<canvas id=\"canvas2d\" width=\"" + width + "\" height=\"" + height + "\" />");
-            var ctx = $("#canvas2d")[0].getContext("2d");
-            var data = ctx.createImageData(width + 1, height + 1);
-            
-            return {
-                cleanup: function() {
-                    $("#canvas2d").remove();
-                },
-                
-                create: function(sectors, x1, y1, x2, y2) {
-                    return viewport2d.viewport2D(sectors, x1, y1, x2, y2, data,ctx);
-                }
-            }
-        },
-        viewport2D: function(sectors,x1,y1,x2,y2,data,ctx) {
-            var c2s = new Cartesian2Screen(x1,y1,x2,y2);
-            
-            var drawers = viewport2d.scanPolys(_.map(sectors, function(s) { return s.poly }), x1,y1,x2,y2);
-            
-            return {
-                draw: function(textures) {
-                    Timer.start("Sectordraw");
-                    
-                    Timer.substart("clean");
-                    var length = ctx.canvas.width * ctx.canvas.height * 4, i = 0;
-                    for (; i < length; i++) {
-                        data.data[i] = 0;
-                    }
-                    Timer.subend();
-                    
-                    viewport2d.fillBuffer(drawers, textures, data);
-                    
-                    Timer.substart("Put image buffer");
-                    ctx.putImageData(data, 0, 0);
-                    Timer.subend();
-                    
-                    Timer.end();
-                    
-                    for (var i = 0; i < sectors.length; i++) {
-                        viewport2d.drawPoly(c2s, ctx, sectors[i].label, sectors[i].poly, "#0000ff");
-                    }
-                }
-            }
-        },
+var renderutil = {
         
         scanPolys: function(polys,x1,y1,x2,y2) {
             var width = x2 - x1;
             var height = y2 - y1;
             var drawers = [];
             for (var s = 0; s < polys.length; s++) {
-                var rays = viewport2d.scanPoly(polys[s]);
+                var rays = renderutil.scanPoly(polys[s]);
                 drawers.push(new DrawScanlines({x1:x1,y1:y1,x2:x2,y2:y2,width:width,height:height},  polys[s], rays));
             }
             return drawers;

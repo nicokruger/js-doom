@@ -1,4 +1,7 @@
-RendererBackingCanvas = function(game,width,height) {
+var screens;
+if (!screens) screens = {}; // initialise the top-level module if it does not exist
+
+screens.backingCanvas = function(game,width,height) {
     var extents_width = game.extents.x2 - game.extents.x1 + width;
     var extents_height = game.extents.y2 - game.extents.y1 + height;
     $("#gamescreenarea").width(width);

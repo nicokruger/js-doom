@@ -1,4 +1,4 @@
-describe("The viewport", function() {
+describe("The render utils", function() {
     it("can draw a polygon", function () {
         var p = $P($V(0,0), $V(1,0), $V(1,1), $V(0,1));
         var data = {
@@ -22,7 +22,7 @@ describe("The viewport", function() {
             0,0,0,0,  0,0,0,0,  0,0,0,0, 0,0,0,0, 0,0,0,0
         ];
                               
-        viewport2d.fillBuffer(viewport2d.scanPolys([p], -2, -2, 2, 2), [tex1], data);
+        renderutil.fillBuffer(renderutil.scanPolys([p], -2, -2, 2, 2), [tex1], data);
         
         expect(data.data).toEqual(expected);
     });
@@ -42,7 +42,7 @@ describe("The viewport", function() {
                     9,10,11,12, 13,14,15,16 ]}
         }
         
-        viewport2d.fillBuffer(viewport2d.scanPolys([p], 0, 1, 2, 3), [tex1], data);
+        renderutil.fillBuffer(renderutil.scanPolys([p], 0, 1, 2, 3), [tex1], data);
         
         expect(data.data).toEqual([
                 0,0,0,0, 0,0,0,0, 0,0,0,0,
@@ -90,7 +90,7 @@ describe("The viewport", function() {
                            imageData: { data: [ 1,2,3,4,     5,6,7,8,
                              9,10,11,12,     13,14,15.,16] } };
        
-       viewport2d.fillBuffer(viewport2d.scanPolys([p1], 0, 0, 1, 1), [tex1], data);
+       renderutil.fillBuffer(renderutil.scanPolys([p1], 0, 0, 1, 1), [tex1], data);
        
        expect(data.data).toEqual([
            1,2,3,4,  5,6,7,8,  
@@ -110,7 +110,7 @@ describe("The viewport", function() {
                               imageData: { data: [ 1,2,3,4,     5,6,7,8,
                                 9,10,11,12,     13,14,15.,16] }};
           
-          viewport2d.fillBuffer(viewport2d.scanPolys([p1], -2, 0, 1, 1), [tex1], data);
+          renderutil.fillBuffer(renderutil.scanPolys([p1], -2, 0, 1, 1), [tex1], data);
           
           expect(data.data).toEqual([
               1,2,3,4,  5,6,7,8,  1,2,3,4,     5,6,7,8,
@@ -132,7 +132,7 @@ describe("The viewport", function() {
                               imageData: { data: [ 1,2,3,4,     5,6,7,8,
                                 9,10,11,12,     13,14,15.,16] }};
           
-          viewport2d.fillBuffer(viewport2d.scanPolys([p1], 0, 0, 1, 3), [tex1], data);
+          renderutil.fillBuffer(renderutil.scanPolys([p1], 0, 0, 1, 3), [tex1], data);
           
           expect(data.data).toEqual([
                       1,2,3,4,     5,6,7,8,
@@ -164,7 +164,7 @@ describe("The viewport", function() {
                             imageData: { data: [ 200,200,200,200,     100,100,100,100,
                               200,200,200,200,     100,100,100.,100] } };
                               
-        viewport2d.fillBuffer(viewport2d.scanPolys([p1,p2], 0, 0, 4, 1), [tex1, tex2], data);
+        renderutil.fillBuffer(renderutil.scanPolys([p1,p2], 0, 0, 4, 1), [tex1, tex2], data);
         
         expect(data.data).toEqual([
             255,255,255,255,  128,128,128,128,  200,200,200,200,     100,100,100,100, 0,0,0,0,
@@ -172,4 +172,19 @@ describe("The viewport", function() {
             //0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
         ]);
     });
+    
+    it("should be possible to generate horizontal scanlines for a square", function () {
+        var p = $P($V(5,5), $V(15,5), $V(15,10), $V(5,10));
+        var rays = renderutil.scanPoly(p);
+        
+        expect(rays.length).toBe(6);
+        
+        expect(rays[0].length).toBe(1); expect(rays[0][0].origin).toEqual($V(5,5));
+        expect(rays[1].length).toBe(1); expect(rays[1][0].origin).toEqual($V(5,6));
+        expect(rays[2].length).toBe(1); expect(rays[2][0].origin).toEqual($V(5,7));
+        expect(rays[3].length).toBe(1); expect(rays[3][0].origin).toEqual($V(5,8));
+        expect(rays[4].length).toBe(1); expect(rays[4][0].origin).toEqual($V(5,9));
+        expect(rays[5].length).toBe(1); expect(rays[5][0].origin).toEqual($V(5,10));
+    });
+
 });

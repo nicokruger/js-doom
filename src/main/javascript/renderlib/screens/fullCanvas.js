@@ -1,5 +1,8 @@
 
-RendererFullCanvas = function(game,width,height) {
+var screens;
+if (!screens) screens = {}; // initialise the top-level module if it does not exist
+    
+screens.fullCanvas = function(game,width,height) {
     var game_width = game.extents.x2 - game.extents.x1 + width;
     var game_height = game.extents.y2 - game.extents.y1 + height;
     
@@ -30,8 +33,8 @@ RendererFullCanvas = function(game,width,height) {
                 game.extents.x2 + half_viewportwidth, 
                 game.extents.y2 + half_viewportheight);
             
-            $("#gamescreenarea").scrollTop(c2s.cartesian2screenx(x1));
-            $("#gamescreenarea").scrollLeft(c2s.cartesian2screeny(y2));
+            $("#gamescreenarea").scrollLeft(c2s.cartesian2screenx(x1));
+            $("#gamescreenarea").scrollTop(c2s.cartesian2screeny(y2));
             
             console.log("created full canvas viewport from " + x1 + "," + y2 + " extents: " + c2s.toString());
             return {
