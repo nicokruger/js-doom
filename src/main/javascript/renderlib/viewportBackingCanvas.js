@@ -1,16 +1,17 @@
 
-ViewportBackingCanvas = function(sectors,x1,y1,x2,y2,ctx_front, ctx_back) {
+ViewportBackingCanvas = function(sectors,x1,y1,x2,y2,extents,ctx_front, ctx_back) {
     this.x1 = x1; this.y1 = y1;
     this.x2 = x2; this.y2 = y2;
     this.width = x2 - x1;
     this.height = y2 - y1;
+    this.extents = extents;
     this.ctx_front = ctx_front;
     this.ctx_back = ctx_back;
     this.sectors = sectors;
 }
 
 ViewportBackingCanvas.prototype.draw = function(textures) {
-    var v = new Cartesian2Screen(-2048, -2048, 2048, 2048);
+    var v = new Cartesian2Screen(this.extents.x1, this.extents.y1, this.extents.x2, this.extents.y2);
     
     Timer.start("Sectordraw");
 

@@ -6,6 +6,7 @@ Game = function(data) {
     
     $("#console").val($("console").val() + "\nPlayer start at " + data.player1[0] + "," + data.player1[1]);
     console.log("Player start at " + data.player1[0] + "," + data.player1[1]);
+    console.log("Extents: " + this.extents.x1 + " / " + this.extents.y1 + " - " + this.extents.x2 + "/" + this.extents.y2);
 
     // Load level
     var that=this;

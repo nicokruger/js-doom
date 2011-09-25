@@ -84,8 +84,10 @@ RendererFullCanvas = function(game,width,height) {
 };
             
 RendererBackingCanvas = function(game,width,height) {
+    var extents_width = game.extents.x2 - game.extents.x1;
+    var extents_height = game.extents.y2 - game.extents.y1;
     $("#gamescreenarea").append("<canvas id=\"canvas\" width=\"" + width + "\" height=\"" + height + "\" />");
-    $("#gamescreenarea").append("<canvas id=\"canvas_hidden\" width=\"4096\" height=\"4096\" style=\"display: none\"/>");
+    $("#gamescreenarea").append("<canvas id=\"canvas_hidden\" width=\"" + extents_width +"\" height=\"" + extents_height + "\" style=\"display: none\"/>");
     
     return {
         cleanup: function() {
@@ -95,6 +97,7 @@ RendererBackingCanvas = function(game,width,height) {
         
         create: function(sectors, x1, y1, x2, y2) {
             return new ViewportBackingCanvas(sectors, x1,y1, x2, y2,
+                game.extents,
                 document.getElementById("canvas").getContext("2d"),
                 document.getElementById("canvas_hidden").getContext("2d"));
         }

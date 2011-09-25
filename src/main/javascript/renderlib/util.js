@@ -12,7 +12,11 @@ Cartesian2Screen = function(x1, y1, x2, y2) {
         },
         height: function() {
             return y2 - y1;
+        },
+        toString: function() {
+            return "[" + x1 + "," + y1 + "] x [" + x2 + "," + y2 + "]";
         }
+        
     }
 }
 

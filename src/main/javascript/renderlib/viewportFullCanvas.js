@@ -4,7 +4,7 @@ ViewportFullCanvas = function(sectors,c2s,x1,y2,ctx) {
     this.c2s = c2s;
     this.ctx = ctx;
     this.sectors = sectors;
-    
+    console.log("created full canvas viewport from " + x1 + "," + y2 + " extents: " + this.c2s.toString());
     var scrollx = c2s.cartesian2screenx(x1);
     var scrolly = c2s.cartesian2screeny(y2);
     console.log("scrolling to " + scrollx + " - " + scrolly);
