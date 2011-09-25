@@ -6,7 +6,7 @@ Sector = function (poly, label, textures) {
     
     this.poly = poly;
     this.label = label;
-    this.rays = Scanner(this.poly);
+    this.rays = Viewport2D.Scanner(this.poly);
 
     this.width = poly.width;
     this.height = poly.height;

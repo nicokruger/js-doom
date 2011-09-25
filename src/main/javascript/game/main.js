@@ -15,22 +15,6 @@ function init() {
     loadmap();
 }
 
-Renderer2D = function(game,width,height) {
-    $("#gamescreenarea").append("<canvas id=\"canvas2d\" width=\"" + width + "\" height=\"" + height + "\" />");
-    var ctx = $("#canvas2d")[0].getContext("2d");
-    var data = ctx.createImageData(width + 1, height + 1);
-    
-    return {
-        cleanup: function() {
-            $("#canvas2d").remove();
-        },
-        
-        create: function(sectors, x1, y1, x2, y2) {
-            return new Viewport2D(sectors, x1, y1, x2, y2, data,ctx);
-        }
-    }
-        
-};
     
 RendererGL = function(game,width,height) {
     $("#gamescreenarea").append("<canvas id=\"canvasgl\" width=\"" + width + "\" height=\"" + height + "\" />");

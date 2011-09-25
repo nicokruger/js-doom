@@ -1,88 +1,120 @@
+var Viewport2D = {
+        Renderer2D: function(game,width,height) {
+            $("#gamescreenarea").append("<canvas id=\"canvas2d\" width=\"" + width + "\" height=\"" + height + "\" />");
+            var ctx = $("#canvas2d")[0].getContext("2d");
+            var data = ctx.createImageData(width + 1, height + 1);
+            
+            return {
+                cleanup: function() {
+                    $("#canvas2d").remove();
+                },
+                
+                create: function(sectors, x1, y1, x2, y2) {
+                    return Viewport2D.Viewport2D(sectors, x1, y1, x2, y2, data,ctx);
+                }
+            }
+        },
+        ScanSectors: function(sectors,x1,y1,x2,y2) {
+            var width = x2 - x1;
+            var height = y2 - y1;
+            var drawers = [];
+            for (var s = 0; s < sectors.length; s++) {
+                var rays = Viewport2D.Scanner(sectors[s].poly);
+                drawers.push(new DrawScanlines({x1:x1,y1:y1,x2:x2,y2:y2,width:width,height:height},  sectors[s].poly, rays));
+            }
+            return drawers;
+        },
+        Viewport2D: function(sectors,x1,y1,x2,y2,data,ctx) {
+            var c2s = new Cartesian2Screen(x1,y1,x2,y2);
+            
+            var drawers = Viewport2D.ScanSectors(sectors,x1,y1,x2,y2);
+            
+            return {
+                draw: function(textures) {
+                    Timer.start("Sectordraw");
+                    
+                    Timer.substart("clean");
+                    var length = ctx.canvas.width * ctx.canvas.height * 4, i = 0;
+                    for (; i < length; i++) {
+                        data.data[i] = 0;
+                    }
+                    Timer.subend();
+                    
+                    Viewport2D.SingleBitmap(drawers, textures, data);
+                    
+                    Timer.substart("Put image buffer");
+                    ctx.putImageData(data, 0, 0);
+                    Timer.subend();
+                    
+                    Timer.end();
+                    
+                    for (var i = 0; i < sectors.length; i++) {
+                        Viewport2D.DrawPoly(c2s, ctx, sectors[i].label, sectors[i].poly, "#0000ff");
+                    }
+                }
+            }
+        },
+        SingleBitmap: function(drawers, textures, data) {
+            Timer.substart("singleBitmap");
+            for (var s = 0; s < drawers.length; s++) {
+                drawers[s].draw(textures[s], data);
+            }
+            Timer.subend();
+        },
+        
+        Scanner: function(poly) {
+            // Partitioning
+            var rays = [];
+            var x1 = poly.extremes.x1;
+            var y1 = poly.extremes.y1;
+            var width = poly.width;
+            var height = poly.height;
 
-Viewport2D = function(sectors,x1,y1,x2,y2,data,ctx) {
-    this.c2s = new Cartesian2Screen(x1,y1,x2,y2);
-    this.x1 = x1; this.x2 = x2;
-    this.y1 = y1;  this.y2 = y2;
-    this.width = x2 - x1;
-    this.height = y2 - y1;
-    this.data = data;
-    this.ctx = ctx;
-    
-    this.sectors = sectors;
-    this.drawers = [];
-    for (var s = 0; s < this.sectors.length; s++) {
-        var rays = Scanner(this.sectors[s].poly);
-        this.drawers.push(new DrawScanlines(this,  this.sectors[s].poly, rays));
-    }
+            // All of the following partitions MUST be succesful - we are after all restricting
+            // our scanlines to the extreme bounds of the polygon.
+            
+            // bottom - handled seperately
+            var l = poly.partition($L($V(x1-1, y1), $V(x1+width+1, y1))).cosame;
+            if (l.length > 0) {
+                rays.push(l);
+            }
+            
+            // middle part - iterate through "inner" part of polygon
+            for (var y = 1; y <= height-1; y++) {
+                rays.push(poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1))).neg);
+            }
+            
+            //top - reverse it, because it is in the opposite direction than the scanline
+            l = poly.partition($L($V(x1-1, y1+height), $V(x1+width+1, y1+height))).codiff;
+            if (l.length > 0) {
+                rays.push([$L(l[0].end, l[0].origin)]);
+            }    
+            return rays;
+        },
+        
+        DrawPoly:   function drawPoly(c2s, ctx, label, poly, colour) {
+            
+            ctx.strokeStyle = colour;
+            ctx.beginPath();
+            for (var i = 0; i < poly.edges.length; i++) {
+                ctx.moveTo(c2s.cartesian2screenx(poly.edges[i].origin.x), c2s.cartesian2screeny(poly.edges[i].origin.y));
+                ctx.lineTo(c2s.cartesian2screenx(poly.edges[i].end.x), c2s.cartesian2screeny(poly.edges[i].end.y));
+            }
+            ctx.stroke();
 
-}
+            ctx.fillStyle = "rgba(220, 220, 220, 1)";
+            ctx.font = "bold 12px sans-serif";
+            var x = c2s.cartesian2screenx(poly.extremes.x1);
+            var y = c2s.cartesian2screeny(poly.extremes.y1);
 
-Viewport2D.prototype.singleBitmap = function (textures, data) {
-    var v = "V: [" + this.x1 + "," + this.y1 + "] x [" + this.x2 + "," + this.y2 + "]";
+            ctx.fillText(label, x, y);
 
-    Timer.substart("NoClosures [" + v+ "]");
-    for (var s = 0; s < this.drawers.length; s++) {
-        this.drawers[s].draw(textures[s], data);
-    }
-    Timer.subend();
-}
+        }
 
-Viewport2D.prototype.draw = function(textures) {
-    
-    Timer.start("Sectordraw");
-    
-    Timer.substart("clean");
-    var length = this.ctx.canvas.width * this.ctx.canvas.height * 4, i = 0;
-    for (; i < length; i++) {
-        this.data.data[i] = 0;
-    }
-    //this.ctx.fillStyle  = '#000000'; 
-    //this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-    Timer.subend();
-    
-    this.singleBitmap(textures, this.data);
-    
-    Timer.substart("Put image buffer");
-    this.ctx.putImageData(this.data, 0, 0);
-    Timer.subend();
-    
-    Timer.end();
-    
-    for (var i = 0; i < this.sectors.length; i++) {
-        drawPoly(this.c2s, this.ctx, this.sectors[i].label, this.sectors[i].poly, "#0000ff");
-    }
-    
-}
 
-Scanner = function(poly) {
-    // Partitioning
-    var rays = [];
-    var x1 = poly.extremes.x1;
-    var y1 = poly.extremes.y1;
-    var width = poly.width;
-    var height = poly.height;
+        
+};
 
-    // All of the following partitions MUST be succesful - we are after all restricting
-    // our scanlines to the extreme bounds of the polygon.
-    
-    // bottom - handled seperately
-    var l = poly.partition($L($V(x1-1, y1), $V(x1+width+1, y1))).cosame;
-    if (l.length > 0) {
-        rays.push(l);
-    }
-    
-    // middle part - iterate through "inner" part of polygon
-    for (var y = 1; y <= height-1; y++) {
-        rays.push(poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1))).neg);
-    }
-    
-    //top - reverse it, because it is in the opposite direction than the scanline
-    l = poly.partition($L($V(x1-1, y1+height), $V(x1+width+1, y1+height))).codiff;
-    if (l.length > 0) {
-        rays.push([$L(l[0].end, l[0].origin)]);
-    }    
-    return rays;
- }
 
 
 DrawScanlines = function(viewport, poly, rays) {
@@ -160,24 +192,6 @@ DrawScanlines.prototype.draw = function(texture, data) {
 
 
 
-
-function drawPoly(c2s, ctx, label, poly, colour) {
-    ctx.strokeStyle = colour;
-    ctx.beginPath();
-    for (var i = 0; i < poly.edges.length; i++) {
-        ctx.moveTo(c2s.cartesian2screenx(poly.edges[i].origin.x), c2s.cartesian2screeny(poly.edges[i].origin.y));
-        ctx.lineTo(c2s.cartesian2screenx(poly.edges[i].end.x), c2s.cartesian2screeny(poly.edges[i].end.y));
-    }
-    ctx.stroke();
-
-    ctx.fillStyle = "rgba(220, 220, 220, 1)";
-    ctx.font = "bold 12px sans-serif";
-    var x = c2s.cartesian2screenx(poly.extremes.x1);
-    var y = c2s.cartesian2screeny(poly.extremes.y1);
-
-    ctx.fillText(label, x, y);
-
-}
 
 
 
