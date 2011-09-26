@@ -3,7 +3,7 @@ describe("BSP trees", function() {
 
     describe("Simple Square polygons", function () {
         it("creates a BSP for a simple square", function() {
-            bsptree = bsp($P($V(0,0), $V(1,0), $V(1,1), $V(0,1)).edges)
+            bsptree = renderlib.bsp.create($P($V(0,0), $V(1,0), $V(1,1), $V(0,1)).edges)
 
             expect(bsptree.line).toEqual($L($V(0,1), $V(0,0)));
                 expect(bsptree.positive).toBe(null);
@@ -29,7 +29,7 @@ describe("BSP trees", function() {
 
 
     it("wraps around a set of vertices so that the resulting polygon is counter-clockwise", function() {
-        var e = order_edges([$L($V(0,0), $V(1,0)),
+        var e = $P.order_edges([$L($V(0,0), $V(1,0)),
             $L($V(0,1), $V(0,0)),
             $L($V(1,1), $V(0,1)),
             $L($V(1,0), $V(1,1))]);
@@ -39,7 +39,7 @@ describe("BSP trees", function() {
             $L($V(1,1), $V(0,1)),
             $L($V(0,1), $V(0,0))])
 
-        var ee = order_edges([
+        var ee = $P.order_edges([
             $L($V(200, 290), $V(197, 299)),
             $L($V(197, 299),$V(196, 300)),
             $L($V(100, 300), $V(100, 200)),
