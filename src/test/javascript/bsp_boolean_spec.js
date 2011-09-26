@@ -36,6 +36,21 @@ describe("BSP trees", function() {
         })
 
         it("should be able to detertmine the intersection even if an intersection point is on a vertex", function () {
+            var circle_to_poly = function(p, r, points) {
+
+                var edges = []
+                var step = 2*Math.PI/points
+
+
+                var vertices = [];
+                for (var i = 0; i < points; i++) {
+                    var angle = step * i;
+                    var v = $V(p[0] + r*Math.cos(angle), p[1] + r*Math.sin(angle));
+                    vertices.push(v);
+                }
+                return $P(vertices);
+            }
+
 
             var P1 = $P($V(100,200), $V(200,200), $V(200,300), $V(100,300));
 
@@ -61,6 +76,8 @@ describe("BSP trees", function() {
             expect(Math.round(I1.area(),0)).toBe(9987);
 
         })
+        
+        
     });
 
 })
