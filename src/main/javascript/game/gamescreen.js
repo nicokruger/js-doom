@@ -7,7 +7,7 @@ GameScreen = function(width,height,data,game, viewportCreator) {
     this.height = height;
     this.viewportCreator = viewportCreator;
     
-    this.textureLoader = new TextureLoader();
+    this.textureLoader = new renderlib.texture.TextureLoader();
     this.textureLoader.fromUrl("doomlogo2", "data/doomlogo.png", 256, 256); 
     this.textureLoader.fromUrl("test", "data/test.png", 256, 256); 
     _.keys(data.texturedata).forEach(function (texturename) {
