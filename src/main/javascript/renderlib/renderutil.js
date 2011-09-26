@@ -6,7 +6,7 @@ var renderutil = {
             var drawers = [];
             for (var s = 0; s < polys.length; s++) {
                 var rays = renderutil.scanPoly(polys[s]);
-                drawers.push(new DrawScanlines({x1:x1,y1:y1,x2:x2,y2:y2,width:width,height:height},  polys[s], rays));
+                drawers.push(new renderutil.DrawScanlines({x1:x1,y1:y1,x2:x2,y2:y2,width:width,height:height},  polys[s], rays));
             }
             return drawers;
         },
@@ -74,7 +74,7 @@ var renderutil = {
 
 
 
-DrawScanlines = function(viewport, poly, rays) {
+renderutil.DrawScanlines = function(viewport, poly, rays) {
     var y1 = _.max([poly.extremes.y1, viewport.y1]); // this doesn't change
     var y2 = _.min([poly.extremes.y2, viewport.y2]); // this doesn't change
 
@@ -110,7 +110,7 @@ DrawScanlines = function(viewport, poly, rays) {
     
 }
 
-DrawScanlines.prototype.draw = function(texture, data) {
+renderutil.DrawScanlines.prototype.draw = function(texture, data) {
     for (var y = this.y1; y <= this.y2; y++) {
         var lines = this.scans[y-this.y1].lines;
         
