@@ -22,7 +22,7 @@ describe("The render utils", function() {
             0,0,0,0,  0,0,0,0,  0,0,0,0, 0,0,0,0, 0,0,0,0
         ];
                               
-        renderutil.fillBuffer(renderutil.scanPolys([p], -2, -2, 2, 2), [tex1], data);
+        renderlib.renderutil.fillBuffer(renderlib.renderutil.scanPolys([p], -2, -2, 2, 2), [tex1], data);
         
         expect(data.data).toEqual(expected);
     });
@@ -42,7 +42,7 @@ describe("The render utils", function() {
                     9,10,11,12, 13,14,15,16 ]}
         }
         
-        renderutil.fillBuffer(renderutil.scanPolys([p], 0, 1, 2, 3), [tex1], data);
+        renderlib.renderutil.fillBuffer(renderlib.renderutil.scanPolys([p], 0, 1, 2, 3), [tex1], data);
         
         expect(data.data).toEqual([
                 0,0,0,0, 0,0,0,0, 0,0,0,0,
@@ -90,7 +90,7 @@ describe("The render utils", function() {
                            imageData: { data: [ 1,2,3,4,     5,6,7,8,
                              9,10,11,12,     13,14,15.,16] } };
        
-       renderutil.fillBuffer(renderutil.scanPolys([p1], 0, 0, 1, 1), [tex1], data);
+       renderlib.renderutil.fillBuffer(renderlib.renderutil.scanPolys([p1], 0, 0, 1, 1), [tex1], data);
        
        expect(data.data).toEqual([
            1,2,3,4,  5,6,7,8,  
@@ -110,7 +110,7 @@ describe("The render utils", function() {
                               imageData: { data: [ 1,2,3,4,     5,6,7,8,
                                 9,10,11,12,     13,14,15.,16] }};
           
-          renderutil.fillBuffer(renderutil.scanPolys([p1], -2, 0, 1, 1), [tex1], data);
+          renderlib.renderutil.fillBuffer(renderlib.renderutil.scanPolys([p1], -2, 0, 1, 1), [tex1], data);
           
           expect(data.data).toEqual([
               1,2,3,4,  5,6,7,8,  1,2,3,4,     5,6,7,8,
@@ -132,7 +132,7 @@ describe("The render utils", function() {
                               imageData: { data: [ 1,2,3,4,     5,6,7,8,
                                 9,10,11,12,     13,14,15.,16] }};
           
-          renderutil.fillBuffer(renderutil.scanPolys([p1], 0, 0, 1, 3), [tex1], data);
+          renderlib.renderutil.fillBuffer(renderlib.renderutil.scanPolys([p1], 0, 0, 1, 3), [tex1], data);
           
           expect(data.data).toEqual([
                       1,2,3,4,     5,6,7,8,
@@ -164,7 +164,7 @@ describe("The render utils", function() {
                             imageData: { data: [ 200,200,200,200,     100,100,100,100,
                               200,200,200,200,     100,100,100.,100] } };
                               
-        renderutil.fillBuffer(renderutil.scanPolys([p1,p2], 0, 0, 4, 1), [tex1, tex2], data);
+        renderlib.renderutil.fillBuffer(renderlib.renderutil.scanPolys([p1,p2], 0, 0, 4, 1), [tex1, tex2], data);
         
         expect(data.data).toEqual([
             255,255,255,255,  128,128,128,128,  200,200,200,200,     100,100,100,100, 0,0,0,0,
@@ -175,7 +175,7 @@ describe("The render utils", function() {
     
     it("should be possible to generate horizontal scanlines for a square", function () {
         var p = $P($V(5,5), $V(15,5), $V(15,10), $V(5,10));
-        var rays = renderutil.scanPoly(p);
+        var rays = renderlib.renderutil.scanPoly(p);
         
         expect(rays.length).toBe(6);
         

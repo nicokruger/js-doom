@@ -1,8 +1,8 @@
-
-var screens;
-if (!screens) screens = {}; // initialise the top-level module if it does not exist
+var renderlib;
+if (!renderlib) renderlib = {}; // initialise the top-level module if it does not exist
+if (!renderlib.screens) renderlib.screens = {}
     
-screens.fullCanvas = function(game,width,height) {
+renderlib.screens.fullCanvas = function(game,width,height) {
     var game_width = game.extents.x2 - game.extents.x1 + width;
     var game_height = game.extents.y2 - game.extents.y1 + height;
     
@@ -43,7 +43,7 @@ screens.fullCanvas = function(game,width,height) {
                     
                     renderlib.util.Timer.substart("patternPoly");
                     for (var s = 0; s < sectors.length; s++) {
-                        renderutil.canvasDrawPoly(c2s, ctx, sectors[s].label, sectors[s].poly, "#0000ff", textures[s]);
+                        renderlib.renderutil.canvasDrawPoly(c2s, ctx, sectors[s].label, sectors[s].poly, "#0000ff", textures[s]);
                     };
                     renderlib.util.Timer.subend();
                     

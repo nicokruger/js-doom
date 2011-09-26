@@ -1,7 +1,8 @@
-var screens;
-if (!screens) screens = {}; // initialise the top-level module if it does not exist
+var renderlib;
+if (!renderlib) renderlib = {}; // initialise the top-level module if it does not exist
+if (!renderlib.screens) renderlib.screens = {}
 
-screens.blit = function(game,width,height) {
+renderlib.screens.blit = function(game,width,height) {
     $("#gamescreenarea").append("<canvas id=\"canvas2d\" width=\"" + width + "\" height=\"" + height + "\" />");
     var ctx = $("#canvas2d")[0].getContext("2d");
     var data = ctx.createImageData(width + 1, height + 1);
@@ -13,7 +14,7 @@ screens.blit = function(game,width,height) {
         
         create: function(sectors, x1, y1, x2, y2) {
             var c2s = new renderlib.util.Cartesian2Screen(x1,y1,x2,y2);
-            var drawers = renderutil.scanPolys(_.map(sectors, function(s) { return s.poly }), x1,y1,x2,y2);
+            var drawers = renderlib.renderutil.scanPolys(_.map(sectors, function(s) { return s.poly }), x1,y1,x2,y2);
             return {
                 draw: function(textures) {
                     renderlib.util.Timer.start("Sectordraw");
@@ -25,7 +26,7 @@ screens.blit = function(game,width,height) {
                     }
                     renderlib.util.Timer.subend();
                     
-                    renderutil.fillBuffer(drawers, textures, data);
+                    renderlib.renderutil.fillBuffer(drawers, textures, data);
                     
                     renderlib.util.Timer.substart("Put image buffer");
                     ctx.putImageData(data, 0, 0);

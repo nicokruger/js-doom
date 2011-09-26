@@ -1,5 +1,7 @@
-
-renderutil_gl = function(gl, shaders) {
+var renderlib;
+if (!renderlib) renderlib = {}; // initialise the top-level module if it does not exist
+    
+renderlib.renderutil_gl= function(gl, shaders) {
     var shaderProgram;
     var mvMatrix = mat4.create();
     var pMatrix = mat4.create();

@@ -1,7 +1,8 @@
-var screens;
-if (!screens) screens = {}; // initialise the top-level module if it does not exist
+var renderlib;
+if (!renderlib) renderlib = {}; // initialise the top-level module if it does not exist
+if (!renderlib.screens) renderlib.screens = {}
 
-screens.gl = function(game,width,height) {
+renderlib.screens.gl = function(game,width,height) {
     $("#gamescreenarea").append("<canvas id=\"canvasgl\" width=\"" + width + "\" height=\"" + height + "\" />");
     var canvas = $("#canvasgl")[0];
     
@@ -19,9 +20,9 @@ screens.gl = function(game,width,height) {
     
     // Load the shaders
     var glutil = {};
-    var shaderloader = screens.gl.shaderloader({vs: "data/shaders/vs.html", fs: "data/shaders/fs.html" }, function(shaders) {
+    var shaderloader = renderlib.screens.gl.shaderloader({vs: "data/shaders/vs.html", fs: "data/shaders/fs.html" }, function(shaders) {
         console.log("SHADERS LOADED");
-        glutil.util = renderutil_gl(gl, shaders);
+        glutil.util = renderlib.renderutil_gl(gl, shaders);
     });
 
     // Temporary canvas for background image
@@ -38,7 +39,7 @@ screens.gl = function(game,width,height) {
         },
         
         create: function(sectors, x1, y1, x2, y2) {
-            var drawers = renderutil.scanPolys(_.map(sectors, function(s) { return s.poly }), x1,y1,x2-1,y2-1);
+            var drawers = renderlib.renderutil.scanPolys(_.map(sectors, function(s) { return s.poly }), x1,y1,x2-1,y2-1);
             renderlib.util.Timer.substart("clear");
             for (var i = 0; i < width * height * 4; i++) {
                 data.data[i] = 0;
@@ -54,7 +55,7 @@ screens.gl = function(game,width,height) {
                     }
 
                     renderlib.util.Timer.substart("fill buffer");
-                    renderutil.fillBuffer(drawers, textures, data);
+                    renderlib.renderutil.fillBuffer(drawers, textures, data);
                     renderlib.util.Timer.subend();
                     
                     //glutil.util.loadTexture(textures[i].imageData);
@@ -71,7 +72,7 @@ screens.gl = function(game,width,height) {
     }
 }
 
-screens.gl.shaderloader = function(shader_map, callback) {
+renderlib.screens.gl.shaderloader = function(shader_map, callback) {
     var unloaded = 0;
     var shaders = {};
     var store = function(shader) {

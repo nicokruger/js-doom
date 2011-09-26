@@ -6,7 +6,7 @@ Sector = function (poly, label, textures) {
     
     this.poly = poly;
     this.label = label;
-    this.rays = renderutil.scanPoly(this.poly);
+    this.rays = renderlib.renderutil.scanPoly(this.poly);
 
     this.width = poly.width;
     this.height = poly.height;

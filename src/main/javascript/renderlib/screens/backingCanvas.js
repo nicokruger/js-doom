@@ -1,7 +1,8 @@
-var screens;
-if (!screens) screens = {}; // initialise the top-level module if it does not exist
+var renderlib;
+if (!renderlib) renderlib = {}; // initialise the top-level module if it does not exist
+if (!renderlib.screens) renderlib.screens = {}
 
-screens.backingCanvas = function(game,width,height) {
+renderlib.screens.backingCanvas = function(game,width,height) {
     var extents_width = game.extents.x2 - game.extents.x1 + width;
     var extents_height = game.extents.y2 - game.extents.y1 + height;
     $("#gamescreenarea").width(width);
@@ -39,7 +40,7 @@ screens.backingCanvas = function(game,width,height) {
                     
                     renderlib.util.Timer.substart("draw-all");
                     for (var s = 0; s < sectors.length; s++) {
-                        renderutil.canvasDrawPoly(c2s, ctx_back, sectors[s].label, sectors[s].poly, "#0000ff", textures[s]);
+                        renderlib.renderutil.canvasDrawPoly(c2s, ctx_back, sectors[s].label, sectors[s].poly, "#0000ff", textures[s]);
                     };
                     renderlib.util.Timer.subend();
                     
