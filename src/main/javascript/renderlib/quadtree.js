@@ -79,16 +79,16 @@ PolyPlacer = function(p) {
     var threshold = 10000;
     return {
         topLeft: function (x,y,operation) {
-            poly_intersect_simple(makeSquare(x-threshold,y,x,y+threshold), p) && operation(p);
+            renderlib.clip.poly_intersect_simple(makeSquare(x-threshold,y,x,y+threshold), p) && operation(p);
         },
         topRight: function (x,y,operation) {
-            poly_intersect_simple(makeSquare(x,y,x+threshold,y+threshold), p) && operation(p);
+            renderlib.clip.poly_intersect_simple(makeSquare(x,y,x+threshold,y+threshold), p) && operation(p);
         },
         bottomLeft: function (x,y,operation) {
-            poly_intersect_simple(makeSquare(x-threshold,y-threshold,x,y), p) && operation(p);
+            renderlib.clip.poly_intersect_simple(makeSquare(x-threshold,y-threshold,x,y), p) && operation(p);
         },
         bottomRight: function (x,y,operation) {
-            poly_intersect_simple(makeSquare(x,y-threshold,x+threshold,y), p) && operation(p);
+            renderlib.clip.poly_intersect_simple(makeSquare(x,y-threshold,x+threshold,y), p) && operation(p);
         }
     }
 }

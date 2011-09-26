@@ -1,3 +1,6 @@
+var renderlib;
+if (!renderlib) renderlib = {}; // initialise the top-level module if it does not exist
+
 /**
  * This is the direct implementation of the Method of Seperating Axes
  * Page 269 from Geometric tools for computer graphics, converted from
@@ -11,64 +14,68 @@
  * for which the intersections of the projections from both polygons
  * do NOT intersect, then the polys are non-intersecting.
  */
-function poly_intersect_simple(c0, c1) {
+renderlib.clip = (function(){
 
-	// First, test C0
-	var res = true;
-	c0.edges.forEach(function(edge) {
+    var compute_interval = function(C, D) {
 
-	    var e = edge.canonical()
-        var D = e.leftNormal()
+        var min = D.dot(C[0])
+        var max = min
 
-		var minmax = compute_interval(c0.vertices, D)
-		var min0 = minmax[0]; var max0 = minmax[1];
-		var minmax = compute_interval(c1.vertices, D)
-		var min1 = minmax[0]; var max1 = minmax[1];
-		if (max1 < min0 || max0 < min1) {
-			res = false;
-		}
-	});
-	if (!res) {
-		return false
-	};
+        for (var i = 1; i < C.length; i++) {
+            var value = D.dot(C[i])
+            if (value < min)
+                min = value;
+            else if (value > max)
+                max = value;
 
-	var res = true;
-	// Now, test C1
-	c1.edges.forEach(function(edge) {
+        }
 
-	    var e = edge.canonical()
-        var D = e.leftNormal()
+        return [min,max]
+    }
 
-		var minmax = compute_interval(c0.vertices, D)
-		var min0 = minmax[0]; var max0 = minmax[1];
-		var minmax = compute_interval(c1.vertices, D)
-		var min1 = minmax[0]; var max1 = minmax[1];
-		if (max1 < min0 || max0 < min1) {
-			res = false;
-		}
+    return {
+        poly_intersect_simple: function(c0, c1) {
+            // First, test C0
+            var res = true;
+            c0.edges.forEach(function(edge) {
 
-	});
-	if (!res) {
-		return false;
-	}
+                var e = edge.canonical()
+                var D = e.leftNormal()
 
-	return true;
-}
+                var minmax = compute_interval(c0.vertices, D)
+                var min0 = minmax[0]; var max0 = minmax[1];
+                var minmax = compute_interval(c1.vertices, D)
+                var min1 = minmax[0]; var max1 = minmax[1];
+                if (max1 < min0 || max0 < min1) {
+                    res = false;
+                }
+            });
+            if (!res) {
+                return false
+            };
 
-function compute_interval(C, D) {
+            var res = true;
+            // Now, test C1
+            c1.edges.forEach(function(edge) {
 
-    var min = D.dot(C[0])
-	var max = min
+                var e = edge.canonical()
+                var D = e.leftNormal()
 
-	for (var i = 1; i < C.length; i++) {
-		var value = D.dot(C[i])
-		if (value < min)
-			min = value;
-		else if (value > max)
-			max = value;
+                var minmax = compute_interval(c0.vertices, D)
+                var min0 = minmax[0]; var max0 = minmax[1];
+                var minmax = compute_interval(c1.vertices, D)
+                var min1 = minmax[0]; var max1 = minmax[1];
+                if (max1 < min0 || max0 < min1) {
+                    res = false;
+                }
 
-	}
+            });
+            if (!res) {
+                return false;
+            }
 
-	return [min,max]
-}
+            return true;
+        }
+    }
+})();
 
