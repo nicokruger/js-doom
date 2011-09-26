@@ -39,6 +39,12 @@ screens.gl = function(game,width,height) {
         
         create: function(sectors, x1, y1, x2, y2) {
             var drawers = renderutil.scanPolys(_.map(sectors, function(s) { return s.poly }), x1,y1,x2-1,y2-1);
+            Timer.substart("clear");
+            for (var i = 0; i < width * height * 4; i++) {
+                data.data[i] = 0;
+            }
+            Timer.subend();
+            
             return {
                 draw: function(textures) {
                     Timer.start("gl");
@@ -47,12 +53,6 @@ screens.gl = function(game,width,height) {
                         return;
                     }
 
-                    Timer.substart("clear");
-                    for (var i = 0; i < width * height * 4; i++) {
-                        data.data[i] = 0;
-                    }
-                    Timer.subend();
-                    
                     Timer.substart("fill buffer");
                     renderutil.fillBuffer(drawers, textures, data);
                     Timer.subend();
