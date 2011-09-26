@@ -17,7 +17,7 @@ GameScreen = function(width,height,data,game, viewportCreator) {
 
     this.sectors = game.sectors;
     // QuadTree setup
-    this.quadtree = setupQuadTree(game.extents.x1,game.extents.y1,game.extents.x2,game.extents.y2, 250, 250);
+    this.quadtree = renderlib.quadtree.setupQuadTree(game.extents.x1,game.extents.y1,game.extents.x2,game.extents.y2, 250, 250);
     game.sectors.forEach(function (sector) {
         that.quadtree.add(SectorPlacer(sector));
     });
@@ -54,7 +54,7 @@ GameScreen.prototype.tick = function(delta) {
 
 GameScreen.prototype.setupViewport = function() {
     var sectors = [];
-    this.quadtree.forEach(Square(this.x, this.y, this.x + this.width, this.y + this.height), function (sector) {
+    this.quadtree.forEach(renderlib.quadtree.square(this.x, this.y, this.x + this.width, this.y + this.height), function (sector) {
         sectors.push(sector);
     });
     this.sectors = sectors;
@@ -89,5 +89,29 @@ GameScreen.prototype.setCenter = function (x,y) {
     
     this.setupViewport();
     
+}
+
+function SectorPlacer(sector) {
+    var polyPlacer = renderlib.quadtree.PolyPlacer(sector.poly);
+
+    var operationInterceptor = function(operation) {
+        return function (polygon) {
+            operation(sector);
+        };
+    }
+    return {
+        topLeft: function (x,y,operation) {
+            polyPlacer.topLeft(x,y,operationInterceptor(operation));
+        },
+        topRight: function (x,y,operation) {
+            polyPlacer.topRight(x,y,operationInterceptor(operation));
+        },
+        bottomLeft: function (x,y,operation) {
+            polyPlacer.bottomLeft(x,y,operationInterceptor(operation));
+        },
+        bottomRight: function (x,y,operation) {
+            polyPlacer.bottomRight(x,y,operationInterceptor(operation));
+        }
+    }
 }
 
