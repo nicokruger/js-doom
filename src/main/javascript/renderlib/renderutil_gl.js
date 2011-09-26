@@ -1,5 +1,5 @@
 
-renderutil_gl = function(gl) {
+renderutil_gl = function(gl, shaders) {
     var shaderProgram;
     var mvMatrix = mat4.create();
     var pMatrix = mat4.create();
@@ -8,18 +8,87 @@ renderutil_gl = function(gl) {
     var cubeVertexTextureCoordBuffer;
     var cubeVertexIndexBuffer;
     var neheTexture;
+    var shader_map = {};
+        
+ 
+    var module =  {
+        
+        drawScene: function() {
+            gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    __init_gl = function() {
+            //mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+            mat4.ortho(0, 1024, 0, 1024, 0.1, 100.0, pMatrix)
+            mat4.identity(mvMatrix);
+            mat4.translate(mvMatrix, [0.0, 0.0, -5.0]);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
+            gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
+            gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, neheTexture);
+            gl.uniform1i(shaderProgram.samplerUniform, 0);
+
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+            this.setMatrixUniforms();
+            gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+        },
+        
+        mvPushMatrix: function() {
+            var copy = mat4.create();
+            mat4.set(mvMatrix, copy);
+            mvMatrixStack.push(copy);
+        },
+        
+        mvPopMatrix: function() {
+            if (mvMatrixStack.length == 0) {
+                throw "Invalid popMatrix!";
+            }
+            mvMatrix = mvMatrixStack.pop();
+        },
+        
+        setMatrixUniforms: function() {
+            gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
+            gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
+        }
+
+        
+
+    }
+    
+    // TODO: function is WAY too long, REFACTOR
+   __init_gl = function() {
         
         //
         // SECTION: init shaders
         //
-        var fragmentShader = this.getShader("shader-fs");
-        var vertexShader = this.getShader("shader-vs");
-
         shaderProgram = gl.createProgram();
-        gl.attachShader(shaderProgram, vertexShader);
-        gl.attachShader(shaderProgram, fragmentShader);
+
+        for (var shader in shaders) {
+            var type = shaders[shader].type;
+            var script = shaders[shader].script;
+            var shader;
+            if (type == "x-shader/x-fragment") {
+                shader = gl.createShader(gl.FRAGMENT_SHADER);
+            } else if (type == "x-shader/x-vertex") {
+                shader = gl.createShader(gl.VERTEX_SHADER);
+            } else {
+                alert("invalid shader type: " + type);
+            }
+
+            gl.shaderSource(shader, script);
+            gl.compileShader(shader);
+
+            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                alert(gl.getShaderInfoLog(shader));
+                return null;
+            }
+
+            gl.attachShader(shaderProgram, shader);
+        }
         gl.linkProgram(shaderProgram);
 
         if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
@@ -95,88 +164,7 @@ renderutil_gl = function(gl) {
         gl.clearColor(1.0, 0.0, 0.0, 1.0);
         gl.enable(gl.DEPTH_TEST);
     }
-    
-    var module =  {
-        getShader: function(id) {
-            var shaderScript = document.getElementById(id);
-            
-            if (!shaderScript) {
-                return null;
-            }
-
-            var str = "";
-            var k = shaderScript.firstChild;
-            while (k) {
-                if (k.nodeType == 3) {
-                    str += k.textContent;
-                }
-                k = k.nextSibling;
-            }
-
-            var shader;
-            if (shaderScript.type == "x-shader/x-fragment") {
-                shader = gl.createShader(gl.FRAGMENT_SHADER);
-            } else if (shaderScript.type == "x-shader/x-vertex") {
-                shader = gl.createShader(gl.VERTEX_SHADER);
-            } else {
-                return null;
-            }
-
-            gl.shaderSource(shader, str);
-            gl.compileShader(shader);
-
-            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                alert(gl.getShaderInfoLog(shader));
-                return null;
-            }
-
-            return shader;
-        },
         
-        mvPushMatrix: function() {
-            var copy = mat4.create();
-            mat4.set(mvMatrix, copy);
-            mvMatrixStack.push(copy);
-        },
-        
-        mvPopMatrix: function() {
-            if (mvMatrixStack.length == 0) {
-                throw "Invalid popMatrix!";
-            }
-            mvMatrix = mvMatrixStack.pop();
-        },
-        
-        setMatrixUniforms: function() {
-            gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
-            gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
-        },
-
-        drawScene: function() {
-            gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-            //mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
-            mat4.ortho(0, 1024, 0, 1024, 0.1, 100.0, pMatrix)
-            mat4.identity(mvMatrix);
-            mat4.translate(mvMatrix, [0.0, 0.0, -5.0]);
-
-            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
-            gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
-            gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, neheTexture);
-            gl.uniform1i(shaderProgram.samplerUniform, 0);
-
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
-            this.setMatrixUniforms();
-            gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
-        }
-
-    }
-    
     //__init_gl(gl);
     _.bind(__init_gl, module)();
     
