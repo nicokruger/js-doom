@@ -28,7 +28,7 @@ screens.fullCanvas = function(game,width,height) {
         create: function(sectors, x1, y1, x2, y2) {
             var half_viewportwidth = Math.round(width/2, 0);
             var half_viewportheight = Math.round(height/2, 0);
-            var c2s = new Cartesian2Screen(game.extents.x1 - half_viewportwidth, 
+            var c2s = new renderlib.util.Cartesian2Screen(game.extents.x1 - half_viewportwidth, 
                 game.extents.y1 - half_viewportheight, 
                 game.extents.x2 + half_viewportwidth, 
                 game.extents.y2 + half_viewportheight);
@@ -39,15 +39,15 @@ screens.fullCanvas = function(game,width,height) {
             console.log("created full canvas viewport from " + x1 + "," + y2 + " extents: " + c2s.toString());
             return {
                 draw: function(textures) {
-                    Timer.start("Sectordraw");
+                    renderlib.util.Timer.start("Sectordraw");
                     
-                    Timer.substart("patternPoly");
+                    renderlib.util.Timer.substart("patternPoly");
                     for (var s = 0; s < sectors.length; s++) {
-                        CanvasDrawPoly(c2s, ctx, sectors[s].label, sectors[s].poly, "#0000ff", textures[s]);
+                        renderutil.canvasDrawPoly(c2s, ctx, sectors[s].label, sectors[s].poly, "#0000ff", textures[s]);
                     };
-                    Timer.subend();
+                    renderlib.util.Timer.subend();
                     
-                    Timer.end();
+                    renderlib.util.Timer.end();
                 }
             }
         }

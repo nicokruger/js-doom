@@ -19,32 +19,32 @@ screens.backingCanvas = function(game,width,height) {
         create: function(sectors, x1, y1, x2, y2) {
             var half_viewportwidth = Math.round(width/2, 0);
             var half_viewportheight = Math.round(height/2, 0);
-            var c2s = new Cartesian2Screen(game.extents.x1 - half_viewportwidth, 
+            var c2s = new renderlib.util.Cartesian2Screen(game.extents.x1 - half_viewportwidth, 
                 game.extents.y1 - half_viewportheight, 
                 game.extents.x2 + half_viewportwidth, 
                 game.extents.y2 + half_viewportheight);
             
             return  {
                 draw: function(textures) {
-                    Timer.start("Sectordraw");
+                    renderlib.util.Timer.start("Sectordraw");
 
-                    Timer.substart("clean back");
+                    renderlib.util.Timer.substart("clean back");
                     ctx_back.fillStyle  = '#000000'; 
                     ctx_back.fillRect(
                         c2s.cartesian2screenx(x1), 
                         c2s.cartesian2screeny(y1),
                         c2s.cartesian2screenx(x2) - c2s.cartesian2screenx(x1), 
                         c2s.cartesian2screeny(y2) - c2s.cartesian2screeny(y1));
-                    Timer.subend();
+                    renderlib.util.Timer.subend();
                     
-                    Timer.substart("draw-all");
+                    renderlib.util.Timer.substart("draw-all");
                     for (var s = 0; s < sectors.length; s++) {
-                        CanvasDrawPoly(c2s, ctx_back, sectors[s].label, sectors[s].poly, "#0000ff", textures[s]);
+                        renderutil.canvasDrawPoly(c2s, ctx_back, sectors[s].label, sectors[s].poly, "#0000ff", textures[s]);
                     };
-                    Timer.subend();
+                    renderlib.util.Timer.subend();
                     
                     console.log("width/height: " + width + " / " + height);
-                    Timer.substart("copy to front");
+                    renderlib.util.Timer.substart("copy to front");
                     ctx_front.drawImage(ctx_back.canvas, 
                         c2s.cartesian2screenx(x1), 
                         c2s.cartesian2screeny(y1),
@@ -52,9 +52,9 @@ screens.backingCanvas = function(game,width,height) {
                         c2s.cartesian2screeny(y2) - c2s.cartesian2screeny(y1),
                         0, 0, 
                         width, height);
-                    Timer.subend();
+                    renderlib.util.Timer.subend();
                     
-                    Timer.end();
+                    renderlib.util.Timer.end();
                 }
             }
         }

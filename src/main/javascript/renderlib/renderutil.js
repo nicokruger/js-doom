@@ -1,75 +1,100 @@
 var renderutil = {
-        
-        scanPolys: function(polys,x1,y1,x2,y2) {
-            var width = x2 - x1;
-            var height = y2 - y1;
-            var drawers = [];
-            for (var s = 0; s < polys.length; s++) {
-                var rays = renderutil.scanPoly(polys[s]);
-                drawers.push(new renderutil.DrawScanlines({x1:x1,y1:y1,x2:x2,y2:y2,width:width,height:height},  polys[s], rays));
-            }
-            return drawers;
-        },
-        
-        fillBuffer: function(drawers, textures, data) {
-            Timer.substart("singleBitmap");
-            for (var s = 0; s < drawers.length; s++) {
-                drawers[s].draw(textures[s], data);
-            }
-            Timer.subend();
-        },
-        
-        scanPoly: function(poly) {
-            // Partitioning
-            var rays = [];
-            var x1 = poly.extremes.x1;
-            var y1 = poly.extremes.y1;
-            var width = poly.width;
-            var height = poly.height;
-
-            // All of the following partitions MUST be succesful - we are after all restricting
-            // our scanlines to the extreme bounds of the polygon.
-            
-            // bottom - handled seperately
-            var l = poly.partition($L($V(x1-1, y1), $V(x1+width+1, y1))).cosame;
-            if (l.length > 0) {
-                rays.push(l);
-            }
-            
-            // middle part - iterate through "inner" part of polygon
-            for (var y = 1; y <= height-1; y++) {
-                rays.push(poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1))).neg);
-            }
-            
-            //top - reverse it, because it is in the opposite direction than the scanline
-            l = poly.partition($L($V(x1-1, y1+height), $V(x1+width+1, y1+height))).codiff;
-            if (l.length > 0) {
-                rays.push([$L(l[0].end, l[0].origin)]);
-            }    
-            return rays;
-        },
-        
-        drawPoly:   function drawPoly(c2s, ctx, label, poly, colour) {
-            
-            ctx.strokeStyle = colour;
-            ctx.beginPath();
-            for (var i = 0; i < poly.edges.length; i++) {
-                ctx.moveTo(c2s.cartesian2screenx(poly.edges[i].origin.x), c2s.cartesian2screeny(poly.edges[i].origin.y));
-                ctx.lineTo(c2s.cartesian2screenx(poly.edges[i].end.x), c2s.cartesian2screeny(poly.edges[i].end.y));
-            }
-            ctx.stroke();
-
-            ctx.fillStyle = "rgba(220, 220, 220, 1)";
-            ctx.font = "bold 12px sans-serif";
-            var x = c2s.cartesian2screenx(poly.extremes.x1);
-            var y = c2s.cartesian2screeny(poly.extremes.y1);
-
-            ctx.fillText(label, x, y);
-
+    scanPolys: function(polys,x1,y1,x2,y2) {
+        var width = x2 - x1;
+        var height = y2 - y1;
+        var drawers = [];
+        for (var s = 0; s < polys.length; s++) {
+            var rays = renderutil.scanPoly(polys[s]);
+            drawers.push(new renderutil.DrawScanlines({x1:x1,y1:y1,x2:x2,y2:y2,width:width,height:height},  polys[s], rays));
         }
+        return drawers;
+    },
+    
+    fillBuffer: function(drawers, textures, data) {
+        renderlib.util.Timer.substart("singleBitmap");
+        for (var s = 0; s < drawers.length; s++) {
+            drawers[s].draw(textures[s], data);
+        }
+        renderlib.util.Timer.subend();
+    },
+    
+    scanPoly: function(poly) {
+        // Partitioning
+        var rays = [];
+        var x1 = poly.extremes.x1;
+        var y1 = poly.extremes.y1;
+        var width = poly.width;
+        var height = poly.height;
 
-
+        // All of the following partitions MUST be succesful - we are after all restricting
+        // our scanlines to the extreme bounds of the polygon.
         
+        // bottom - handled seperately
+        var l = poly.partition($L($V(x1-1, y1), $V(x1+width+1, y1))).cosame;
+        if (l.length > 0) {
+            rays.push(l);
+        }
+        
+        // middle part - iterate through "inner" part of polygon
+        for (var y = 1; y <= height-1; y++) {
+            rays.push(poly.partition($L($V(x1-1, y+y1), $V(x1+width+1, y+y1))).neg);
+        }
+        
+        //top - reverse it, because it is in the opposite direction than the scanline
+        l = poly.partition($L($V(x1-1, y1+height), $V(x1+width+1, y1+height))).codiff;
+        if (l.length > 0) {
+            rays.push([$L(l[0].end, l[0].origin)]);
+        }    
+        return rays;
+    },
+    
+    drawPoly:   function drawPoly(c2s, ctx, label, poly, colour) {
+        
+        ctx.strokeStyle = colour;
+        ctx.beginPath();
+        for (var i = 0; i < poly.edges.length; i++) {
+            ctx.moveTo(c2s.cartesian2screenx(poly.edges[i].origin.x), c2s.cartesian2screeny(poly.edges[i].origin.y));
+            ctx.lineTo(c2s.cartesian2screenx(poly.edges[i].end.x), c2s.cartesian2screeny(poly.edges[i].end.y));
+        }
+        ctx.stroke();
+
+        ctx.fillStyle = "rgba(220, 220, 220, 1)";
+        ctx.font = "bold 12px sans-serif";
+        var x = c2s.cartesian2screenx(poly.extremes.x1);
+        var y = c2s.cartesian2screeny(poly.extremes.y1);
+
+        ctx.fillText(label, x, y);
+
+    },
+    
+    canvasDrawPoly: function(c2s, ctx, label, poly, colour, texture) {
+        ctx.strokeStyle = colour;
+        
+        var pattern = ctx.createPattern(texture.img, "repeat");
+        ctx.fillStyle = pattern;
+        
+        var first = true;
+        ctx.beginPath();
+        for (var i = 0; i < poly.edges.length; i++) {
+            if (first) {
+                ctx.moveTo(c2s.cartesian2screenx(poly.edges[i].origin.x), c2s.cartesian2screeny(poly.edges[i].origin.y));
+                first = false;
+            } else {
+                ctx.lineTo(c2s.cartesian2screenx(poly.edges[i].origin.x), c2s.cartesian2screeny(poly.edges[i].origin.y));
+            };
+            ctx.lineTo(c2s.cartesian2screenx(poly.edges[i].end.x), c2s.cartesian2screeny(poly.edges[i].end.y));
+        }
+        ctx.stroke();
+        ctx.fill();
+        
+        ctx.fillStyle = "rgba(220, 220, 220, 1)";
+        ctx.font = "bold 12px sans-serif";
+        var x = c2s.cartesian2screenx(poly.extremes.x1);
+        var y = c2s.cartesian2screeny(poly.extremes.y1);
+
+        ctx.fillText(label, x, y);
+
+    }
 };
 
 

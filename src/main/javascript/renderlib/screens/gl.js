@@ -39,32 +39,32 @@ screens.gl = function(game,width,height) {
         
         create: function(sectors, x1, y1, x2, y2) {
             var drawers = renderutil.scanPolys(_.map(sectors, function(s) { return s.poly }), x1,y1,x2-1,y2-1);
-            Timer.substart("clear");
+            renderlib.util.Timer.substart("clear");
             for (var i = 0; i < width * height * 4; i++) {
                 data.data[i] = 0;
             }
-            Timer.subend();
+            renderlib.util.Timer.subend();
             
             return {
                 draw: function(textures) {
-                    Timer.start("gl");
+                    renderlib.util.Timer.start("gl");
                     if (!shaderloader.ready()) {
                         console.log("shaderloader not ready... not drawing");
                         return;
                     }
 
-                    Timer.substart("fill buffer");
+                    renderlib.util.Timer.substart("fill buffer");
                     renderutil.fillBuffer(drawers, textures, data);
-                    Timer.subend();
+                    renderlib.util.Timer.subend();
                     
                     //glutil.util.loadTexture(textures[i].imageData);
-                    Timer.substart("fill texture");
+                    renderlib.util.Timer.substart("fill texture");
                     glutil.util.loadTexture(data);
-                    Timer.subend();
-                    Timer.substart("draw scene");
+                    renderlib.util.Timer.subend();
+                    renderlib.util.Timer.substart("draw scene");
                     glutil.util.drawScene();
-                    Timer.subend();
-                    Timer.end();
+                    renderlib.util.Timer.subend();
+                    renderlib.util.Timer.end();
                 }
             }
         }

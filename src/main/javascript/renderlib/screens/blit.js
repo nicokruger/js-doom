@@ -12,30 +12,26 @@ screens.blit = function(game,width,height) {
         },
         
         create: function(sectors, x1, y1, x2, y2) {
-            var c2s = new Cartesian2Screen(x1,y1,x2,y2);
+            var c2s = new renderlib.util.Cartesian2Screen(x1,y1,x2,y2);
             var drawers = renderutil.scanPolys(_.map(sectors, function(s) { return s.poly }), x1,y1,x2,y2);
             return {
                 draw: function(textures) {
-                    Timer.start("Sectordraw");
+                    renderlib.util.Timer.start("Sectordraw");
                     
-                    Timer.substart("clean");
+                    renderlib.util.Timer.substart("clean");
                     var length = ctx.canvas.width * ctx.canvas.height * 4, i = 0;
                     for (; i < length; i++) {
                         data.data[i] = 0;
                     }
-                    Timer.subend();
+                    renderlib.util.Timer.subend();
                     
                     renderutil.fillBuffer(drawers, textures, data);
                     
-                    Timer.substart("Put image buffer");
+                    renderlib.util.Timer.substart("Put image buffer");
                     ctx.putImageData(data, 0, 0);
-                    Timer.subend();
+                    renderlib.util.Timer.subend();
                     
-                    Timer.end();
-                    
-                    for (var i = 0; i < sectors.length; i++) {
-                        renderutil.drawPoly(c2s, ctx, sectors[i].label, sectors[i].poly, "#0000ff");
-                    }
+                    renderlib.util.Timer.end();
                 }
             }
         }
