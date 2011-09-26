@@ -7,11 +7,21 @@ renderutil_gl = function(gl, shaders) {
     var cubeVertexPositionBuffer;
     var cubeVertexTextureCoordBuffer;
     var cubeVertexIndexBuffer;
-    var neheTexture;
+    var texture;
     var shader_map = {};
         
  
     var module =  {
+        
+        loadTexture: function(texture_data) {
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+            gl.pixelStorei(gl.UNPACK_ALIGNMENT, true);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture_data);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+            gl.bindTexture(gl.TEXTURE_2D, null);            
+        },
         
         drawScene: function() {
             gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
@@ -29,7 +39,7 @@ renderutil_gl = function(gl, shaders) {
             gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
             gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, neheTexture);
+            gl.bindTexture(gl.TEXTURE_2D, texture);
             gl.uniform1i(shaderProgram.samplerUniform, 0);
 
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
@@ -148,18 +158,7 @@ renderutil_gl = function(gl, shaders) {
         //
         // INIT TEXTURES
         // 
-        neheTexture = gl.createTexture();
-        neheTexture.img = new Image();
-        neheTexture.img.src = "data/nehe.gif";
-        neheTexture.img.onload = new function() {
-            gl.bindTexture(gl.TEXTURE_2D, neheTexture);
-            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-            gl.pixelStorei(gl.UNPACK_ALIGNMENT, true);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, neheTexture.img);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-            gl.bindTexture(gl.TEXTURE_2D, null);
-        }
+        texture = gl.createTexture();
 
         gl.clearColor(1.0, 0.0, 0.0, 1.0);
         gl.enable(gl.DEPTH_TEST);

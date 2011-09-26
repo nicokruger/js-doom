@@ -23,12 +23,12 @@ screens.gl = function(game,width,height) {
         console.log("SHADERS LOADED");
         glutil.util = renderutil_gl(gl, shaders);
     });
-    //var glutil = renderutil_gl(gl);
 
     // Temporary canvas for background image
     var  tmpctx = document.createElement("canvas").getContext("2d");
     tmpctx.canvas.width = width + 1;
     tmpctx.canvas.height = height + 1;    
+    delete tmpctx; // free memory ? probably not, I reckon the imagedata reference will keep it alive
     var data = tmpctx.createImageData(width + 1, height + 1);
         
     return {
@@ -37,14 +37,21 @@ screens.gl = function(game,width,height) {
         },
         
         create: function(sectors, x1, y1, x2, y2) {
+            var drawers = renderutil.scanPolys(_.map(sectors, function(s) { return s.poly }), x1,y1,x2,y2);
             return {
-                draw: function() {
+                draw: function(textures) {
                     if (!shaderloader.ready()) {
                         console.log("shaderloader not ready... not drawing");
                         return;
                     }
                     
+                    //renderutil.fillBuffer(drawers, textures, data);
+                    
+                    for (var i = 0; i < width * height * 4; i++) {
+                        data.data[i] = 255;
+                    }
                     Timer.start("gl");
+                    glutil.util.loadTexture(textures[0].imageData);
                     glutil.util.drawScene();
                     Timer.end();
                 }
