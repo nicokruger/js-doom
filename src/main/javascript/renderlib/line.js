@@ -1,6 +1,6 @@
 
 $L = (function() {
-    Line = function (origin, end) {
+    var Line = function (origin, end) {
         this.origin = origin;
         this.end = end;
     }
@@ -70,13 +70,7 @@ $L = (function() {
         return null;
     }
 
-    Line.LEFT = -1
-    Line.INTERSECTS_FORWARD = 0
-    Line.INTERSECTS_BACKWARD = 1
-    Line.RIGHT = 2
-    Line.COINCIDENT = 3
-
-    function cc(t, d0, d1) {
+     var cc = function(t, d0, d1) {
         if (Math.abs(t) < 0.00001) t = 0;
         if (Math.abs(t - 1) < 0.00001) t = 1;
         return (d0 * d1 <= 0);
@@ -100,10 +94,10 @@ $L = (function() {
         var t = d0 / (d0 - d1);
 
         if (d0 < 0 && d1 == 0) {
-            return Line.INTERSECTS_FORWARD;
+            return $L.INTERSECTS_FORWARD;
         }
         if (d0 > 0 && d1 == 0) {
-            return Line.INTERSECTS_BACKWARD;
+            return $L.INTERSECTS_BACKWARD;
         }
     /*    if (d1 < 0 && d0 == 0) {
             return Line.INTERSECTS_FORWARD;
@@ -114,16 +108,16 @@ $L = (function() {
         
         if (d0 * d1 < 0) {
             if (d1 >= 0) {
-                return Line.INTERSECTS_FORWARD;
+                return $L.INTERSECTS_FORWARD;
             } else {
-                return Line.INTERSECTS_BACKWARD;
+                return $L.INTERSECTS_BACKWARD;
             }
         } else if (d0 > 0 || d1 > 0) {
-            return Line.RIGHT;
+            return $L.RIGHT;
         } else if (d0 < 0 || d1 < 0) {
-            return Line.LEFT;
+            return $L.LEFT;
         } else {
-            return Line.COINCIDENT;
+            return $L.COINCIDENT;
         }
 
     }
@@ -168,7 +162,7 @@ $L = (function() {
 
     }
 
-    function find_intersection(u0, u1, v0, v1) {
+    var find_intersection = function(u0, u1, v0, v1) {
         if (u1 < v0 || u0 > v1)
             return [];
 
@@ -187,7 +181,7 @@ $L = (function() {
     }
 
 
-    L = function(v1,v2) {
+    var L = function(v1,v2) {
         var l = new Line(v1,v2);
         return l;
     }
@@ -211,6 +205,13 @@ $L = (function() {
     L.coincident_segment = function(l1,l2) {
         return l1.coincident_segment(l2);
     }
+    
+    L.LEFT = -1
+    L.INTERSECTS_FORWARD = 0
+    L.INTERSECTS_BACKWARD = 1
+    L.RIGHT = 2
+    L.COINCIDENT = 3
+
     
     return L;
 })();

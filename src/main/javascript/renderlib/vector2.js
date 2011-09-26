@@ -39,7 +39,7 @@ $V = (function() {
     }
 
     Vector.prototype.offset = function(v) {
-        var l = new Line(v, this.add(v));
+        var l = $L(v, this.add(v));
         return l;
     }
 

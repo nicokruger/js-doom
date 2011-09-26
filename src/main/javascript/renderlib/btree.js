@@ -39,7 +39,7 @@ renderlib.bsp = (function() {
 
         var classification = T.line.intersects(edge);
 
-        if (classification == Line.INTERSECTS_FORWARD) {
+        if (classification == $L.INTERSECTS_FORWARD) {
             var I = T.line.intersection(edge);
             
             if (I == null) {
@@ -56,7 +56,7 @@ renderlib.bsp = (function() {
                 neg_partition(T.negative, first, partition_node);
             }
 
-        } else if (classification == Line.INTERSECTS_BACKWARD) {
+        } else if (classification == $L.INTERSECTS_BACKWARD) {
             var I = T.line.intersection(edge);
 
             if (I == null) {
@@ -73,11 +73,11 @@ renderlib.bsp = (function() {
                 neg_partition(T.negative, second, partition_node);
             }
 
-        } else if (classification == Line.RIGHT) {
+        } else if (classification == $L.RIGHT) {
             pos_partition(T.positive, edge, partition_node);
-        } else if (classification == Line.LEFT) {
+        } else if (classification == $L.LEFT) {
             neg_partition(T.negative, edge, partition_node);
-        } else if (classification == Line.COINCIDENT) {
+        } else if (classification == $L.COINCIDENT) {
             T.coincident.forEach(function (EE) {
                 var I = EE.coincident_segment(edge)
 
@@ -118,7 +118,7 @@ renderlib.bsp = (function() {
 
         var classification = line.intersects(edge);
 
-        if (classification == Line.INTERSECTS_FORWARD) {
+        if (classification == $L.INTERSECTS_FORWARD) {
             var I = line.intersection(edge);
             if (!edge.origin.equals(I)) {
                 bsp_node.neg.push($L(edge.origin, I));
@@ -126,7 +126,7 @@ renderlib.bsp = (function() {
             if (!I.equals(edge.end)) {
                 bsp_node.pos.push($L(I, edge.end));
             }
-        } else if (classification == Line.INTERSECTS_BACKWARD) {
+        } else if (classification == $L.INTERSECTS_BACKWARD) {
             var I = line.intersection(edge);
             if (!edge.origin.equals(I)) {
                 bsp_node.pos.push($L(edge.origin, I));
@@ -134,11 +134,11 @@ renderlib.bsp = (function() {
             if (!I.equals(edge.end)) {
                 bsp_node.neg.push($L(I, edge.end));
             }
-        } else if (classification == Line.RIGHT) {
+        } else if (classification == $L.RIGHT) {
             bsp_node.pos.push(edge);
-        } else if (classification == Line.LEFT) {
+        } else if (classification == $L.LEFT) {
             bsp_node.neg.push(edge);
-        } else if (classification == Line.COINCIDENT) {
+        } else if (classification == $L.COINCIDENT) {
             bsp_node.coincident.push(edge);
         }
     }

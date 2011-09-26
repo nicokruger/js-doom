@@ -22,52 +22,52 @@ describe("Intersections", function () {
     describe("Line intersection classification", function() {
         it("classifies intersections at vertex extremes", function () {
             var l1 = $L($V(5,4), $V(5,5)); var l2 = $L($V(4,5), $V(5,5));
-            expect(l1.intersects(l2)).toBe(Line.INTERSECTS_FORWARD); // INTERSECTS_FORWARD
+            expect(l1.intersects(l2)).toBe($L.INTERSECTS_FORWARD); // INTERSECTS_FORWARD
         
             var l1 = $L($V(5,5), $V(0,0)); var l2 = $L($V(4,5), $V(5,5));
-            expect(l1.intersects(l2)).toBe(Line.INTERSECTS_BACKWARD); // INTERSECTS_FORWARD
+            expect(l1.intersects(l2)).toBe($L.INTERSECTS_BACKWARD); // INTERSECTS_FORWARD
         });
 
         it("classifies co-incident lines", function () {
-            expect($L.intersects($L($V(0,0), $V(1,1)), $L($V(0.5,0.5), $V(3,3)))).toBe(Line.COINCIDENT);
-            expect($L.intersects($L($V(0,0), $V(1,0)), $L($V(0,0), $V(1,0)))).toBe(Line.COINCIDENT);
+            expect($L.intersects($L($V(0,0), $V(1,1)), $L($V(0.5,0.5), $V(3,3)))).toBe($L.COINCIDENT);
+            expect($L.intersects($L($V(0,0), $V(1,0)), $L($V(0,0), $V(1,0)))).toBe($L.COINCIDENT);
         });
         
         it("classifies the relation between two lines", function () {
-            expect($L.intersects($L($V(0,0), $V(10,0)), $L($V(15,15), $V(5,15)))).toBe(Line.LEFT);
-            expect($L.intersects($L($V(0,0), $V(0,2)), $L($V(-3,1), $V(-2,1)))).toBe(Line.LEFT)
+            expect($L.intersects($L($V(0,0), $V(10,0)), $L($V(15,15), $V(5,15)))).toBe($L.LEFT);
+            expect($L.intersects($L($V(0,0), $V(0,2)), $L($V(-3,1), $V(-2,1)))).toBe($L.LEFT)
         });
         
         it("classifies intersecting lines with the same direction", function() {
-            expect($L.intersects($L($V(0,0), $V(0,2)), $L($V(-1,1), $V(1,1)))).toBe(Line.INTERSECTS_FORWARD);
-            expect($L.intersects($L($V(0,0), $V(10,10)), $L($V(0,10), $V(10,0)))).toBe(Line.INTERSECTS_FORWARD);
-            expect($L.intersects($L($V(5,5), $V(10,10)), $L($V(0,10), $V(10,0)))).toBe(Line.INTERSECTS_FORWARD);
+            expect($L.intersects($L($V(0,0), $V(0,2)), $L($V(-1,1), $V(1,1)))).toBe($L.INTERSECTS_FORWARD);
+            expect($L.intersects($L($V(0,0), $V(10,10)), $L($V(0,10), $V(10,0)))).toBe($L.INTERSECTS_FORWARD);
+            expect($L.intersects($L($V(5,5), $V(10,10)), $L($V(0,10), $V(10,0)))).toBe($L.INTERSECTS_FORWARD);
         });
         
         it("classifies intersecting lines with opposite direction", function () {
-            expect($L.intersects($L($V(0,2), $V(0,0)), $L($V(-1,1), $V(1,1)))).toBe(Line.INTERSECTS_BACKWARD)
-            expect($L.intersects($L($V(0,10), $V(10,0)), $L($V(0,0), $V(10,10)))).toBe(Line.INTERSECTS_BACKWARD);
-            expect($L.intersects($L($V(10,0), $V(10,10)), $L($V(15,15), $V(5,15)))).toBe(Line.INTERSECTS_BACKWARD);
-            expect($L.intersects($L($V(-9,-9), $V(-10,-10)), $L($V(0,10), $V(10,0)))).toBe(Line.INTERSECTS_BACKWARD);
+            expect($L.intersects($L($V(0,2), $V(0,0)), $L($V(-1,1), $V(1,1)))).toBe($L.INTERSECTS_BACKWARD)
+            expect($L.intersects($L($V(0,10), $V(10,0)), $L($V(0,0), $V(10,10)))).toBe($L.INTERSECTS_BACKWARD);
+            expect($L.intersects($L($V(10,0), $V(10,10)), $L($V(15,15), $V(5,15)))).toBe($L.INTERSECTS_BACKWARD);
+            expect($L.intersects($L($V(-9,-9), $V(-10,-10)), $L($V(0,10), $V(10,0)))).toBe($L.INTERSECTS_BACKWARD);
         });
 
         it("should be handle the intersection edge cases of a 'line' having origin and end points the same", function() {
         
             // Check the intersection at the end point
-            expect($L.intersects($L($V(5,5), $V(10,5)), $L($V(10,5), $V(10,5)))).toBe(Line.COINCIDENT);
+            expect($L.intersects($L($V(5,5), $V(10,5)), $L($V(10,5), $V(10,5)))).toBe($L.COINCIDENT);
             // Check the intersection at the origin point
-            expect($L.intersects($L($V(10,5), $V(5,5)), $L($V(5,5), $V(5,5)))).toBe(Line.COINCIDENT);
+            expect($L.intersects($L($V(10,5), $V(5,5)), $L($V(5,5), $V(5,5)))).toBe($L.COINCIDENT);
 
             // Check the intersection at the origin point
-            expect($L.intersects($L($V(5,5), $V(10,5)), $L($V(5,5), $V(5,5)))).toBe(Line.COINCIDENT);
+            expect($L.intersects($L($V(5,5), $V(10,5)), $L($V(5,5), $V(5,5)))).toBe($L.COINCIDENT);
             // Check the intersection at the end point
-            expect($L.intersects($L($V(10,5), $V(5,5)), $L($V(5,5), $V(5,5)))).toBe(Line.COINCIDENT);
+            expect($L.intersects($L($V(10,5), $V(5,5)), $L($V(5,5), $V(5,5)))).toBe($L.COINCIDENT);
 
-            expect($L.intersects($L($V(10,5), $V(10,5)), $L($V(5,5), $V(10,5)))).toBe(Line.COINCIDENT);
-            expect($L.intersects($L($V(5,5), $V(5,5)), $L($V(5,5), $V(10,5)))).toBe(Line.COINCIDENT);
+            expect($L.intersects($L($V(10,5), $V(10,5)), $L($V(5,5), $V(10,5)))).toBe($L.COINCIDENT);
+            expect($L.intersects($L($V(5,5), $V(5,5)), $L($V(5,5), $V(10,5)))).toBe($L.COINCIDENT);
 
-            expect($L.intersects($L($V(10,5), $V(10,5)), $L($V(5,5), $V(10,5)))).toBe(Line.COINCIDENT);
-            expect($L.intersects($L($V(10,5), $V(10,5)), $L($V(5,5), $V(10,5)))).toBe(Line.COINCIDENT);
+            expect($L.intersects($L($V(10,5), $V(10,5)), $L($V(5,5), $V(10,5)))).toBe($L.COINCIDENT);
+            expect($L.intersects($L($V(10,5), $V(10,5)), $L($V(5,5), $V(10,5)))).toBe($L.COINCIDENT);
         
         });
         

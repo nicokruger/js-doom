@@ -60,7 +60,7 @@ $P = (function() {
     }
     
     // These are local to the module
-    Polygon = function(vertices) {
+    var Polygon = function(vertices) {
         // for easy drawing
         this.vertices = [];
         var bounds = {
