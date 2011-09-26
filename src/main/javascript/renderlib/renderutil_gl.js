@@ -14,6 +14,7 @@ renderutil_gl = function(gl, shaders) {
     var module =  {
         
         loadTexture: function(texture_data) {
+            texture = gl.createTexture();
             gl.bindTexture(gl.TEXTURE_2D, texture);
             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
             gl.pixelStorei(gl.UNPACK_ALIGNMENT, true);
@@ -154,11 +155,6 @@ renderutil_gl = function(gl, shaders) {
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices), gl.STATIC_DRAW);
         cubeVertexIndexBuffer.itemSize = 1;
         cubeVertexIndexBuffer.numItems = 6;
-
-        //
-        // INIT TEXTURES
-        // 
-        texture = gl.createTexture();
 
         gl.clearColor(1.0, 0.0, 0.0, 1.0);
         gl.enable(gl.DEPTH_TEST);

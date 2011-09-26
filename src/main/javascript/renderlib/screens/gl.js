@@ -26,33 +26,44 @@ screens.gl = function(game,width,height) {
 
     // Temporary canvas for background image
     var  tmpctx = document.createElement("canvas").getContext("2d");
-    tmpctx.canvas.width = width + 1;
-    tmpctx.canvas.height = height + 1;    
+    tmpctx.canvas.width = width ;
+    tmpctx.canvas.height = height;    
+    var data = tmpctx.createImageData(width, height);
     delete tmpctx; // free memory ? probably not, I reckon the imagedata reference will keep it alive
-    var data = tmpctx.createImageData(width + 1, height + 1);
         
+    var i = 0;
     return {
         cleanup: function() {
             $("#canvasgl").remove();
         },
         
         create: function(sectors, x1, y1, x2, y2) {
-            var drawers = renderutil.scanPolys(_.map(sectors, function(s) { return s.poly }), x1,y1,x2,y2);
+            var drawers = renderutil.scanPolys(_.map(sectors, function(s) { return s.poly }), x1,y1,x2-1,y2-1);
             return {
                 draw: function(textures) {
+                    Timer.start("gl");
                     if (!shaderloader.ready()) {
                         console.log("shaderloader not ready... not drawing");
                         return;
                     }
-                    
-                    //renderutil.fillBuffer(drawers, textures, data);
-                    
+
+                    Timer.substart("clear");
                     for (var i = 0; i < width * height * 4; i++) {
-                        data.data[i] = 255;
+                        data.data[i] = 0;
                     }
-                    Timer.start("gl");
-                    glutil.util.loadTexture(textures[0].imageData);
+                    Timer.subend();
+                    
+                    Timer.substart("fill buffer");
+                    renderutil.fillBuffer(drawers, textures, data);
+                    Timer.subend();
+                    
+                    //glutil.util.loadTexture(textures[i].imageData);
+                    Timer.substart("fill texture");
+                    glutil.util.loadTexture(data);
+                    Timer.subend();
+                    Timer.substart("draw scene");
                     glutil.util.drawScene();
+                    Timer.subend();
                     Timer.end();
                 }
             }
