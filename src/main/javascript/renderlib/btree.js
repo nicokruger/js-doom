@@ -1,7 +1,23 @@
 var renderlib;
 if (!renderlib) renderlib = {}; // initialise the top-level module if it does not exist
 
-renderlib.bsp = (function() {
+var CCL = {
+    INTERSECTS_FORWARD: 0,
+    INTERSECTS_BACKWARD: 1,
+    LEFT: -1,
+    RIGHT: 2,
+    COINCIDENT: 3
+}
+
+var CL = {
+    INTERSECTS_FORWARD: 1,
+    INTERSECTS_BACKWARD: 0,
+    LEFT: 2,
+    RIGHT: -1,
+    COINCIDENT: 3
+}
+
+var bsp = function(winding) {
     
     // Helper Functions
     var find_v = function(l, v) {
@@ -39,7 +55,7 @@ renderlib.bsp = (function() {
 
         var classification = T.line.intersects(edge);
 
-        if (classification == $L.INTERSECTS_FORWARD) {
+        if (classification == winding.INTERSECTS_FORWARD) {
             var I = T.line.intersection(edge);
             
             if (I == null) {
@@ -56,7 +72,7 @@ renderlib.bsp = (function() {
                 neg_partition(T.negative, first, partition_node);
             }
 
-        } else if (classification == $L.INTERSECTS_BACKWARD) {
+        } else if (classification == winding.INTERSECTS_BACKWARD) {
             var I = T.line.intersection(edge);
 
             if (I == null) {
@@ -73,11 +89,11 @@ renderlib.bsp = (function() {
                 neg_partition(T.negative, second, partition_node);
             }
 
-        } else if (classification == $L.RIGHT) {
+        } else if (classification == winding.RIGHT) {
             pos_partition(T.positive, edge, partition_node);
-        } else if (classification == $L.LEFT) {
+        } else if (classification == winding.LEFT) {
             neg_partition(T.negative, edge, partition_node);
-        } else if (classification == $L.COINCIDENT) {
+        } else if (classification == winding.COINCIDENT) {
             T.coincident.forEach(function (EE) {
                 var I = EE.coincident_segment(edge)
 
@@ -102,9 +118,9 @@ renderlib.bsp = (function() {
         bsp_node.pos = [];
         bsp_node.neg = [];
 
-        lines.forEach(function (edge) {
-            classify(line, edge, bsp_node)
-        });
+        for (var i = 0; i < lines.length; i++) {
+            classify(line, lines[i], bsp_node);
+        }
 
         if (bsp_node.pos.length > 0)
              bsp_node.positive = renderlib.bsp.create(bsp_node.pos);
@@ -118,7 +134,7 @@ renderlib.bsp = (function() {
 
         var classification = line.intersects(edge);
 
-        if (classification == $L.INTERSECTS_FORWARD) {
+        if (classification == winding.INTERSECTS_FORWARD) {
             var I = line.intersection(edge);
             if (!edge.origin.equals(I)) {
                 bsp_node.neg.push($L(edge.origin, I));
@@ -126,7 +142,7 @@ renderlib.bsp = (function() {
             if (!I.equals(edge.end)) {
                 bsp_node.pos.push($L(I, edge.end));
             }
-        } else if (classification == $L.INTERSECTS_BACKWARD) {
+        } else if (classification == winding.INTERSECTS_BACKWARD) {
             var I = line.intersection(edge);
             if (!edge.origin.equals(I)) {
                 bsp_node.pos.push($L(edge.origin, I));
@@ -134,11 +150,11 @@ renderlib.bsp = (function() {
             if (!I.equals(edge.end)) {
                 bsp_node.neg.push($L(I, edge.end));
             }
-        } else if (classification == $L.RIGHT) {
+        } else if (classification == winding.RIGHT) {
             bsp_node.pos.push(edge);
-        } else if (classification == $L.LEFT) {
+        } else if (classification == winding.LEFT) {
             bsp_node.neg.push(edge);
-        } else if (classification == $L.COINCIDENT) {
+        } else if (classification == winding.COINCIDENT) {
             bsp_node.coincident.push(edge);
         }
     }
@@ -146,8 +162,10 @@ renderlib.bsp = (function() {
     
     // Exports
     return {
-        create: function(lines) {
-            var line = lines[0];
+        create: function(lines, line) {
+            if (line === undefined) {
+                var line = lines[0];
+            }
 
             return bsp_gather_node(line, lines);
         },
@@ -168,6 +186,9 @@ renderlib.bsp = (function() {
         }
 
     }
-})();
+}
+
+renderlib.bsp = bsp(CCL);
+renderlib.bsp_cl = bsp(CL);
 
 

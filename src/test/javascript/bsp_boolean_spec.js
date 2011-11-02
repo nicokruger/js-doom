@@ -65,7 +65,7 @@ describe("BSP trees", function() {
             var pn;
             P2 = circle_to_poly([100.0, 229.0], 120.0, 25);
             I1 = P2.intersection(P1);
-            pn = P2.partition($L($V(200,200), $V(200,300))); // CHANGE THIS TO 301 and it works!!!
+            pn = P2.partition($L($V(200,200), $V(200,300))); 
             expect(pn.neg).toNotEqual([]);
             expect(Math.round(I1.area(),0)).toBe(9987);
 
