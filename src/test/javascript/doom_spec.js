@@ -12,7 +12,9 @@ describe("The doom game library", function() {
         waitsFor(function() { return polygons != null; });
         
         runs(function() {
-            expect(polygons.length).toBe(4);
+            expect(polygons.length).toBe(1);
+            
+            expect(polygons[0][0]).toEqual($L($V(-768,768), $V(-256, 768)));
         });
     });
    

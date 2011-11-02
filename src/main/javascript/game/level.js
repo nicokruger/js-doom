@@ -5,15 +5,31 @@ doom.get_polygons = function(leveldata) {
 
     var doom_sectors = leveldata.sectors;
     var doom_ssectors = leveldata.ssectors;
-    var doom_vertices = leveldata.vertexes;
+    var doom_vertices = _(leveldata.vertexes).map(function (v) { return $V(v.x,v.y); });
+    var doom_sidedefs = leveldata.sidedefs;
+    var doom_linedefs = leveldata.linedefs;
+
+    // Sidedef -> sector mapping
+    var sidedefs_sectors = _(doom_sidedefs).chain().zip(_.range(doom_sidedefs.length)).reduce(function (o, sidedef) {
+        o[sidedef[1]] = sidedef[0].sector;
+        return o;
+    }, {}).value();
     
-    var ssectors = _.map(doom_ssectors, function (doom_ssector) {
-            _.map(doom_ssector.segs, function(seg) {
-                
-            });
+    // create a list full of empty lists for all the sectors
+    var sectors = _(_.range(_.max(_.values(sidedefs_sectors)) + 1)).map(function (x) { return [] });
+
+    // go through all linedefs, and add vertices to sectors for both sidedefs
+    _(doom_linedefs).each(function (linedef) {
+        
+        if (linedef.right != -1) {
+            sectors[sidedefs_sectors[linedef.right]].push($L(doom_vertices[linedef.vx_a], doom_vertices[linedef.vx_b]));
+        }
+        if (linedef.left != -1) {
+            sectors[sidedefs_sectors[linedef.left]].push($L(doom_vertices[linedef.vx_b], doom_vertices[linedef.vx_a]));
+        }
     });
     
-    return ssectors;
+    return sectors;
     
     /*var sectors = [];
 
