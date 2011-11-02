@@ -4,8 +4,8 @@ describe("The doom game library", function() {
         var polygons = null;
         
         runs(function() {
-            $.getJSON("src/test/javascript/hole.json", function(data) {
-                polygons = doom.get_polygons(data);
+            $.getJSON("src/main/javascript/data/hole.json", function(data) {
+                polygons = doom.get_sectors(data);
             });
         });
         
@@ -14,7 +14,8 @@ describe("The doom game library", function() {
         runs(function() {
             expect(polygons.length).toBe(1);
             
-            expect(polygons[0][0]).toEqual($L($V(-768,768), $V(-256, 768)));
+            expect(polygons[0].poly.edges[0]).toEqual($L($V(-768,768), $V(-256, 768)));
+            
         });
     });
    

@@ -1,11 +1,11 @@
 var doom;
 if (!doom) doom = {}; // create top-level module
     
-doom.get_polygons = function(leveldata) {
+doom.get_sectors = function(leveldata) {
 
     var doom_sectors = leveldata.sectors;
     var doom_ssectors = leveldata.ssectors;
-    var doom_vertices = _(leveldata.vertexes).map(function (v) { return $V(v.x,v.y); });
+    var doom_vertices = _(leveldata.vertices).map(function (v) { return $V(v.x,v.y); });
     var doom_sidedefs = leveldata.sidedefs;
     var doom_linedefs = leveldata.linedefs;
 
@@ -29,7 +29,27 @@ doom.get_polygons = function(leveldata) {
         }
     });
     
-    return sectors;
+    return _(sectors).map(function (s) {
+        return {
+            tick: function (delta) {
+            },
+            poly: {
+                edges: s,
+                bsp: renderlib.bsp_cl.create(s),
+                vertices: _(s).chain().map(function (x) { return x.origin }).uniq().value(),
+                extremes: {
+                    x1: -768,
+                    x2: -256,
+                    y1: 256,
+                    y2: 768
+                },
+                partition: function (line) {
+                    return renderlib.bsp_cl.partition(s, line)
+                },
+            },
+            texture: "doomlogo2"
+        }
+    });
     
     /*var sectors = [];
 

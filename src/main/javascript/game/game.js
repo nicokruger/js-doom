@@ -10,7 +10,7 @@ Game = function(data) {
 
     // Load level
     var that=this;
-    this.sectors = get_sectors(data);
+    this.sectors = doom.get_sectors(data);
 
 }
 
