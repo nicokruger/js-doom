@@ -6,7 +6,10 @@ var CCL = {
     INTERSECTS_BACKWARD: 1,
     LEFT: -1,
     RIGHT: 2,
-    COINCIDENT: 3
+    COINCIDENT: 3,
+    patch: function (x,y) {
+        return $L(x, y);
+    }
 }
 
 var CL = {
@@ -14,7 +17,10 @@ var CL = {
     INTERSECTS_BACKWARD: 0,
     LEFT: 2,
     RIGHT: -1,
-    COINCIDENT: 3
+    COINCIDENT: 3,
+    patch: function (x,y) {
+        return $L(y,x);
+    }
 }
 
 var bsp = function(winding) {
@@ -64,11 +70,13 @@ var bsp = function(winding) {
             }
 
             if (!I.equals(edge.end)) {
-                var second = $L(I, edge.end);
+                //var second = $L(I, edge.end);
+                var second = winding.patch(I, edge.end);
                 pos_partition(T.positive, second, partition_node);
             }
             if (!edge.origin.equals(I)) {
-                var first = $L(edge.origin, I)
+                //var first = $L(edge.origin, I)
+                var first = winding.patch(edge.origin, I);
                 neg_partition(T.negative, first, partition_node);
             }
 
@@ -81,11 +89,13 @@ var bsp = function(winding) {
             }
             
             if (!edge.origin.equals(I)) {
-                var first = $L(edge.origin, I)
+                //var first = $L(edge.origin, I)
+                var first = winding.patch(edge.origin, I);
                 pos_partition(T.positive, first, partition_node);
             }
             if (!I.equals(edge.end)) {
-                var second = $L(I, edge.end);
+                //var second = $L(I, edge.end);
+                var second = winding.patch(I, edge.end);
                 neg_partition(T.negative, second, partition_node);
             }
 
@@ -95,6 +105,11 @@ var bsp = function(winding) {
             neg_partition(T.negative, edge, partition_node);
         } else if (classification == winding.COINCIDENT) {
             T.coincident.forEach(function (EE) {
+                
+                //
+                // THE BUG IS HERE
+                //
+                
                 var I = EE.coincident_segment(edge)
 
                 // Check the direction of the line

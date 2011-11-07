@@ -33,6 +33,22 @@ renderlib.screens.blit = function(game,width,height) {
                     renderlib.util.Timer.subend();
                     
                     renderlib.util.Timer.end();
+                    
+                    for (var i = 0; i < sectors.length; i++) {
+                        for (var k = 0; k < sectors[i].poly.edges.length; k++) {
+                            ctx.beginPath();
+                            var one = sectors[i].poly.edges[k].origin;
+                            var two = sectors[i].poly.edges[k].end;
+                            var g = ctx.createLinearGradient(c2s.cartesian2screenx(one.x), c2s.cartesian2screeny(one.y), 
+                                c2s.cartesian2screenx(two.x), c2s.cartesian2screeny(two.y));
+                            g.addColorStop(0.0, 'rgba(255, 0, 0, 1.0)');
+                            g.addColorStop(1.0, 'rgba(0, 255, 0, 1.0)');
+                            ctx.strokeStyle = g;
+                            ctx.moveTo(c2s.cartesian2screenx(one.x), c2s.cartesian2screeny(one.y));
+                            ctx.lineTo(c2s.cartesian2screenx(two.x), c2s.cartesian2screeny(two.y));
+                            ctx.stroke();                            
+                        }
+                    }
                 }
             }
         }

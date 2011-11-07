@@ -22,20 +22,19 @@ doom.get_sectors = function(leveldata) {
     _(doom_linedefs).each(function (linedef) {
         
         if (linedef.right != -1) {
-            sectors[sidedefs_sectors[linedef.right]].push($L(doom_vertices[linedef.vx_a], doom_vertices[linedef.vx_b]));
+            sectors[sidedefs_sectors[linedef.right]].push($L(doom_vertices[linedef.vx_b], doom_vertices[linedef.vx_a]));
         }
         if (linedef.left != -1) {
-            sectors[sidedefs_sectors[linedef.left]].push($L(doom_vertices[linedef.vx_b], doom_vertices[linedef.vx_a]));
+            sectors[sidedefs_sectors[linedef.left]].push($L(doom_vertices[linedef.vx_a], doom_vertices[linedef.vx_b]));
         }
     });
     
     return _(sectors).map(function (s) {
-        return {
-            tick: function (delta) {
-            },
-            poly: {
+        var bsp = renderlib.bsp.create(s);
+        
+        var poly =  {
                 edges: s,
-                bsp: renderlib.bsp_cl.create(s),
+                bsp: bsp,
                 vertices: _(s).chain().map(function (x) { return x.origin }).uniq().value(),
                 extremes: {
                     x1: -768,
@@ -43,11 +42,19 @@ doom.get_sectors = function(leveldata) {
                     y1: 256,
                     y2: 768
                 },
-                partition: function (line) {
-                    return renderlib.bsp_cl.partition(s, line)
-                },
+                width: -256 - -768,
+                height: 768 - 256
+            }
+        poly["partition"] = function (line) {
+            return renderlib.bsp.partition(poly, line)
+        }
+        return {
+            tick: function (delta) {
             },
-            texture: "doomlogo2"
+            poly: poly,
+            texture: "doomlogo2",
+            width: -256 - -768,
+            height: 768 - 256
         }
     });
     
