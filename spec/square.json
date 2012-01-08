@@ -1,0 +1,150 @@
+{
+    "doom_ssectors": [
+        {
+            "numsegs": 1, 
+            "seg_a": 0
+        }, 
+        {
+            "numsegs": 3, 
+            "seg_a": 1
+        }
+    ], 
+    "extents": {
+        "x1": -512, 
+        "x2": -256, 
+        "y1": 0, 
+        "y2": 256
+    }, 
+    "linedefs": [
+        {
+            "left": -1, 
+            "right": 3, 
+            "vx_a": 0, 
+            "vx_b": 1
+        }, 
+        {
+            "left": -1, 
+            "right": 2, 
+            "vx_a": 1, 
+            "vx_b": 2
+        }, 
+        {
+            "left": -1, 
+            "right": 1, 
+            "vx_a": 2, 
+            "vx_b": 3
+        }, 
+        {
+            "left": -1, 
+            "right": 0, 
+            "vx_a": 3, 
+            "vx_b": 0
+        }
+    ], 
+    "player1": [
+        -368, 
+        128
+    ], 
+    "sectors": [
+        {
+            "light": 144, 
+            "z_ceil": 128, 
+            "z_floor": 0
+        }
+    ], 
+    "segs": [
+        {
+            "line": 0, 
+            "side": 0, 
+            "vx_a": 0, 
+            "vx_b": 1
+        }, 
+        {
+            "line": 1, 
+            "side": 0, 
+            "vx_a": 1, 
+            "vx_b": 2
+        }, 
+        {
+            "line": 2, 
+            "side": 0, 
+            "vx_a": 2, 
+            "vx_b": 3
+        }, 
+        {
+            "line": 3, 
+            "side": 0, 
+            "vx_a": 3, 
+            "vx_b": 0
+        }
+    ], 
+    "sidedefs": [
+        {
+            "sector": 0
+        }, 
+        {
+            "sector": 0
+        }, 
+        {
+            "sector": 0
+        }, 
+        {
+            "sector": 0
+        }
+    ], 
+    "ssectors": [
+        {
+            "sector": 0, 
+            "segs": [
+                {
+                    "line": 0, 
+                    "side": 0, 
+                    "vx_a": 0, 
+                    "vx_b": 1
+                }
+            ]
+        }, 
+        {
+            "sector": 0, 
+            "segs": [
+                {
+                    "line": 1, 
+                    "side": 0, 
+                    "vx_a": 1, 
+                    "vx_b": 2
+                }, 
+                {
+                    "line": 2, 
+                    "side": 0, 
+                    "vx_a": 2, 
+                    "vx_b": 3
+                }, 
+                {
+                    "line": 3, 
+                    "side": 0, 
+                    "vx_a": 3, 
+                    "vx_b": 0
+                }
+            ]
+        }
+    ], 
+    "texturedata": [], 
+    "vertices": [
+        {
+            "x": -512, 
+            "y": 256
+        }, 
+        {
+            "x": -256, 
+            "y": 256
+        }, 
+        {
+            "x": -256, 
+            "y": 0
+        }, 
+        {
+            "x": -512, 
+            "y": 0
+        }
+    ]
+}
