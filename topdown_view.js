@@ -31,10 +31,8 @@ doomviews.topdown = function (doomdata) {
 	});
 
 	var patternMap = {};
+	var builtPatterns = false;
 	var textureSsector = function (ctx, ssector) {
-		if (!patternMap.hasOwnProperty(ssector.sector.tx_floor)) {
-			patternMap[ssector.sector.tx_floor] = ctx.createPattern(textureLoader.texture[ssector.sector.tx_floor].img, "repeat");
-		}
 		var pattern = patternMap[ssector.sector.tx_floor];
 		ctx.fillStyle = pattern;
 		ctx.beginPath();
@@ -63,6 +61,13 @@ doomviews.topdown = function (doomdata) {
 	};
 
 	var drawSectors = function (screen, c2s, ctx) {
+		if (!builtPatterns) {
+			_(ssectors).each(function (ssector) {
+				patternMap[ssector.sector.tx_floor] = ctx.createPattern(textureLoader.texture[ssector.sector.tx_floor].img, "repeat");
+			});
+			builtPatterns = true;
+		}
+
 		_(ssectors).each(function (ssector) {
 			textureSsector(ctx, ssector);
 		});

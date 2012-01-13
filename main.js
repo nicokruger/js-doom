@@ -46,12 +46,18 @@ $(function () {
 
     map(maps[currentMap]);
 
-    KeyboardJS.bind.key("equal", function () {
+    KeyboardJS.bind.key("q", function () {
         currentMap++;
+        if (currentMap > maps.lenth-1) {
+            currentMap = 0;
+        }
         map(maps[currentMap]);
     });
-    KeyboardJS.bind.key("dash", function () {
+    KeyboardJS.bind.key("w", function () {
         currentMap--;
+        if (currentMap  < 0) {
+            currentMap = maps.length - 1;
+        }
         map(maps[currentMap]);
     });
 
