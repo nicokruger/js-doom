@@ -14,7 +14,7 @@ $(function () {
         }
     };
     var map = function (map) {
-        $.getJSON(map, function (data) {
+        $.getJSON("/data/maps/" + map, function (data) {
             var doomdata = {
                 ssectors: doom.get_ssectors(data),
                 nodes: doom.get_nodes(data),
