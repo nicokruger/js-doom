@@ -4,7 +4,8 @@ if (!doomviews) doomviews = {};
 doomviews.topdown = function (doomdata) {
 
 	var all_ssectors = doomdata.ssectors;
-	var ssectors = [];
+	var ssectors = all_ssectors;
+	/*var ssectors = [];
 	
 	var quadtree = renderlib.quadtree.setupQuadTree(doomdata.extents.x1,
 		doomdata.extents.y1,
@@ -12,7 +13,7 @@ doomviews.topdown = function (doomdata) {
 		doomdata.extents.y2, 100, 100);
 	_(all_ssectors).each(function (sector) {
 		quadtree.add(renderlib.quadtree.PolyPlacer(sector));
-	});
+	});*/
 
 	var textures = _.chain(doomdata.sectors).map(function (sector) {
 		return sector.tx_floor;
@@ -29,8 +30,12 @@ doomviews.topdown = function (doomdata) {
 		textureLoader.fromUrl(t, "data/textures/" + t.toLowerCase() + ".png", 256, 256);
 	});
 
+	var patternMap = {};
 	var textureSsector = function (ctx, ssector) {
-		var pattern = ctx.createPattern(textureLoader.texture[ssector.sector.tx_floor].img, "repeat");
+		if (!patternMap.hasOwnProperty(ssector.sector.tx_floor)) {
+			patternMap[ssector.sector.tx_floor] = ctx.createPattern(textureLoader.texture[ssector.sector.tx_floor].img, "repeat");
+		}
+		var pattern = patternMap[ssector.sector.tx_floor];
 		ctx.fillStyle = pattern;
 		ctx.beginPath();
 		ctx.moveTo(ssector.edges[0].origin.x, ssector.edges[0].origin.y);
@@ -40,7 +45,7 @@ doomviews.topdown = function (doomdata) {
 		ctx.closePath();
 		ctx.fill();
 
-		var lightLevel = 1.0 - ssector.sector.light/255 ;
+		/*var lightLevel = 1.0 - ssector.sector.light/255 ;
 		if (lightLevel > 1) lightLevel = 1;
 		ctx.fillStyle = "rgba(0,0,0," + lightLevel + ")";
 		ctx.beginPath();
@@ -49,7 +54,7 @@ doomviews.topdown = function (doomdata) {
 			ctx.lineTo(ssector.edges[i].origin.x, ssector.edges[i].origin.y);
 		}
 		ctx.closePath();
-		ctx.fill();
+		ctx.fill();*/
 
 	};
 
@@ -72,10 +77,10 @@ doomviews.topdown = function (doomdata) {
 			}
 		},
 		onViewChange: function (x1,y1,x2,y2) {
-			ssectors = [];
+			/*ssectors = [];
 			quadtree.forEach(renderlib.quadtree.square(x1,y1,x2,y2), function (ssector) {
 				ssectors.push(ssector);
-			});
+			});*/
 			
 		}
 	};
