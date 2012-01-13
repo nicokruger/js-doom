@@ -14,16 +14,16 @@ views = (function () {
 	window.requestAnimFrame(tick);
     
     // Key bindings
-    KeyboardJS.bind.key("w, up", function () {
+    KeyboardJS.bind.key("up", function () {
         _(gamescreens).each(function (gs) { gs[2] += 16; gs[0].center(gs[1],gs[2]); });
     });
-    KeyboardJS.bind.key("s, down", function () {
+    KeyboardJS.bind.key("down", function () {
         _(gamescreens).each(function (gs) { gs[2] -= 16; gs[0].center(gs[1],gs[2]); });
     });
-    KeyboardJS.bind.key("a, left", function () {
+    KeyboardJS.bind.key("left", function () {
        _(gamescreens).each(function (gs) { gs[1] -= 16; gs[0].center(gs[1],gs[2]); });
     });
-    KeyboardJS.bind.key("d, right", function () {
+    KeyboardJS.bind.key("right", function () {
        _(gamescreens).each(function (gs) { gs[1] += 16; gs[0].center(gs[1],gs[2]); });
     });
     KeyboardJS.bind.key("u", function () {

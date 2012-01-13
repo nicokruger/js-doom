@@ -3,9 +3,6 @@ if (!doomviews) doomviews = {};
 
 doomviews.topdown = function (doomdata) {
 
-	var ssector_to_sector = _(doomdata.ssectors).map(function (ssector) {
-	});
-
 	var ssectors = doomdata.ssectors;
 
 	var textures = _.chain(doomdata.sectors).map(function (sector) {
@@ -33,10 +30,22 @@ doomviews.topdown = function (doomdata) {
 		}
 		ctx.closePath();
 		ctx.fill();
+
+		var lightLevel = 1.0 - ssector.sector.light/255 ;
+		if (lightLevel > 1) lightLevel = 1;
+		ctx.fillStyle = "rgba(0,0,0," + lightLevel + ")";
+		ctx.beginPath();
+		ctx.moveTo(ssector.edges[0].origin.x, ssector.edges[0].origin.y);
+		for (i = 1; i < ssector.edges.length; i++) {
+			ctx.lineTo(ssector.edges[i].origin.x, ssector.edges[i].origin.y);
+		}
+		ctx.closePath();
+		ctx.fill();
+
 	};
 
 	var waitingForTextures = function (screen, c2s, ctx) {
-		screen.console.frame_log("Waiting for " + texturesOutstanding + " textures");
+		screen.console.frame_log("<span class=\"mapname\">Waiting for " + texturesOutstanding + " textures</span>");
 	};
 
 	var drawSectors = function (screen, c2s, ctx) {

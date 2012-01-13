@@ -23,84 +23,22 @@
     
     <script language="javascript" src="main.js"></script>
     <script language="javascript" src="level.js"></script>
+
+    <style>
+        .mapname {
+            padding-left: 50px;
+            padding-right: 50px;
+            font-size: 24px;
+        }
+    </style>
 </head>
 <body style="color: #ffffff; background-color: #000000">
     <div id="top">
-        <select id="map">
-            <option>hole.json</option>
-            <option>doom2-MAP01.json</option>
-            <option>doom2-MAP02.json</option>
-            <option>doom2-MAP03.json</option>
-            <option>doom2-MAP04.json</option>
-            <option>doom2-MAP05.json</option>
-            <option>doom2-MAP06.json</option>
-            <option>doom2-MAP07.json</option>
-            <option>doom2-MAP08.json</option>
-            <option>doom2-MAP09.json</option>
-            <option>doom2-MAP10.json</option>
-            <option>doom2-MAP11.json</option>
-            <option>doom2-MAP12.json</option>
-            <option>doom2-MAP13.json</option>
-            <option>doom2-MAP14.json</option>
-            <option>doom2-MAP15.json</option>
-            <option>doom2-MAP16.json</option>
-            <option>doom2-MAP17.json</option>
-            <option>doom2-MAP18.json</option>
-            <option>doom2-MAP19.json</option>
-            <option>doom2-MAP20.json</option>
-            <option>doom2-MAP21.json</option>
-            <option>doom2-MAP22.json</option>
-            <option>doom2-MAP23.json</option>
-            <option>doom2-MAP24.json</option>
-            <option>doom2-MAP25.json</option>
-            <option>doom2-MAP26.json</option>
-            <option>doom2-MAP27.json</option>
-            <option>doom2-MAP28.json</option>
-            <option>doom2-MAP29.json</option>
-            <option>doom2-MAP30.json</option>
-            <option>doom2-MAP31.json</option>
-            <option>doom2-MAP32.json</option>
-            <option>doom-E1M1.json</option>
-            <option>doom-E1M2.json</option>
-            <option>doom-E1M3.json</option>
-            <option>doom-E1M4.json</option>
-            <option>doom-E1M5.json</option>
-            <option>doom-E1M6.json</option>
-            <option>doom-E1M7.json</option>
-            <option>doom-E1M8.json</option>
-            <option>doom-E1M9.json</option>
-            <option>doom-E2M1.json</option>
-            <option>doom-E2M2.json</option>
-            <option>doom-E2M3.json</option>
-            <option>doom-E2M4.json</option>
-            <option>doom-E2M5.json</option>
-            <option>doom-E2M6.json</option>
-            <option>doom-E2M7.json</option>
-            <option>doom-E2M8.json</option>
-            <option>doom-E2M9.json</option>
-            <option>doom-E3M1.json</option>
-            <option>doom-E3M2.json</option>
-            <option>doom-E3M3.json</option>
-            <option>doom-E3M4.json</option>
-            <option>doom-E3M5.json</option>
-            <option>doom-E3M6.json</option>
-            <option>doom-E3M7.json</option>
-            <option>doom-E3M8.json</option>
-            <option>doom-E3M9.json</option>
-            <option>doom-E4M1.json</option>
-            <option>doom-E4M2.json</option>
-            <option>doom-E4M3.json</option>
-            <option>doom-E4M4.json</option>
-            <option>doom-E4M5.json</option>
-            <option>doom-E4M6.json</option>
-            <option>doom-E4M7.json</option>
-            <option>doom-E4M8.json</option>
-            <option>doom-E4M9.json</option>
-        </select>
+        Use arrows to scroll,-/= to change maps, u/j to zoom, z to toggle debug mode
     </div>
     <div id="gamescreen" class="gamescreen" style="float:left">
     </div>
-    <div style="float:left; width: 700px; height:95%; overflow:scroll; display:none">
+    <div id="debuginfo" style="float:left; width: 700px; height:95%; overflow:scroll; display:none">
         <ul id="tree" style="float:left; overflow:visible;">
         </ul>
     </div>

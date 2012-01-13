@@ -48,39 +48,3 @@ util.drawDirectionalLine = function (ctx, origin, end, color,label) {
     }
 };
 
-util.populateNodes = function (node, parent, screen) {
-    var me = $("<ul>Node<li></li></ul>").appendTo(parent);
-    me.hover(function () {
-       PARTITION = node.partition;
-    });
-    var ssector;
-
-    if (typeof(node.left) === "number") {
-        ssector = $("<span>SSector: " + node.left + "</span>").appendTo(me);
-        ssector.css("color","rgb(0,255,0)");
-        ssector.hover(function () {
-            SSECTOR = node.left;
-            PARTITION = node.partition;
-            BB = [node.leftBB,"rgb(0,255,0)", "rgba(0,255,0,0.3)"];
-            SECTOR = ssectors2[node.left].sector;
-            //gs.center((node.partition.origin.x+node.partition.end.x)/2, (node.partition.end.x+node.partition.end.y)/2);
-        });
-    } else {
-        util.populateNodes(node.left, me);
-    }
-
-    if (typeof(node.right) === "number") {
-        ssector = $("<span>SSector: " + node.right + "</span>").appendTo(me);
-        ssector.css("color","rgb(0,0,255)");
-        ssector.hover(function () {
-            SSECTOR = node.right;
-            PARTITION = node.partition;
-            BB = [node.rightBB,"rgb(0,0,255)", "rgba(0,0,255,0.3)"];
-            SECTOR = ssectors2[node.right].sector;
-            //gs.center((node.partition.origin.x+node.partition.end.x)/2, (node.partition.end.x+node.partition.end.y)/2);
-        });
-    } else {
-        util.populateNodes(node.right, me);
-    }
-};
-
