@@ -1,82 +1,42 @@
 <html>
 <head>
     <title>Topdown Doom</title>
-	<style>
-		body {
-			margin:0px;
-			padding:0px;
-			text-align:center;
-		}
-		
-		canvas {
-			outline:0;
-			border:1px solid #000;
-			margin-left: auto;
-			margin-right: auto;
-		}
-	</style>
+
+    <link rel="stylesheet" href="style.css"></link>
+
+    <!-- 3rd party -->
+    <script language="javascript" src="vendor/underscore-min.js"></script>
+    <script language="javascript" src="vendor/jquery-1.6.2.min.js"></script>
+    <script language="javascript" src="vendor/glMatrix-0.9.5.min.js"></script>
+    <script language="javascript" src="vendor/webgl-utils.js"></script>
+    <script language="javascript" src="vendor/keyboard.js"></script>
+    <script language="javascript" src="vendor/gamescreen-0.0.1.js"></script>
+
+    <script language="javascript" src="util.js"></script>
+    <script language="javascript" src="vector2.js"></script>
+    <script language="javascript" src="line.js"></script>
+    <script language="javascript" src="polygon.js"></script>
+    <script language="javascript" src="views.js"></script>
+    <script language="javascript" src="debug_view.js"></script>
+    <script language="javascript" src="topdown_view.js"></script>
+    <script language="javascript" src="texture.js"></script>
     
+    <script language="javascript" src="main.js"></script>
+    <script language="javascript" src="level.js"></script>
 </head>
 <body style="color: #ffffff; background-color: #000000">
-<div>
-    <div>
-        <textarea id="console" style="width:500px; height:200px"></textarea>
+    <div id="top">
+        <select id="map">
+            <option>hole.json</option>
+            <option>E1M1.json</option>
+            <option>MAP01.json</option>
+        </select>
     </div>
-    <div>
-        <span>
-            <button onclick="up()">Up</button>
-            <button onclick="down()">Down</button>
-            <button onclick="left()">Left</button>
-            <button onclick="right()">Right</button>
-            <button onclick="d()">D</button>
-            <input type="text" id="viewportx" />
-            <input type="text" id="viewporty" />
-            <button onclick="set()">set</button>
-            Map: <select id="map" onchange="loadmap()">
-                <option value="data/hole.json">hole</option>
-            </select>
-            Renderer: <select id="renderer" onchange="changerenderer()">
-                <option value="renderlib.screens.blit">blit</option>
-                <option value="renderlib.screens.fullCanvas">fullCanvas</option>
-                <option value="renderlib.screens.backingCanvas">backingCanvas</option>
-                <option value="renderlib.screens.gl">gl</option>
-            </select>
-        </span>
-        <div id="viewport" style="color: #000000">Viewport:</div>
+    <div id="gamescreen" class="gamescreen" style="float:left">
     </div>
-</div>
-
-<div id="gamescreenarea">
-</div>
-
-<!-- 3rd party -->
-<script language="javascript" src="vendor/underscore.js"></script>
-<script language="javascript" src="vendor/jquery-1.6.2.min.js"></script>
-<script language="javascript" src="vendor/glMatrix-0.9.5.min.js"></script>
-<script language="javascript" src="vendor/webgl-utils.js"></script>
-
-<!-- Render library scripts -->
-<script language="javascript" src="scripts/clip.js"></script>
-<script language="javascript" src="scripts/quadtree.js"></script>
-<script language="javascript" src="scripts/util.js"></script>
-<script language="javascript" src="scripts/vector2.js"></script>
-<script language="javascript" src="scripts/line.js"></script>
-<script language="javascript" src="scripts/polygon.js"></script>
-<script language="javascript" src="scripts/btree.js"></script>
-<script language="javascript" src="scripts/texture.js"></script>
-<script language="javascript" src="scripts/fullCanvas.js"></script>
-<script language="javascript" src="scripts/backingCanvas.js"></script>
-<script language="javascript" src="scripts/blit.js"></script>
-<script language="javascript" src="scripts/gl.js"></script>
-<script language="javascript" src="scripts/renderutil.js"></script>
-<script language="javascript" src="scripts/renderutil_gl.js"></script>
-
-<!-- Game scripts -->
-<script language="javascript" src="scripts/level.js"></script>
-<script language="javascript" src="scripts/sector.js"></script>
-<script language="javascript" src="scripts/gamescreen.js"></script>
-<script language="javascript" src="scripts/game.js"></script>
-<script language="javascript" src="scripts/main.js"></script>
-
+    <div style="float:left; width: 700px; height:95%; overflow:scroll; display:none">
+        <ul id="tree" style="float:left; overflow:visible;">
+        </ul>
+    </div>
 </body>
 </html>

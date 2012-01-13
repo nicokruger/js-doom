@@ -2,9 +2,10 @@ var renderlib;
 if (!renderlib) renderlib = {}; // initialise the top-level module if it does not exist
 
 renderlib.texture = (function() {
-    var TextureLoader = function() {
+    var TextureLoader = function(callback) {
         this.texture = {};
         this.unloaded = 0;
+        this.callback = callback;
     };
 
     TextureLoader.prototype.ready = function() {
@@ -29,6 +30,7 @@ renderlib.texture = (function() {
             that.texture[name].img = img; // TODO: hack!!! (we need this for the canvas Pattern object from the ViewportCanvas
 
             that.unloaded -= 1;
+            that.callback(that.unloaded);
         };
 
         img.src = data;
@@ -52,6 +54,7 @@ renderlib.texture = (function() {
             that.texture[name] = new renderlib.texture.Texture(ctx.getImageData(0,0,width,height), width, height,ctx);
             that.texture[name].img = im; // TODO: hack!!! (we need this for the canvas Pattern object from the ViewportCanvas
             that.unloaded -= 1;
+            that.callback(that.unloaded);
         };
         im.src = image;
     };

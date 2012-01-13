@@ -14,7 +14,7 @@ Sector = function (poly, label, textures) {
     this.y1 = poly.extremes.y1;
 
 
-}
+};
 
 Sector.prototype.tick = function(x) {
     this.texture_index++;
@@ -22,10 +22,10 @@ Sector.prototype.tick = function(x) {
         this.texture_index = 0;
     }
     this.texture = this.textures[this.texture_index];
-}
+};
 
 Sector.prototype.draw = function(viewport, data) {
 
 
-}
+};
 
