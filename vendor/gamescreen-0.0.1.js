@@ -453,8 +453,11 @@ var _local = (function () {
 			var s = type($(where), world, width, height, background);
 
 			return {
-				create: function (x1, y1, x2, y2) {
+				create: function (x1, y1, x2, y2, callback) {
 					var _s = s.create([], x1, y1, x2, y2);
+					if (typeof(callback) !== "undefined") {
+						callback(x1,y1,x2,y2);
+					}
 					return _s;
 				},
 
@@ -481,7 +484,8 @@ var _local = (function () {
 			return this.sc.create(centerpoint[0] - screenWidth/2,
 				centerpoint[1] - screenHeight/2,
 				centerpoint[0] + screenWidth/2,
-				centerpoint[1] + screenHeight/2, background);
+				centerpoint[1] + screenHeight/2,
+				this.viewChangeCallback);
 		};
 
 		this.resize = function (_screenWidth, _screenHeight) {
@@ -491,24 +495,35 @@ var _local = (function () {
 			return this.sc.create(centerpoint[0] - screenWidth/2,
 				centerpoint[1] - screenHeight/2,
 				centerpoint[0] + screenWidth/2,
-				centerpoint[1] + screenHeight/2, background);
+				centerpoint[1] + screenHeight/2, this.viewChangeCallback);
 		};
 
 		this.move = function (x,y) {
 			centerpoint[0] += x;
 			centerpoint[1] += y;
 
-			return this.sc.create(centerpoint[0] - screenWidth/2, centerpoint[1] - screenHeight/2, centerpoint[0] + screenWidth/2, centerpoint[1] + screenHeight/2, background);
+			return this.sc.create(centerpoint[0] - screenWidth/2,
+				centerpoint[1] - screenHeight/2,
+				centerpoint[0] + screenWidth/2,
+				centerpoint[1] + screenHeight/2,
+				this.viewChangeCallback);
 		};
 
 		this.center = function (x, y) {
 			centerpoint[0] = x;
 			centerpoint[1] = y;
-			return this.sc.create(centerpoint[0] - screenWidth/2, centerpoint[1] - screenHeight/2, centerpoint[0] + screenWidth/2, centerpoint[1] + screenHeight/2, background);
+			return this.sc.create(centerpoint[0] - screenWidth/2,
+				centerpoint[1] - screenHeight/2,
+				centerpoint[0] + screenWidth/2, centerpoint[1] + screenHeight/2,
+				this.viewChangeCallback);
 		};
 
 		this.getCenter = function () {
 			return centerpoint;
+		};
+
+		this.onViewChange = function (callback) {
+			this.viewChangeCallback = callback;
 		};
 	};
 
@@ -578,6 +593,9 @@ var _local = (function () {
 			},
 			remove: function() {
 				viewport.remove();
+			},
+			onViewChange: function (callback) {
+				viewport.onViewChange(callback);
 			},
 			console: screen.console
 		};

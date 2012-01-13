@@ -10,7 +10,7 @@ $P = (function () {
         } else {
             p = new Polygon(arguments);
         }
-        p.bsp = renderlib.bsp.create(p.edges);
+        //p.bsp = renderlib.bsp.create(p.edges);
         p.bounds = get_bb(p.vertices);
         return p;
     };

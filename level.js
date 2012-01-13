@@ -56,8 +56,12 @@ doom.get_ssectors = function (leveldata) {
         }
 
         return {
-            edges: _(segs).map(function (seg) { return $L(doom_vertices[seg.vx_a], doom_vertices[seg.vx_b]); }),
-            sector: leveldata.sectors[seg2sector[0]]
+            // vx_b -> vx_a so ssectors are counter-clockwise
+            edges: _(segs).map(function (seg) { return $L(doom_vertices[seg.vx_b], doom_vertices[seg.vx_a]); }),
+            sector: leveldata.sectors[seg2sector[0]],
+            vertices: _(segs).map(function (seg) {
+                return doom_vertices[seg.vx_a];
+            })
         };
     });
 };

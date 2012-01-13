@@ -3,7 +3,16 @@ if (!doomviews) doomviews = {};
 
 doomviews.topdown = function (doomdata) {
 
-	var ssectors = doomdata.ssectors;
+	var all_ssectors = doomdata.ssectors;
+	var ssectors = [];
+	
+	var quadtree = renderlib.quadtree.setupQuadTree(doomdata.extents.x1,
+		doomdata.extents.y1,
+		doomdata.extents.x2,
+		doomdata.extents.y2, 100, 100);
+	_(all_ssectors).each(function (sector) {
+		quadtree.add(renderlib.quadtree.PolyPlacer(sector));
+	});
 
 	var textures = _.chain(doomdata.sectors).map(function (sector) {
 		return sector.tx_floor;
@@ -50,20 +59,24 @@ doomviews.topdown = function (doomdata) {
 
 	var drawSectors = function (screen, c2s, ctx) {
 		_(ssectors).each(function (ssector) {
-			if (typeof(ssector) === "undefined") {
-				screen.console.log("Invalid ssector");
-				return;
-			}
-
 			textureSsector(ctx, ssector);
 		});
 	};
 
-	return function (screen, c2s, ctx) {
-		if (texturesOutstanding ===  0) {
-			drawSectors(screen, c2s, ctx);
-		} else {
-			waitingForTextures(screen,c2s,ctx);
+	return {
+		drawFunction: function (screen, c2s, ctx) {
+			if (texturesOutstanding ===  0) {
+				drawSectors(screen, c2s, ctx);
+			} else {
+				waitingForTextures(screen,c2s,ctx);
+			}
+		},
+		onViewChange: function (x1,y1,x2,y2) {
+			ssectors = [];
+			quadtree.forEach(renderlib.quadtree.square(x1,y1,x2,y2), function (ssector) {
+				ssectors.push(ssector);
+			});
+			
 		}
 	};
 };

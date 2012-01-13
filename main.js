@@ -10,7 +10,7 @@ $(function () {
     var view = function (screen, c2s, ctx) {
         if (mode === 0) {
             screen.console.frame_log("<span class=\"mapname\">" + maps[currentMap] + "</span>");
-            topdownview(screen, c2s, ctx);
+            topdownview.drawFunction(screen, c2s, ctx);
         } else if (mode == 1) {
             screen.console.frame_log("<span class=\"mapname\">Debug</span>");
             debugview(screen, c2s, ctx);
@@ -26,7 +26,8 @@ $(function () {
                 ssectors: doom.get_ssectors(data),
                 nodes: doom.get_nodes(data),
                 linedefs: doom.get_linedefs(data),
-                sectors: doom.get_sectors(data)
+                sectors: doom.get_sectors(data),
+                extents: data.extents
             };
 
             nodes = doomdata.nodes;
@@ -36,6 +37,10 @@ $(function () {
             gs = views.scrollableView($("#gamescreen"), view, $(window).width(), $(window).height()-150,
                 data.player1[0], data.player1[1],
                 gamescreen.world(data.extents.x1, data.extents.y1, data.extents.x2, data.extents.y2));
+            gs.onViewChange(function (x1,y1,x2,y2) {
+                topdownview.onViewChange(x1,y1,x2,y2);
+            });
+            gs.center(data.player1[0], data.player1[1]);
         });
     };
 
